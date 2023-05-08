@@ -100,7 +100,9 @@ public class StationServiceImpl implements StationServiceInterface {
 			} else
 				throw new InValidDataException("Station Data Cannot Be Empty. Please Check and Try Again");
 
-		} catch (StationException exception) {
+		} catch (Exception e) {
+			
+			StationException exception = new StationException();
 			exception.setErrorCode("STN001");
 			exception.setStatusCode("404");
 			exception.setStatus("Failed");
@@ -640,7 +642,6 @@ public class StationServiceImpl implements StationServiceInterface {
 						c.setModifiedDate(idAndDateGenerator.dateSetter());
 						chargers.set(chargerIndex, c);
 						station.setChargers(chargers);
-						System.out.println(chargers);
 						if (stationRepository.save(station) != null)
 							return true;
 						else
@@ -650,7 +651,8 @@ public class StationServiceImpl implements StationServiceInterface {
 								"No Chargers Found. There are no Charger available in the system. Please verify and try again");
 				} else
 					throw new StationNotFoundException(
-							"Station Not Found. The station with the provided ID does not exist. Please verify and try again");
+							"Station Not Found. The station with the pr"
+							+ "ovided ID does not exist. Please verify and try again");
 			} else
 				throw new InValidIdExcepetion(
 						"Invalid Charger ID. The ID provided is not valid. Please check and try again.");
