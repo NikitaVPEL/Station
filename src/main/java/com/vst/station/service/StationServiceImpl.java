@@ -2,8 +2,9 @@ package com.vst.station.service;
 
 import java.time.Instant;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
+
+import javax.transaction.Transactional;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -16,10 +17,10 @@ import com.vst.station.converter.ConnectorConverter;
 import com.vst.station.converter.StationConveter;
 import com.vst.station.dto.ChargerDTO;
 import com.vst.station.dto.ConnectorDTO;
+import com.vst.station.dto.StationDTO;
 import com.vst.station.dto.StationDTO1;
 import com.vst.station.dto.StationFindDTO;
 import com.vst.station.dto.StationUpdateDTO;
-import com.vst.station.dto.StationDTO;
 import com.vst.station.exception.ChargerNotFoundException;
 import com.vst.station.exception.InValidDataException;
 import com.vst.station.exception.InValidIdExcepetion;
@@ -35,7 +36,6 @@ import com.vst.station.repository.StationRepository;
 import com.vst.station.utils.IdAndDateGenerator;
 import com.vst.station.utils.Utility;
 
-import jakarta.transaction.Transactional;
 
 @SuppressWarnings("unused")
 @Service

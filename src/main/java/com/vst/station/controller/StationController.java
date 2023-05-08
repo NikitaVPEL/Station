@@ -2,6 +2,8 @@ package com.vst.station.controller;
 
 import java.util.List;
 
+import javax.validation.Valid;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,7 +26,6 @@ import com.vst.station.dto.StationUpdateDTO;
 import com.vst.station.model.Station;
 import com.vst.station.service.StationServiceImpl;
 
-import jakarta.validation.Valid;
 
 @RequestMapping("/manageStation")
 @CrossOrigin(origins = "*")
