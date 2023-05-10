@@ -10,7 +10,9 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
+import com.vst.station.exception.InValidDataException;
 import com.vst.station.exception.InValidIdExcepetion;
+import com.vst.station.exception.StationException;
 import com.vst.station.exception.StationIdNotAcceptableException;
 import com.vst.station.exception.StationNotFoundException;
 
@@ -67,5 +69,47 @@ public class StationApiError {
 		});
 		return errorMap;
 	}
+	
+	@ExceptionHandler(InValidDataException.class)
+	@ResponseStatus(HttpStatus.NOT_FOUND)
+	public Map<String, Object> inValidData(InValidDataException ex) {
+		Map<String, Object> errorMap = new HashMap<>();
+		StationErrorResponse response = new StationErrorResponse();
+		response.setMessage(ex.getMessage());
+		response.setStatus(HttpStatus.NOT_FOUND);
+		response.setStatusCode("404");
+		response.setTimeStamp(LocalDateTime.now());
+		errorMap.put(message, response);
+		return errorMap;
+	}
+	
+	@ExceptionHandler(StationException.class)
+	@ResponseStatus(HttpStatus.BAD_GATEWAY)
+	public Map<String, Object> stationException(StationException ex) {
+		Map<String, Object> errorMap = new HashMap<>();
+		StationException exception = new StationException();
+		
+		exception.setErrorCode(ex.getErrorCode());
+		exception.setFunctionality(ex.getFunctionality());
+		exception.setLineNumber(ex.getLineNumber());
+		exception.setMessage(ex.getMessage());
+		exception.setMethodName(ex.getMethodName());
+		exception.setServiceCode(ex.getServiceCode());
+		exception.setStatus(ex.getStatus());
+		exception.setStatusCode(ex.getStatusCode());
+		
+		System.out.println(exception);
+
+//		StationErrorResponse response = new StationErrorResponse();
+//		response.setMessage(ex.getMessage());
+//		response.setStatus(HttpStatus.NOT_FOUND);
+//		response.setStatusCode("404");
+//		response.setTimeStamp(LocalDateTime.now());
+		errorMap.put(message, exception);
+		return errorMap;
+	}
+	
+	
+	
 
 }

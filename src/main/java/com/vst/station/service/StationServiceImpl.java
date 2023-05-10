@@ -1,5 +1,14 @@
 package com.vst.station.service;
 
+/**
+* Service layer to write the business logic and throw the exception. 
+*
+* Inherited from : {@link : @StationServiceInterface }
+*
+* @author Nikita Chakole <nikita.chakole@vpel.in>
+* @since  21/12/2022
+*/
+
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
@@ -36,7 +45,6 @@ import com.vst.station.repository.StationRepository;
 import com.vst.station.utils.IdAndDateGenerator;
 import com.vst.station.utils.Utility;
 
-
 @SuppressWarnings("unused")
 @Service
 public class StationServiceImpl implements StationServiceInterface {
@@ -66,6 +74,15 @@ public class StationServiceImpl implements StationServiceInterface {
 
 	public static final Logger logger = LogManager.getLogger(StationServiceImpl.class);
 
+	/**
+	 * Usage: Add new Station
+	 * 
+	 * @param stationDTO
+	 * @return Boolean(True/False)
+	 * @exception : throw {@link @StationException} if any error occure while adding
+	 *              new host
+	 */
+	@Transactional // To avoid rollback on listed exception
 	@Override
 	public boolean addStation(StationDTO stationDTO) {
 		try {
@@ -101,7 +118,7 @@ public class StationServiceImpl implements StationServiceInterface {
 				throw new InValidDataException("Station Data Cannot Be Empty. Please Check and Try Again");
 
 		} catch (Exception e) {
-			
+
 			StationException exception = new StationException();
 			exception.setErrorCode("STN001");
 			exception.setStatusCode("404");
@@ -119,6 +136,20 @@ public class StationServiceImpl implements StationServiceInterface {
 		return false;
 	}
 
+	/**
+	 * Usage: add Chargerin the specific station using station id
+	 * 
+	 * @param stationId, ChargerDto
+	 * @return Boolean (true/false)
+	 * @exception : throw : {@link @HostException} if any error occure while the
+	 *              code.
+	 * @exception : throw : {@link @InValidIdExcepetion} if received id is null.
+	 * @exception : throw : {@link @InValidDataException} if received object is
+	 *              null.
+	 * @exception : throW : {@link @StationNotFoundException} if station object is
+	 *              null.
+	 */
+	@Transactional
 	@Override
 	public boolean addCharger(String stationId, ChargerDTO chargerDTO) {
 
@@ -158,6 +189,20 @@ public class StationServiceImpl implements StationServiceInterface {
 
 	}
 
+	/**
+	 * Usage: add Connector in specific charger of specific Station using station id and charger id
+	 * 
+	 * @param stationId, chargerId, ConnectorDto
+	 * @return boolean (true/false)
+	 @exception : throw : {@link @stationException} if any error occure while the
+	 *              code.
+	 * @exception : throw : {@link @InValidIdExcepetion} if received id is null.
+	 * @exception : throw : {@link @InValidDataException} if received object is
+	 *              null.
+	 * @exception : throW : {@link @StationNotFoundException} if station object is
+	 *              null.
+	 */
+	@Transactional
 	@Override
 	public boolean addConnector(String stationId, String chargerId, ConnectorDTO connectorDTO) {
 
@@ -173,9 +218,7 @@ public class StationServiceImpl implements StationServiceInterface {
 							break;
 						}
 					}
-					if (charger == null) {
-						throw new InValidDataException("Charger Data Cannot Be Empty. Please Check and Try Again");
-					}
+					if (charger != null) {
 					List<Connector> connectors = charger.getConnectors();
 					int connectorNumber = 0;
 					charger.setChargerNumberOfConnector(connectorNumber);
@@ -197,25 +240,44 @@ public class StationServiceImpl implements StationServiceInterface {
 						return true;
 					else
 						throw new InValidDataException("Connector Data Cannot Be Empty. Please Check and Try Again");
+					}else {
+					throw new InValidDataException("Charger Not Found. Please Check and Try Again");
+					}
+					}else {
+					throw new StationNotFoundException("Station not Available Please Check and try again");
 				}
 			} else
 				throw new InValidDataException("Object not found. The requested object is null or does not exist");
 		} else
 			throw new StationIdNotAcceptableException(
 					"Invalid ID. The ID provided is not valid. Please check and try again.");
-		return false;
 	}
 
+	/**
+	 * Usage: update station using station id 
+	 * 
+	 * @param stationId, stationUpdateDTO
+	 * @return boolean (true/false)
+	 @exception : throw : {@link @stationException} if any error occure while the
+	 *              code.
+	 * @exception : throw : {@link @InValidIdExcepetion} if received id is null.
+	 * @exception : throw : {@link @InValidDataException} if received object is
+	 *              null.
+	 * @exception : throW : {@link @StationNotFoundException} if station object is
+	 *              null.
+	 */
 	@Transactional
 	@Override
 	public boolean updateStation(String stationId, StationUpdateDTO stationUpdateDTO) {
+		try {
 		if (!stationId.isBlank() && stationId != null) {
+			if(stationUpdateDTO!=null) {
 
 			Station stationObj = stationConveter.updateDtoToEntity(stationUpdateDTO);
-
 			Station obj = stationRepository.findByStationIdAndIsActiveTrue(utility.stringSanitization(stationId));
 
 			if (obj != null) {
+				
 				boolean flag = false;
 
 				if (stationObj.getStationName() != null && !stationObj.getStationName().isBlank()) {
@@ -268,13 +330,16 @@ public class StationServiceImpl implements StationServiceInterface {
 					flag = true;
 				}
 
-				if (stationObj.getStationLocationURL() != null && !stationObj.getStationLocationURL().isBlank())
-					obj.setStationLocationURL(stationObj.getStationLocationURL());
+				if (stationObj.getStationLocationURL() != null && !stationObj.getStationLocationURL().isBlank()) {
+					obj.setStationLocationURL(stationObj.getStationLocationURL());					flag = true;
+				}
 
 				if (stationObj.getStationParkingArea() != null && !stationObj.getStationParkingArea().isBlank()) {
 					obj.setStationParkingArea(stationObj.getStationParkingArea());
+					flag = true;
+				}
 
-					if (stationObj.getStationContactNumber() != null && !stationObj.getStationContactNumber().isBlank())
+					if (stationObj.getStationContactNumber() != null && !stationObj.getStationContactNumber().isBlank()) {
 						obj.setStationContactNumber(stationObj.getStationContactNumber());
 					flag = true;
 				}
@@ -295,7 +360,6 @@ public class StationServiceImpl implements StationServiceInterface {
 				}
 
 				List<String> list = obj.getStationAmenity();
-
 				List<String> inputList = stationObj.getStationAmenity();
 
 				for (int i = 0; i < inputList.size(); i++) {
@@ -305,7 +369,7 @@ public class StationServiceImpl implements StationServiceInterface {
 						flag = true;
 					}
 				}
-
+				int a = 1/0; 
 				obj.setModifiedBy("Admin");
 				obj.setModifiedDate(idAndDateGenerator.dateSetter());
 				if (flag) {
@@ -319,10 +383,26 @@ public class StationServiceImpl implements StationServiceInterface {
 			} else {
 				throw new StationNotFoundException("Station Not Aavailable. Please Check and Try Again");
 			}
+			}else {
+				throw new InValidDataException("please provide station details");	
+				}
 		} else {
 			throw new StationIdNotAcceptableException(
 					"Invalid ID. The ID provided is not valid. Please check and try again.");
 		}
+		}catch (Exception e) {
+//			StationException exception = new StationException();
+//			exception.setErrorCode("400");
+//			exception.setFunctionality("update station");
+//			exception.setLineNumber(397);
+//			exception.setMessage(e.getLocalizedMessage());
+//			exception.setMethodName("updateStation");
+//			exception.setServiceCode("STN");
+//			exception.setStatus("");
+//			exception.setStatusCode("");
+//			logger.error(exception);
+			throw new StationException("data not found");
+			}
 	}
 
 	@Transactional
@@ -650,8 +730,7 @@ public class StationServiceImpl implements StationServiceInterface {
 						throw new InValidDataException(
 								"No Chargers Found. There are no Charger available in the system. Please verify and try again");
 				} else
-					throw new StationNotFoundException(
-							"Station Not Found. The station with the pr"
+					throw new StationNotFoundException("Station Not Found. The station with the pr"
 							+ "ovided ID does not exist. Please verify and try again");
 			} else
 				throw new InValidIdExcepetion(
@@ -782,10 +861,29 @@ public class StationServiceImpl implements StationServiceInterface {
 		if (!stationId.trim().isBlank() && stationId != null) {
 			Station station = stationRepository.findByStationIdAndIsActiveTrue(utility.stringSanitization(stationId));
 			if (station != null) {
-				return station;
+				Station finalStation = station;
+				List<Charger> charger = station.getChargers();
+				List<Charger> finalList = new ArrayList<>();
+				for (Charger list : charger) {
+					boolean flag = list.isActive();
+					if (flag == true) {
+						List<Connector> connectors = list.getConnectors();
+						List<Connector> connectorList = new ArrayList<>();
+						for (Connector list2 : connectors) {
+							boolean flag2 = list2.isActive();
+							if (flag2 == true) {
+								connectorList.add(list2);
+							}
+						}
+						list.setConnectors(connectorList);
+						finalList.add(list);
+					}
+					finalStation.setChargers(finalList);
+				}
+
+				return finalStation;
 			} else {
-				return station;
-//				throw new InValidDataException("Station Not Aavailable. Please Check and Try Again");
+				throw new InValidDataException("Station Not Aavailable. Please Check and Try Again");
 			}
 		} else {
 			throw new StationIdNotAcceptableException(
@@ -838,18 +936,27 @@ public class StationServiceImpl implements StationServiceInterface {
 		if (!stationId.isBlank() && stationId != null) {
 			Station station = stationRepository.findByStationIdAndIsActiveTrue(utility.stringSanitization(stationId));
 			if (station != null) {
-				List<Charger> chargers = station.getChargers();
-				if (!chargers.isEmpty()) {
-					List<Charger> finalList = new ArrayList<>();
-					for (Charger list : chargers) {
+				List<Charger> charger = station.getChargers();
+				List<Charger> finalList = new ArrayList<>();
+				if (!charger.isEmpty()) {
+					for (Charger list : charger) {
 						boolean flag = list.isActive();
-						if (flag == true)
+						if (flag == true) {
+							List<Connector> connectors = list.getConnectors();
+							List<Connector> connectorList = new ArrayList<>();
+							for (Connector list2 : connectors) {
+								boolean flag2 = list2.isActive();
+								if (flag2 == true) {
+									connectorList.add(list2);
+								}
+							}
+							list.setConnectors(connectorList);
 							finalList.add(list);
+						}
 					}
 					return finalList;
 				} else
-					throw new InValidDataException(
-							"No Charger Found. There are no Charger available in the Station. Please Check and try again");
+					return null;
 			} else
 				throw new InValidDataException(
 						"No Station Found. There are no Station available in the system. Please Check and try again");
@@ -1114,7 +1221,9 @@ public class StationServiceImpl implements StationServiceInterface {
 			if (!stations.isEmpty()) {
 
 				for (Station s : stations) {
+					if(s.isActive()==true) {
 					finalList.add(stationConveter.entitytoStationDTO1(s));
+					}
 				}
 				return finalList;
 			} else

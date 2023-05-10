@@ -13,6 +13,11 @@ import lombok.ToString;
 @ToString
 public class StationException extends RuntimeException { 
 	
+	
+	public StationException(String exception) {
+		super(exception);
+	}
+
 	private static final long serialVersionUID = -7136395761401538992L;
 	
 	private String errorCode;
@@ -25,7 +30,7 @@ public class StationException extends RuntimeException {
 	private String functionality;
 	
 	
-	
+
 	
 	
 }
