@@ -83,31 +83,6 @@ public class StationApiError {
 		return errorMap;
 	}
 	
-	@ExceptionHandler(StationException.class)
-	@ResponseStatus(HttpStatus.BAD_GATEWAY)
-	public Map<String, Object> stationException(StationException ex) {
-		Map<String, Object> errorMap = new HashMap<>();
-		StationException exception = new StationException();
-		
-		exception.setErrorCode(ex.getErrorCode());
-		exception.setFunctionality(ex.getFunctionality());
-		exception.setLineNumber(ex.getLineNumber());
-		exception.setMessage(ex.getMessage());
-		exception.setMethodName(ex.getMethodName());
-		exception.setServiceCode(ex.getServiceCode());
-		exception.setStatus(ex.getStatus());
-		exception.setStatusCode(ex.getStatusCode());
-		
-		System.out.println(exception);
-
-//		StationErrorResponse response = new StationErrorResponse();
-//		response.setMessage(ex.getMessage());
-//		response.setStatus(HttpStatus.NOT_FOUND);
-//		response.setStatusCode("404");
-//		response.setTimeStamp(LocalDateTime.now());
-		errorMap.put(message, exception);
-		return errorMap;
-	}
 	
 	
 	

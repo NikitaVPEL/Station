@@ -34,7 +34,7 @@ public interface StationServiceInterface {
 	
 	public boolean removeStationCharger(String stationId,String chargerId);
 	
-	public boolean removeStationConnector(String stationId, String chargerId, String connectorId);
+//	public boolean removeStationConnector(String stationId, String chargerId, String connectorId);
 	
 	public boolean removeCharger(String chargerId);
 	
@@ -48,7 +48,7 @@ public interface StationServiceInterface {
 
 	public List<Station> getByVendorId(String stationVendorId);
 
-	public List<Station> getInactiveStation();
+//	public List<Station> getInactiveStation();
 
 	List<Charger> getAllStationChargers(String stationId);
 

@@ -97,14 +97,14 @@ public class StationController {
 			return ResponseEntity.ok(finalList);
 	}
 
-	@GetMapping("/getStationHistory")
-	public ResponseEntity<List<Station>> getInactive() {
-		List<Station> finalList = stationServiceImpl.getInactiveStation();
-		if (!finalList.isEmpty())
-			return ResponseEntity.ok(finalList);
-		else
-			return ResponseEntity.ok(finalList);
-	}
+//	@GetMapping("/getStationHistory")
+//	public ResponseEntity<List<Station>> getInactive() {
+//		List<Station> finalList = stationServiceImpl.getInactiveStation();
+//		if (!finalList.isEmpty())
+//			return ResponseEntity.ok(finalList);
+//		else
+//			return ResponseEntity.ok(finalList);
+//	}
 
 	@GetMapping("/getStationById")
 	public ResponseEntity<Station> getStationData(@RequestParam("stationId") String stationId) {
