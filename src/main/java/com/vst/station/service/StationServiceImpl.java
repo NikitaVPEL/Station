@@ -1278,6 +1278,7 @@ public class StationServiceImpl implements StationServiceInterface {
 
 	@Override
 	public List<Connector> getAllStationConnector(String stationId, String chargerId) {
+		try {
 		if (!stationId.isBlank()) {
 			if (!chargerId.isBlank()) {
 				Station station = stationRepository.findByStationIdAndIsActiveTrue(stationId);
@@ -1291,10 +1292,8 @@ public class StationServiceImpl implements StationServiceInterface {
 								break;
 							}
 						}
-						if (chargerOne == null) {
-							throw new InValidDataException(
-									"No Charger Found. There is no Charger available. Please Check and try again");
-						}
+						if (chargerOne != null) {
+							
 						List<Connector> connectors = chargerOne.getConnectors();
 						if (!connectors.isEmpty()) {
 							List<Connector> finalConnector = new ArrayList<>();
@@ -1302,10 +1301,13 @@ public class StationServiceImpl implements StationServiceInterface {
 								boolean flag = connectors.get(i).isActive();
 								if (flag == true)
 									finalConnector.add(connectors.get(i));
+								return finalConnector;
 							}
-							return finalConnector;
 						} else
 							return null;
+						}else 
+							throw new InValidDataException(
+									"No Charger Found. There is no Charger available. Please Check and try again");
 					} else
 						throw new InValidDataException(
 								"No Chargers Found. There are no Charger available in the Station. Please Check and try again");
@@ -1318,6 +1320,25 @@ public class StationServiceImpl implements StationServiceInterface {
 		} else
 			throw new StationIdNotAcceptableException(
 					"Invalid Station ID. The ID provided is not valid. Please check and try again.");
+		
+	} catch (StationIdNotAcceptableException e) {
+		logger.error(e.getLocalizedMessage());
+		throw new StationIdNotAcceptableException(e.getLocalizedMessage());
+
+	} catch (StationNotFoundException e) {
+		logger.error(e.getLocalizedMessage());
+		throw new StationNotFoundException(e.getLocalizedMessage());
+
+	} catch (Exception e) {
+		logger.error("STN001", "ManageStation", e.getStackTrace()[0].getClassName(),
+				e.getStackTrace()[0].getMethodName(), e.getStackTrace()[0].getLineNumber(),
+				"get chargers of specific station by station id", e.getLocalizedMessage());
+
+		throw new StationException("STN001", "ManageStation", e.getStackTrace()[0].getClassName(),
+				e.getStackTrace()[0].getMethodName(), e.getStackTrace()[0].getLineNumber(),
+				"get chargers of specific station by station id", e.getLocalizedMessage());
+	}
+		return null;
 	}
 
 	@Override
