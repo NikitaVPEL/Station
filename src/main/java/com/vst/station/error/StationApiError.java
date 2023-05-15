@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
+import com.vst.station.exception.ChargerNotFoundException;
 import com.vst.station.exception.InValidDataException;
 import com.vst.station.exception.InValidIdExcepetion;
 import com.vst.station.exception.StationException;
@@ -79,6 +80,41 @@ public class StationApiError {
 		response.setStatus(HttpStatus.NOT_FOUND);
 		response.setStatusCode("404");
 		response.setTimeStamp(LocalDateTime.now());
+		errorMap.put(message, response);
+		return errorMap;
+	}
+	
+	
+	@ExceptionHandler(ChargerNotFoundException.class)
+	@ResponseStatus(HttpStatus.NOT_FOUND)
+	public Map<String, Object> chargerNotFound(ChargerNotFoundException ex) {
+		Map<String, Object> errorMap = new HashMap<>();
+		StationErrorResponse response = new StationErrorResponse();
+		response.setMessage(ex.getMessage());
+		response.setStatus(HttpStatus.NOT_FOUND);
+		response.setStatusCode("404");
+		response.setTimeStamp(LocalDateTime.now());
+		errorMap.put(message, response);
+		return errorMap;
+	}
+	
+	@ExceptionHandler(StationException.class)
+	@ResponseStatus(HttpStatus.BAD_GATEWAY)
+	public Map<String, Object> stationException(StationException ex) {
+		Map<String, Object> errorMap = new HashMap<>();
+		StationErrorResponse response = new StationErrorResponse();
+		
+		response.setStatus(HttpStatus.BAD_GATEWAY);
+		response.setStatusCode("502");
+		response.setServiceName(ex.getServiceName());
+		response.setFunctionality(ex.getFunctionality());
+		response.setLineNumber(ex.getLineNumber());
+		response.setMessage(ex.getMessage());
+		response.setMethodName(ex.getMethodName());
+		response.setServiceCode(ex.getServiceCode());
+		response.setClassName(ex.getClassName());
+		response.setTimeStamp(LocalDateTime.now());
+
 		errorMap.put(message, response);
 		return errorMap;
 	}

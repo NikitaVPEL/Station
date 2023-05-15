@@ -45,12 +45,10 @@ public class ConnectorController {
 	}
 	
 	@PutMapping("/updateConnector")
-	public ResponseEntity<String> updateStationChargerConnector(@RequestParam("stationId") String stationId,
-			@RequestParam("chargerId") String chargerId, @RequestParam("connectorId") String connectorId,
-			@RequestBody ConnectorDTO connectorDTO) {
-		flag=stationServiceImpl.updateConnector(stationId, chargerId, connectorId, connectorDTO);
+	public ResponseEntity<String> updateConnectorDetailsById(@RequestParam("connectorId") String connectorId, @RequestBody ConnectorDTO connectorDTO){
+		boolean flag = stationServiceImpl.updateConnectorById(connectorId, connectorDTO);
 		if(flag==true)
-		return new ResponseEntity<>("Connector Update Succesfully", HttpStatus.OK);
+			return new ResponseEntity<>("Connector Update Succesfully", HttpStatus.OK);
 		else
 			return new ResponseEntity<>("Connector Details not updated, Please check and try again", HttpStatus.NOT_FOUND);
 	}
@@ -73,15 +71,6 @@ public class ConnectorController {
 			return new ResponseEntity<>("Connector Deleted Succesfully", HttpStatus.OK);
 		else
 			return new ResponseEntity<>("Connector Not Deleted. Please try again", HttpStatus.NOT_FOUND);
-	}
-	
-	@GetMapping("/updateConnectorById")
-	public ResponseEntity<String> updateConnectorDetailsById(@RequestParam("connectorId") String connectorId, @RequestBody ConnectorDTO connectorDTO){
-		boolean flag = stationServiceImpl.updateConnectorById(connectorId, connectorDTO);
-		if(flag==true)
-			return new ResponseEntity<>("Connector Update Succesfully", HttpStatus.OK);
-		else
-			return new ResponseEntity<>("Connector Details not updated, Please check and try again", HttpStatus.NOT_FOUND);
 	}
 	
 	@GetMapping("/addMultipleConnector")

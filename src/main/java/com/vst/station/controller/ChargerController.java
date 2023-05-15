@@ -46,6 +46,7 @@ public class ChargerController {
 	@PutMapping("/udpateCharger")
 	public ResponseEntity<String> chargerUpdate(@RequestParam("stationId") String stationId,
 			@RequestParam("chargerId") String chargerId, @RequestBody ChargerDTO chargerDTO) {
+		System.out.println("executed");
 		flag =stationServiceImpl.updateCharger(stationId, chargerId, chargerDTO);
 		if(flag==true)
 		return new ResponseEntity<>("Charger Details Updated Succesfully", HttpStatus.OK);

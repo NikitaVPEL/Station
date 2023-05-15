@@ -25,47 +25,49 @@ public interface StationServiceInterface {
 	public boolean updateStation(String stationId, StationUpdateDTO stationUpdateDTO);
 
 	public boolean updateCharger(String stationId, String chargerId, ChargerDTO chargerDTO);
-
-	public boolean updateConnector(String stationId, String chargerId, String connectorId, ConnectorDTO connectorDTO);
 	
 	public boolean updateConnectorById(String connectorId, ConnectorDTO connectorDTO);
+
+//	public boolean updateConnector(String stationId, String chargerId, String connectorId, ConnectorDTO connectorDTO);
 	
 	public boolean removeStation(String stationId);
 	
 	public boolean removeStationCharger(String stationId,String chargerId);
 	
-//	public boolean removeStationConnector(String stationId, String chargerId, String connectorId);
-	
-	public boolean removeCharger(String chargerId);
-	
 	public boolean removeConnector(String connectorId);
-
+	
 	public List<Station> showAll();
-
+	
 	public Station show(String stationId);
-
+	
 	public List<Station> getByHostId(String stationHostId);
-
+	
 	public List<Station> getByVendorId(String stationVendorId);
-
-//	public List<Station> getInactiveStation();
-
+	
 	List<Charger> getAllStationChargers(String stationId);
-
+	
 	List<Connector> getAllStationConnector(String stationId, String chargerId);
-
-	Station getStation(String stationId);
-
-	Charger getCharger(String chargerId);
-
+	
 	Connector getConnector(String connectorId);
-
+	
 	List<StationDTO1> getRequiredStationData();
 	
 	List<StationDTO1> stationforApplication(String query);
 	
+	Charger getCharger(String chargerId);
+	
 	List<StationDTO1> getAllStationforRadius (double longitude, double latitude, double maxDistance);
 	
+
+	
+	public boolean removeCharger(String chargerId);
+	
+//	public boolean removeStationConnector(String stationId, String chargerId, String connectorId);
+
+//	public List<Station> getInactiveStation();
+
+	Station getStation(String stationId);
+
 	StationFindDTO getNameAndAddressStation(String stationId);
 
 }

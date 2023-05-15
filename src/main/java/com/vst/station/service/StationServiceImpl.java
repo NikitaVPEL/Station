@@ -294,7 +294,7 @@ public class StationServiceImpl implements StationServiceInterface {
 
 		} catch (InValidIdExcepetion e) {
 			logger.error(e.getLocalizedMessage());
-			throw new InValidDataException(e.getLocalizedMessage());
+			throw new InValidIdExcepetion(e.getLocalizedMessage());
 
 		} catch (Exception e) {
 
@@ -427,7 +427,6 @@ public class StationServiceImpl implements StationServiceInterface {
 								flag = true;
 							}
 						}
-						int a = 1 / 0;
 						obj.setModifiedBy("Admin");
 						obj.setModifiedDate(idAndDateGenerator.dateSetter());
 						if (flag) {
@@ -439,16 +438,16 @@ public class StationServiceImpl implements StationServiceInterface {
 						} else
 							throw new InValidIdExcepetion("Please Check Enter Data. And try Again");
 
-					} else {
+					} else
 						throw new StationNotFoundException("Station Not Aavailable. Please Check and Try Again");
-					}
-				} else {
+
+				} else
 					throw new InValidDataException("please provide station details");
-				}
-			} else {
+
+			} else
 				throw new StationIdNotAcceptableException(
 						"Invalid ID. The ID provided is not valid. Please check and try again.");
-			}
+
 		} catch (InValidDataException e) {
 			logger.error(e.getLocalizedMessage());
 			throw new InValidDataException(e.getLocalizedMessage());
@@ -463,7 +462,7 @@ public class StationServiceImpl implements StationServiceInterface {
 
 		} catch (InValidIdExcepetion e) {
 			logger.error(e.getLocalizedMessage());
-			throw new InValidDataException(e.getLocalizedMessage());
+			throw new InValidIdExcepetion(e.getLocalizedMessage());
 
 		} catch (Exception e) {
 
@@ -623,7 +622,6 @@ public class StationServiceImpl implements StationServiceInterface {
 									charger.setIsSmart(obj.getIsSmart());
 									flag = true;
 								}
-
 								charger.setModifiedDate(idAndDateGenerator.dateSetter());
 								charger.setModifiedBy("Admin");
 								chargers.set(index, charger);
@@ -648,9 +646,10 @@ public class StationServiceImpl implements StationServiceInterface {
 								"Station Not Found. The station with the provided ID does not exist. Please verify the station ID and try again");
 				} else
 					throw new InValidIdExcepetion(
-							"Invalid ID. The ID provided is not valid. Please check and try again.");
+							"Invalid charger ID. The ID provided is not valid. Please check and try again.");
 			} else
-				throw new InValidIdExcepetion("Invalid ID. The ID provided is not valid. Please check and try again.");
+				throw new InValidIdExcepetion(
+						"Invalid station ID. The ID provided is not valid. Please check and try again.");
 
 		} catch (InValidDataException e) {
 			logger.error(e.getLocalizedMessage());
@@ -670,7 +669,7 @@ public class StationServiceImpl implements StationServiceInterface {
 
 		} catch (InValidIdExcepetion e) {
 			logger.error(e.getLocalizedMessage());
-			throw new InValidDataException(e.getLocalizedMessage());
+			throw new InValidIdExcepetion(e.getLocalizedMessage());
 
 		} catch (Exception e) {
 
@@ -685,121 +684,100 @@ public class StationServiceImpl implements StationServiceInterface {
 	}
 
 	/**
-	 * Usage: update Connector using station id, charger Id and Connector Id
+	 * Usage: update connector of specific charger
 	 * 
-	 * @param stationId,chargerId,connectorId, ConnectorDTO
+	 * @param connectorId
 	 * @return boolean (true/false)
 	 */
 	@Transactional
 	@Override
-	public boolean updateConnector(String stationId, String chargerId, String connectorId, ConnectorDTO connectorDTO) {
-		logger.info("StationServiceImpl :: updateConnector : execution Started");
+	public boolean updateConnectorById(String connectorId, ConnectorDTO connectorDTO) {
+
+		logger.info("StationServiceImpl :: updateConnectorById : execution Started");
 		try {
-			if (!stationId.isBlank() && stationId != null) {
+			if (connectorId != null && !connectorId.isBlank()) {
+				Station station = stationRepository.findByConnectorId(utility.stringSanitization(connectorId));
+				if (station != null && station.isActive()) {
 
-				if (!chargerId.isBlank() && chargerId != null) {
+					boolean foundFlag = false;
+					List<Charger> chargerList = station.getChargers();
 
-					if (!connectorId.isBlank() && connectorId != null) {
+					if (!chargerList.isEmpty()) {
+						for (int i = 0; i < chargerList.size(); i++) {
+							Charger charger = chargerList.get(i);
+							if (charger.isActive() == true) {
 
-						Station station = stationRepository
-								.findByStationIdAndIsActiveTrue(utility.stringSanitization(stationId));
+								List<Connector> connectorList = charger.getConnectors();
+								if (!connectorList.isEmpty()) {
 
-						if (station != null) {
-							List<Charger> chargers = station.getChargers();
+									for (int j = 0; j < connectorList.size(); j++) {
+										Connector conn = connectorList.get(j);
 
-							if (!chargers.isEmpty()) {
+										if (conn.getConnectorId().equals(utility.stringSanitization(connectorId))) {
+											if (conn.isActive() == true) {
+												Connector obj = connectorConverter.dtoToEntity(connectorDTO);
 
-								int chargerIndex = 0;
-								Charger ch = new Charger();
-								List<Connector> connectors = new ArrayList<>();
+												if (obj.getConnectorNumber() != 0)
+													conn.setConnectorNumber(obj.getConnectorNumber());
 
-								for (int i = 0; i < chargers.size(); i++) {
-									if (chargers.get(i).getChargerId().equals(utility.stringSanitization(chargerId))) {
-										connectors = chargers.get(i).getConnectors();
-										ch = chargers.get(i);
-										chargerIndex = i;
-										break;
-									}
-								}
-								if (!connectors.isEmpty()) {
-									Connector connector = null;
-									int connectorIndex = 0;
-									for (int i = 0; i < connectors.size(); i++) {
-										if (connectors.get(i).getConnectorId()
-												.equals(utility.stringSanitization(connectorId))) {
-											connector = connectors.get(i);
-											connectorIndex = i;
-											break;
+												if (obj.getConnectorType() != null && !obj.getConnectorType().isBlank())
+													conn.setConnectorType(obj.getConnectorType());
+
+												if (obj.getConnectorSocket() != null && !obj.getConnectorSocket().isBlank())
+													conn.setConnectorSocket(obj.getConnectorSocket());
+
+												if (obj.getConnectorStatus() != null && !obj.getConnectorStatus().isBlank())
+													conn.setConnectorStatus(obj.getConnectorStatus());
+
+												if (obj.getConnectorOutputPower() != null
+														&& !obj.getConnectorOutputPower().isBlank())
+													conn.setConnectorOutputPower(obj.getConnectorOutputPower());
+
+												if (obj.getConnectorCharges() != null && !obj.getConnectorCharges().isBlank())
+													conn.setConnectorCharges(obj.getConnectorCharges());
+
+												conn.setModifiedBy("Admin");
+												conn.setModifiedDate(idAndDateGenerator.dateSetter());
+												
+												connectorList.set(j, conn);
+												charger.setConnectors(connectorList);
+												charger.setModifiedDate(idAndDateGenerator.dateSetter());
+												charger.setModifiedBy("Admin");
+												chargerList.set(i, charger);
+												station.setChargers(chargerList);
+												station.setModifiedDate(idAndDateGenerator.dateSetter());
+												station.setModifiedBy("admin");
+												foundFlag = true;
+												break;
+											} else
+												throw new InValidIdExcepetion(
+														"Connector Not Found. There are no Connector available in the system. Please verify and try again.");
 										}
 									}
-
-									if (connector != null) {
-
-										Connector obj = connectorConverter.dtoToEntity(connectorDTO);
-
-										if (obj.getConnectorNumber() != 0)
-											connector.setConnectorNumber(obj.getConnectorNumber());
-
-										if (obj.getConnectorType() != null && !obj.getConnectorType().isBlank())
-											connector.setConnectorType(obj.getConnectorType());
-
-										if (obj.getConnectorSocket() != null && !obj.getConnectorSocket().isBlank())
-											connector.setConnectorSocket(obj.getConnectorSocket());
-
-										if (obj.getConnectorStatus() != null && !obj.getConnectorStatus().isBlank())
-											connector.setConnectorStatus(obj.getConnectorStatus());
-
-										if (obj.getConnectorOutputPower() != null
-												&& !obj.getConnectorOutputPower().isBlank())
-											connector.setConnectorOutputPower(obj.getConnectorOutputPower());
-
-										if (obj.getConnectorCharges() != null && !obj.getConnectorCharges().isBlank())
-											connector.setConnectorCharges(obj.getConnectorCharges());
-
-										connector.setModifiedBy("Admin");
-										connector.setModifiedDate(idAndDateGenerator.dateSetter());
-
-										connectors.set(connectorIndex, connector);
-
-										ch.setConnectors(connectors);
-										chargers.set(chargerIndex, ch);
-										station.setChargers(chargers);
-
-										if (stationRepository.save(station) != null) {
-											logger.info("StationServiceImpl :: updateConnector : execution ended");
-											return true;
-										} else
-											throw new InValidDataException(
-													"Connector Not Updated. Please Check and Try Again");
-									} else
-										throw new InValidDataException(
-												"Connector Not Found. The connector with the given ID is not present. Please verify the connector ID and try again");
-								} else
-									throw new InValidDataException(
-											"No Connectors Found. There are no connectors available in the system. Please verify and try again");
-							} else
-								throw new ChargerNotFoundException(
-										"No Chargers Found. There are no Charger available in the system. Please verify and try again");
+								}
+								if (foundFlag)
+									break;
+							}
+						}
+						if (foundFlag == true) {
+							stationRepository.save(station);
+							logger.info("StationServiceImpl :: updateConnectorById : execution ended");
+							return true;
 						} else
-							throw new StationNotFoundException(
-									"Station Not Found. The station with the provided ID does not exist. Please verify and try again");
+							throw new InValidDataException("Connector Not Found, please try again");
 					} else
-						throw new InValidIdExcepetion(
-								"Invalid Connector ID. The ID provided is not valid. Please check and try again.");
+						throw new ChargerNotFoundException(
+								"No Chargers Found. There are no Charger available in the system. Please verify and try again");
 				} else
-					throw new InValidIdExcepetion(
-							"Invalid Charger ID. The ID provided is not valid. Please check and try again.");
+					throw new StationNotFoundException(
+							"Station Not Found. The station with the provided ID does not exist. Please verify and try again ");
 			} else
-				throw new StationIdNotAcceptableException(
-						"Invalid Station ID. The ID provided is not valid. Please check and try again.");
+				throw new InValidIdExcepetion(
+						"Invalid Connector ID. The ID provided is not valid. Please check and try again.");
 
 		} catch (InValidDataException e) {
 			logger.error(e.getLocalizedMessage());
 			throw new InValidDataException(e.getLocalizedMessage());
-
-		} catch (StationIdNotAcceptableException e) {
-			logger.error(e.getLocalizedMessage());
-			throw new StationIdNotAcceptableException(e.getLocalizedMessage());
 
 		} catch (ChargerNotFoundException e) {
 			logger.error(e.getLocalizedMessage());
@@ -811,17 +789,18 @@ public class StationServiceImpl implements StationServiceInterface {
 
 		} catch (InValidIdExcepetion e) {
 			logger.error(e.getLocalizedMessage());
-			throw new InValidDataException(e.getLocalizedMessage());
+			throw new InValidIdExcepetion(e.getLocalizedMessage());
 
 		} catch (Exception e) {
 			logger.error("STN001", "ManageStation", e.getStackTrace()[0].getClassName(),
 					e.getStackTrace()[0].getMethodName(), e.getStackTrace()[0].getLineNumber(),
-					"update connector using Station Id, charger id and connector id ", e.getLocalizedMessage());
+					"update connector using connector id ", e.getLocalizedMessage());
 
 			throw new StationException("STN001", "ManageStation", e.getStackTrace()[0].getClassName(),
 					e.getStackTrace()[0].getMethodName(), e.getStackTrace()[0].getLineNumber(),
-					"update connector using Station Id, charger id and connector id ", e.getLocalizedMessage());
+					"update connector using connector id ", e.getLocalizedMessage());
 		}
+	
 	}
 
 	/**
@@ -957,7 +936,7 @@ public class StationServiceImpl implements StationServiceInterface {
 
 		} catch (InValidIdExcepetion e) {
 			logger.error(e.getLocalizedMessage());
-			throw new InValidDataException(e.getLocalizedMessage());
+			throw new InValidIdExcepetion(e.getLocalizedMessage());
 
 		} catch (Exception e) {
 			logger.error("STN001", "ManageStation", e.getStackTrace()[0].getClassName(),
@@ -1024,11 +1003,12 @@ public class StationServiceImpl implements StationServiceInterface {
 									break;
 							}
 						}
-						if (stationRepository.save(station) != null) {
+						if (foundFlag == true) {
+							stationRepository.save(station);
 							logger.info("StationServiceImpl :: removeConnector : execution ended");
 							return true;
 						} else
-							throw new InValidDataException("Deletion Failed: The connector could not be deleted.");
+							throw new InValidDataException("Connector Not Found, please try again");
 					} else
 						throw new ChargerNotFoundException(
 								"No Chargers Found. There are no Charger available in the system. Please verify and try again");
@@ -1053,7 +1033,7 @@ public class StationServiceImpl implements StationServiceInterface {
 
 		} catch (InValidIdExcepetion e) {
 			logger.error(e.getLocalizedMessage());
-			throw new InValidDataException(e.getLocalizedMessage());
+			throw new InValidIdExcepetion(e.getLocalizedMessage());
 
 		} catch (Exception e) {
 			logger.error("STN001", "ManageStation", e.getStackTrace()[0].getClassName(),
@@ -1276,205 +1256,374 @@ public class StationServiceImpl implements StationServiceInterface {
 		}
 	}
 
+	/**
+	 * Usage: get all Connector of specific station and specific charger
+	 * 
+	 * @param stationId
+	 * @return List of connector
+	 */
+	@Transactional
 	@Override
 	public List<Connector> getAllStationConnector(String stationId, String chargerId) {
+		logger.info("StationServiceImpl :: getAllStationConnector : execution Started");
+
 		try {
-		if (!stationId.isBlank()) {
-			if (!chargerId.isBlank()) {
-				Station station = stationRepository.findByStationIdAndIsActiveTrue(stationId);
+			if (!stationId.isBlank() && stationId != null) {
+				if (!chargerId.isBlank() && chargerId != null) {
+					Station station = stationRepository.findByStationIdAndIsActiveTrue(stationId);
+					if (station != null) {
+						List<Charger> chargers = station.getChargers();
+						if (!chargers.isEmpty()) {
+
+							Charger chargerOne = new Charger();
+							for (Charger c : chargers) {
+								if (c.getChargerId().equals(chargerId)) {
+									chargerOne = c;
+									break;
+								}
+							}
+							if (chargerOne != null) {
+
+								List<Connector> connectors = chargerOne.getConnectors();
+								if (!connectors.isEmpty()) {
+									List<Connector> finalConnector = new ArrayList<>();
+									for (int i = 0; i < connectors.size(); i++) {
+										if (connectors.get(i).isActive() == true) {
+											finalConnector.add(connectors.get(i));
+										}
+									}
+									if (!finalConnector.isEmpty()) {
+										logger.info("StationServiceImpl :: getAllStationConnector : execution ended");
+										return finalConnector;
+									} else
+										return null;
+								} else
+									return null;
+							} else
+								throw new ChargerNotFoundException(
+										"No Charger Found. There is no Charger available. Please Check and try again");
+						} else
+							throw new ChargerNotFoundException(
+									"No Chargers Found. There are no Charger available in the Station. Please Check and try again");
+					} else
+						throw new StationNotFoundException("No station Found. Please Check and try again");
+				} else
+					throw new InValidIdExcepetion(
+							"Invalid Charger ID. The ID provided is not valid. Please check and try again.");
+			} else
+				throw new StationIdNotAcceptableException(
+						"Invalid Station ID. The ID provided is not valid. Please check and try again.");
+
+		} catch (ChargerNotFoundException e) {
+			logger.error(e.getLocalizedMessage());
+			throw new ChargerNotFoundException(e.getLocalizedMessage());
+
+		} catch (InValidIdExcepetion e) {
+			logger.error(e.getLocalizedMessage());
+			throw new InValidIdExcepetion(e.getLocalizedMessage());
+
+		} catch (StationIdNotAcceptableException e) {
+			logger.error(e.getLocalizedMessage());
+			throw new StationIdNotAcceptableException(e.getLocalizedMessage());
+
+		} catch (StationNotFoundException e) {
+			logger.error(e.getLocalizedMessage());
+			throw new StationNotFoundException(e.getLocalizedMessage());
+
+		} catch (Exception e) {
+			logger.error("STN001", "ManageStation", e.getStackTrace()[0].getClassName(),
+					e.getStackTrace()[0].getMethodName(), e.getStackTrace()[0].getLineNumber(),
+					"get all connector of specific station charger by station and charger id", e.getLocalizedMessage());
+
+			throw new StationException("STN001", "ManageStation", e.getStackTrace()[0].getClassName(),
+					e.getStackTrace()[0].getMethodName(), e.getStackTrace()[0].getLineNumber(),
+					"get all connector of specific station charger by station and charger id", e.getLocalizedMessage());
+		}
+	}
+
+	/**
+	 * Usage: get Connector of specific station and specific charger
+	 * 
+	 * @param connectorId
+	 * @return connector object
+	 */
+	@Transactional
+	@Override
+	public Connector getConnector(String connectorId) {
+		logger.info("StationServiceImpl :: getConnector : execution Started");
+		try {
+			if (connectorId != null && !connectorId.isBlank()) {
+				Station station = stationRepository.findByConnectorId(utility.stringSanitization(connectorId));
+				if (station != null && station.isActive()) {
+
+					Connector connector = null;
+					boolean foundFlag = false;
+					List<Charger> chargerList = station.getChargers();
+
+					if (!chargerList.isEmpty()) {
+						for (Charger charger : chargerList) {
+							if (charger.isActive() == true) {
+
+								List<Connector> connectorList = charger.getConnectors();
+								if (!connectorList.isEmpty()) {
+
+									for (Connector conn : connectorList) {
+
+										if (conn.getConnectorId().equals(utility.stringSanitization(connectorId))) {
+											if (conn.isActive() == true) {
+												connector = conn;
+												;
+												foundFlag = true;
+												break;
+											} else
+												throw new InValidIdExcepetion(
+														"Connector Not Found. There are no Connector available in the system. Please verify and try again.");
+										}
+									}
+								}
+								if (foundFlag)
+									break;
+							}
+						}
+						if (foundFlag == true) {
+							logger.info("StationServiceImpl :: getConnector : execution ended");
+							return connector;
+						} else
+							throw new InValidDataException("Connector Not Found, please try again");
+					} else
+						throw new ChargerNotFoundException(
+								"No Chargers Found. There are no Charger available in the system. Please verify and try again");
+				} else
+					throw new StationNotFoundException(
+							"Station Not Found. The station with the provided ID does not exist. Please verify and try again ");
+			} else
+				throw new InValidIdExcepetion(
+						"Invalid Connector ID. The ID provided is not valid. Please check and try again.");
+
+		} catch (ChargerNotFoundException e) {
+			logger.error(e.getLocalizedMessage());
+			throw new ChargerNotFoundException(e.getLocalizedMessage());
+
+		} catch (InValidIdExcepetion e) {
+			logger.error(e.getLocalizedMessage());
+			throw new InValidIdExcepetion(e.getLocalizedMessage());
+
+		} catch (InValidDataException e) {
+			logger.error(e.getLocalizedMessage());
+			throw new InValidDataException(e.getLocalizedMessage());
+
+		} catch (StationNotFoundException e) {
+			logger.error(e.getLocalizedMessage());
+			throw new StationNotFoundException(e.getLocalizedMessage());
+
+		} catch (Exception e) {
+			logger.error("STN001", "ManageStation", e.getStackTrace()[0].getClassName(),
+					e.getStackTrace()[0].getMethodName(), e.getStackTrace()[0].getLineNumber(),
+					"get connector of specific station charger by connector id", e.getLocalizedMessage());
+
+			throw new StationException("STN001", "ManageStation", e.getStackTrace()[0].getClassName(),
+					e.getStackTrace()[0].getMethodName(), e.getStackTrace()[0].getLineNumber(),
+					"get connector of specific station charger by connector id", e.getLocalizedMessage());
+		}
+
+	}
+
+	/**
+	 * Usage: get required station details
+	 * 
+	 * @return List of stations
+	 */
+	@Transactional
+	@Override
+	public List<StationDTO1> getRequiredStationData() {
+		logger.info("StationServiceImpl :: getRequiredStationData : execution Started");
+		try {
+			List<Station> stations = stationRepository.findAllByIsActiveTrue();
+			List<StationDTO1> dto1 = new ArrayList<>();
+			if (!stations.isEmpty()) {
+
+				for (Station s : stations) {
+					dto1.add(stationConveter.entitytoStationDTO1(s));
+				}
+				logger.info("StationServiceImpl :: getRequiredStationData : execution ended");
+				return dto1;
+			} else
+				return dto1;
+
+		} catch (Exception e) {
+			logger.error("STN001", "ManageStation", e.getStackTrace()[0].getClassName(),
+					e.getStackTrace()[0].getMethodName(), e.getStackTrace()[0].getLineNumber(),
+					"get require details of station", e.getLocalizedMessage());
+
+			throw new StationException("STN001", "ManageStation", e.getStackTrace()[0].getClassName(),
+					e.getStackTrace()[0].getMethodName(), e.getStackTrace()[0].getLineNumber(),
+					"get required details of station", e.getLocalizedMessage());
+		}
+	}
+
+	/**
+	 * Usage: get stations by keyword fron search bar
+	 * 
+	 * @param query (keyword)
+	 * @return List of stations
+	 */
+	@Transactional
+	@Override
+	public List<StationDTO1> stationforApplication(String query) {
+		logger.info("StationServiceImpl :: stationforApplication : execution Started");
+		try {
+			List<StationDTO1> dtos = new ArrayList<>();
+			if (!query.isBlank()) {
+
+				List<Station> list = stationRepository
+						.findByStationNameContainingIgnoreCaseAndIsActiveTrueOrStationAreaContainingIgnoreCaseAndIsActiveTrueOrStationZipCodeContainingIgnoreCaseAndIsActiveTrueOrStationCityContainingIgnoreCaseAndIsActiveTrueOrStationStatusContainingIgnoreCaseAndIsActiveTrue(
+								query, query, query, query, query);
+
+				if (!list.isEmpty()) {
+
+					for (Station station : list) {
+						dtos.add(stationConveter.entitytoStationDTO1(station));
+					}
+					logger.info("StationServiceImpl :: stationforApplication : execution ended");
+					return dtos;
+				} else
+					return dtos;
+			} else
+				return dtos;
+		} catch (Exception e) {
+			logger.error("STN001", "ManageStation", e.getStackTrace()[0].getClassName(),
+					e.getStackTrace()[0].getMethodName(), e.getStackTrace()[0].getLineNumber(),
+					"get station by keywords from search bar", e.getLocalizedMessage());
+
+			throw new StationException("STN001", "ManageStation", e.getStackTrace()[0].getClassName(),
+					e.getStackTrace()[0].getMethodName(), e.getStackTrace()[0].getLineNumber(),
+					"get station by keyword from serch bar", e.getLocalizedMessage());
+		}
+	}
+
+	/**
+	 * Usage: get station details
+	 * 
+	 * @param station id
+	 * @return station object
+	 */
+	@Transactional
+	@Override
+	public Station getStation(String stationId) {
+		logger.info("StationServiceImpl :: getStation : execution Started");
+		try {
+			if (!stationId.isBlank() && stationId != null) {
+				Station station = stationRepository.findStationByStationId(stationId);
 				if (station != null) {
+					logger.info("StationServiceImpl :: getStation : execution ended");
+					return station;
+				} else
+					throw new StationNotFoundException("Station Not Found");
+			} else
+				throw new InValidIdExcepetion(
+						"Invalid Connector ID. The ID provided is not valid. Please check and try again.");
+
+		} catch (InValidIdExcepetion e) {
+			logger.error(e.getLocalizedMessage());
+			throw new StationIdNotAcceptableException(e.getLocalizedMessage());
+
+		} catch (StationNotFoundException e) {
+			logger.error(e.getLocalizedMessage());
+			throw new StationNotFoundException(e.getLocalizedMessage());
+
+		} catch (Exception e) {
+			logger.error("STN001", "ManageStation", e.getStackTrace()[0].getClassName(),
+					e.getStackTrace()[0].getMethodName(), e.getStackTrace()[0].getLineNumber(),
+					"get station using station id", e.getLocalizedMessage());
+
+			throw new StationException("STN001", "ManageStation", e.getStackTrace()[0].getClassName(),
+					e.getStackTrace()[0].getMethodName(), e.getStackTrace()[0].getLineNumber(),
+					"update station using station id ", e.getLocalizedMessage());
+		}
+	}
+
+	/**
+	 * Usage: get Connector of specific station and specific charger
+	 * 
+	 * @param chargerId
+	 * @return charger object
+	 */
+	@Transactional
+	@Override
+	public Charger getCharger(String chargerId) {
+		logger.info("StationServiceImpl :: getCharger : execution Started");
+		try {
+			if (!chargerId.isBlank() && chargerId != null) {
+
+				Station station = stationRepository.findByChargerId(utility.stringSanitization(chargerId));
+
+				if (station != null) {
+
 					List<Charger> chargers = station.getChargers();
+
 					if (!chargers.isEmpty()) {
-						Charger chargerOne = null;
+
+						Charger charger = null;
+
 						for (Charger c : chargers) {
-							if (c.getChargerId().equals(chargerId)) {
-								chargerOne = c;
+							if (c.getChargerId().equals(utility.stringSanitization(chargerId))) {
+								charger = c;
 								break;
 							}
 						}
-						if (chargerOne != null) {
-							
-						List<Connector> connectors = chargerOne.getConnectors();
-						if (!connectors.isEmpty()) {
-							List<Connector> finalConnector = new ArrayList<>();
-							for (int i = 0; i < connectors.size(); i++) {
-								boolean flag = connectors.get(i).isActive();
-								if (flag == true)
-									finalConnector.add(connectors.get(i));
-								return finalConnector;
-							}
+						if (charger != null) {
+							if (charger.isActive() == true) {
+								logger.info("StationServiceImpl :: getCharger : execution ended");
+								return charger;
+							} else
+								return null;
 						} else
-							return null;
-						}else 
-							throw new InValidDataException(
-									"No Charger Found. There is no Charger available. Please Check and try again");
+							throw new ChargerNotFoundException(
+									"Charger Not Found. There is no Charger available in the Station. Please Check and try again");
 					} else
-						throw new InValidDataException(
-								"No Chargers Found. There are no Charger available in the Station. Please Check and try again");
+						throw new ChargerNotFoundException(
+								"Chargers Not Found. There are no Chargers available in the Station. Please Check and try again");
 				} else
-					throw new InValidDataException(
-							"No Charger Found. There are no Connectors available in the Charger. Please Check and try again");
+					throw new StationNotFoundException(
+							"Station Not Found. There is not station available. Please Check and try again");
 			} else
 				throw new InValidIdExcepetion(
 						"Invalid Charger ID. The ID provided is not valid. Please check and try again.");
-		} else
-			throw new StationIdNotAcceptableException(
-					"Invalid Station ID. The ID provided is not valid. Please check and try again.");
-		
-	} catch (StationIdNotAcceptableException e) {
-		logger.error(e.getLocalizedMessage());
-		throw new StationIdNotAcceptableException(e.getLocalizedMessage());
 
-	} catch (StationNotFoundException e) {
-		logger.error(e.getLocalizedMessage());
-		throw new StationNotFoundException(e.getLocalizedMessage());
+		} catch (InValidIdExcepetion e) {
+			logger.error(e.getLocalizedMessage());
+			throw new StationIdNotAcceptableException(e.getLocalizedMessage());
 
-	} catch (Exception e) {
-		logger.error("STN001", "ManageStation", e.getStackTrace()[0].getClassName(),
-				e.getStackTrace()[0].getMethodName(), e.getStackTrace()[0].getLineNumber(),
-				"get chargers of specific station by station id", e.getLocalizedMessage());
+		} catch (StationNotFoundException e) {
+			logger.error(e.getLocalizedMessage());
+			throw new StationNotFoundException(e.getLocalizedMessage());
 
-		throw new StationException("STN001", "ManageStation", e.getStackTrace()[0].getClassName(),
-				e.getStackTrace()[0].getMethodName(), e.getStackTrace()[0].getLineNumber(),
-				"get chargers of specific station by station id", e.getLocalizedMessage());
-	}
-		return null;
-	}
+		} catch (ChargerNotFoundException e) {
+			logger.error(e.getLocalizedMessage());
+			throw new StationNotFoundException(e.getLocalizedMessage());
 
-	@Override
-	public Connector getConnector(String connectorId) {
-		if (!connectorId.isBlank()) {
-			Station s = stationRepository.findByConnectorId(connectorId);
-			List<Charger> cs = s.getChargers();
+		} catch (Exception e) {
+			logger.error("STN001", "ManageStation", e.getStackTrace()[0].getClassName(),
+					e.getStackTrace()[0].getMethodName(), e.getStackTrace()[0].getLineNumber(),
+					"get specific charger using charger id ", e.getLocalizedMessage());
 
-			if (!cs.isEmpty()) {
-
-				List<Connector> connectors = new ArrayList<>();
-
-				for (Charger c : cs) {
-					connectors = c.getConnectors();
-				}
-
-				Connector connector = null;
-
-				if (!connectors.isEmpty()) {
-
-					for (Connector list : connectors) {
-						if (list.getConnectorId().equals(connectorId)) {
-							connector = list;
-							break;
-						}
-					}
-					if (connector != null) {
-						return connector;
-					} else {
-						throw new InValidDataException(
-								"No Connectors Found. There is no Connector available in the Charger. Please Check and try again");
-					}
-				} else
-					throw new InValidDataException(
-							"No Connectors Found. There are no Connectors available in the Charger. Please Check and try again");
-
-			} else
-				throw new InValidDataException(
-						"No Charger Found. There are no Chargers available in the Station. Please Check and try again");
-
-		} else
-			throw new InValidIdExcepetion(
-					"Invalid Connector ID. The ID provided is not valid. Please check and try again.");
+			throw new StationException("STN001", "ManageStation", e.getStackTrace()[0].getClassName(),
+					e.getStackTrace()[0].getMethodName(), e.getStackTrace()[0].getLineNumber(),
+					"get specific charger using charger id", e.getLocalizedMessage());
+		}
 	}
 
-	@Override
-	public List<StationDTO1> getRequiredStationData() {
-		List<Station> stations = stationRepository.findAllByIsActiveTrue();
-		List<StationDTO1> dto1 = new ArrayList<>();
-		if (!stations.isEmpty()) {
-
-			for (Station s : stations) {
-				dto1.add(stationConveter.entitytoStationDTO1(s));
-			}
-			return dto1;
-		} else
-			return dto1;
-	}
-
-	@Override
-	public List<StationDTO1> stationforApplication(String query) {
-
-		List<StationDTO1> dtos = new ArrayList<>();
-		if (!query.isBlank()) {
-
-			List<Station> list = stationRepository
-					.findByStationNameContainingIgnoreCaseAndIsActiveTrueOrStationAreaContainingIgnoreCaseAndIsActiveTrueOrStationZipCodeContainingIgnoreCaseAndIsActiveTrueOrStationCityContainingIgnoreCaseAndIsActiveTrueOrStationStatusContainingIgnoreCaseAndIsActiveTrue(
-							query, query, query, query, query);
-
-			if (!list.isEmpty()) {
-
-				for (Station station : list) {
-					dtos.add(stationConveter.entitytoStationDTO1(station));
-				}
-				return dtos;
-			} else
-				return dtos;
-		} else
-			return dtos;
-	}
-
-	@Override
-	public Station getStation(String stationId) {
-		if (!stationId.isBlank() && stationId != null) {
-			Station station = stationRepository.findStationByStationId(stationId);
-			if (station != null)
-				return station;
-			else
-				throw new StationNotFoundException("Station Not Found");
-		} else
-			throw new InValidIdExcepetion(
-					"Invalid Connector ID. The ID provided is not valid. Please check and try again.");
-	}
-
-	@Override
-	public Charger getCharger(String chargerId) {
-		if (!chargerId.isBlank() && chargerId != null) {
-
-			Station station = stationRepository.findByChargerId(utility.stringSanitization(chargerId));
-
-			if (station != null) {
-
-				List<Charger> chargers = station.getChargers();
-
-				if (!chargers.isEmpty()) {
-
-					Charger charger = null;
-
-					for (Charger c : chargers) {
-						if (c.getChargerId().equals(utility.stringSanitization(chargerId))) {
-							charger = c;
-							break;
-						}
-					}
-					if (charger != null) {
-						if (charger.isActive() == true)
-							return charger;
-						else
-							return null;
-					} else
-						throw new InValidDataException(
-								"Charger Not Found. There is no Charger available in the Station. Please Check and try again");
-				} else
-					throw new InValidDataException(
-							"Chargers Not Found. There are no Chargers available in the Station. Please Check and try again");
-			} else
-				throw new InValidDataException(
-						"Station Not Found. There is not station available. Please Check and try again");
-		} else
-			throw new InValidIdExcepetion(
-					"Invalid Charger ID. The ID provided is not valid. Please check and try again.");
-	}
-
+	/**
+	 * Usage: get list of station in specific radius of map
+	 * 
+	 * @param latitute, longitute, max distance
+	 * @return station list
+	 */
+	@Transactional
 	@Override
 	public List<StationDTO1> getAllStationforRadius(double longitude, double latitude, double maxDistance) {
-
+		logger.info("StationServiceImpl :: getAllStationforRadius : execution Started");
+		try {
 		if (latitude != 0 && longitude != 0 && maxDistance != 0) {
 			double longt = utility.sanitizeCoordinate(longitude);
 			double lat = utility.sanitizeCoordinate(latitude);
@@ -1489,42 +1638,91 @@ public class StationServiceImpl implements StationServiceInterface {
 						finalList.add(stationConveter.entitytoStationDTO1(s));
 					}
 				}
+				logger.info("StationServiceImpl :: getAllStationforRadius : execution ended");
 				return finalList;
 			} else
 				return finalList;
 		} else
 			throw new InValidIdExcepetion("Provided Correct Longitude, Latitude Please check and try again.");
+		
+		} catch (InValidIdExcepetion e) {
+			logger.error(e.getLocalizedMessage());
+			throw new StationIdNotAcceptableException(e.getLocalizedMessage());
+
+		} catch (Exception e) {
+			logger.error("STN001", "ManageStation", e.getStackTrace()[0].getClassName(),
+					e.getStackTrace()[0].getMethodName(), e.getStackTrace()[0].getLineNumber(),
+					"get stations of specific radius in map ", e.getLocalizedMessage());
+
+			throw new StationException("STN001", "ManageStation", e.getStackTrace()[0].getClassName(),
+					e.getStackTrace()[0].getMethodName(), e.getStackTrace()[0].getLineNumber(),
+					"get stations of specific radius in map ", e.getLocalizedMessage());
+		}
 	}
 
+	/**
+	 * Usage: remove charger using charger id
+	 * 
+	 * {@link @removeStationCharger} pass the station and charger id
+	 * @param chargerId
+	 * @return boolean (true/false)
+	 */
+	@Transactional
 	@Override
 	public boolean removeCharger(String chargerId) {
+		logger.info("StationServiceImpl :: removeCharger : execution Started");
+		try {
 		if (!chargerId.isBlank() && chargerId != null) {
 			Station station = stationRepository.findByChargerId(utility.stringSanitization(chargerId));
 			String stationId = station.getStationId();
-			if (removeStationCharger(stationId, chargerId) == true)
+			if (removeStationCharger(stationId, chargerId) == true) {
+				logger.info("StationServiceImpl :: removeCharger : execution ended");
 				return true;
-			else
+			}else
 				return false;
 		} else
 			throw new InValidIdExcepetion(
 					"Invalid Charger ID. The ID provided is not valid. Please check and try again.");
+		
+		} catch (InValidIdExcepetion e) {
+			logger.error(e.getLocalizedMessage());
+			throw new StationIdNotAcceptableException(e.getLocalizedMessage());
+
+		} catch (Exception e) {
+			logger.error("STN001", "ManageStation", e.getStackTrace()[0].getClassName(),
+					e.getStackTrace()[0].getMethodName(), e.getStackTrace()[0].getLineNumber(),
+					"remove charger by charger id and call the remove station charger method", e.getLocalizedMessage());
+
+			throw new StationException("STN001", "ManageStation", e.getStackTrace()[0].getClassName(),
+					e.getStackTrace()[0].getMethodName(), e.getStackTrace()[0].getLineNumber(),
+					"remove charger by charger id and call the remove station charger method", e.getLocalizedMessage());
+		}
 	}
 
-	@Override
-	public boolean updateConnectorById(String connectorId, ConnectorDTO connectorDTO) {
-		Station station = stationRepository.findByConnectorId(utility.stringSanitization(connectorId));
-		String chargerId = station.getChargers().get(0).getChargerId();
-		String stationId = station.getStationId();
-		if (updateConnector(stationId, chargerId, connectorId, connectorDTO) == true)
-			return true;
-		else
-			return false;
-	}
-
+	/**
+	 * Usage: to find station by name and address
+	 * 
+	 * @param station list
+	 * @return station list
+	 */
+	@Transactional
 	@Override
 	public StationFindDTO getNameAndAddressStation(String stationId) {
+		logger.info("StationServiceImpl :: getNameAndAddressStation : execution Started");
+		try {
 		Station station = stationRepository.findByStationId(utility.stringSanitization(stationId));
+		logger.info("StationServiceImpl :: getNameAndAddressStation : execution ended");
 		return stationConveter.entitytoStationFind(station);
+		
+		} catch (Exception e) {
+			logger.error("STN001", "ManageStation", e.getStackTrace()[0].getClassName(),
+					e.getStackTrace()[0].getMethodName(), e.getStackTrace()[0].getLineNumber(),
+					"get name and address of a specific station", e.getLocalizedMessage());
+
+			throw new StationException("STN001", "ManageStation", e.getStackTrace()[0].getClassName(),
+					e.getStackTrace()[0].getMethodName(), e.getStackTrace()[0].getLineNumber(),
+					"get name and address of specific station", e.getLocalizedMessage());
+		}
 	}
 
 	public List<String> am() {
@@ -1634,7 +1832,6 @@ public class StationServiceImpl implements StationServiceInterface {
 			stn.getChargers().add(charger);
 			stationRepository.save(stn);
 		}
-
 	}
 
 	public void addMultipleConnector() {
@@ -1668,10 +1865,6 @@ public class StationServiceImpl implements StationServiceInterface {
 				stn.setChargers(chargers);
 				stationRepository.save(stn);
 			}
-
 		}
-
 	}
-
-
 }

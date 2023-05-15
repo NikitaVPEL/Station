@@ -13,5 +13,12 @@ public class StationErrorResponse {
     private HttpStatus status;
     private String statusCode;
     private LocalDateTime timeStamp;
+    
+	private String serviceCode;
+	private String serviceName;
+	private String className;
+	private String methodName;
+	private int lineNumber;
+	private String functionality;
 }
 
