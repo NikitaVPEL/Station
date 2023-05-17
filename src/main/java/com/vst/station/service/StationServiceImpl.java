@@ -723,22 +723,25 @@ public class StationServiceImpl implements StationServiceInterface {
 												if (obj.getConnectorType() != null && !obj.getConnectorType().isBlank())
 													conn.setConnectorType(obj.getConnectorType());
 
-												if (obj.getConnectorSocket() != null && !obj.getConnectorSocket().isBlank())
+												if (obj.getConnectorSocket() != null
+														&& !obj.getConnectorSocket().isBlank())
 													conn.setConnectorSocket(obj.getConnectorSocket());
 
-												if (obj.getConnectorStatus() != null && !obj.getConnectorStatus().isBlank())
+												if (obj.getConnectorStatus() != null
+														&& !obj.getConnectorStatus().isBlank())
 													conn.setConnectorStatus(obj.getConnectorStatus());
 
 												if (obj.getConnectorOutputPower() != null
 														&& !obj.getConnectorOutputPower().isBlank())
 													conn.setConnectorOutputPower(obj.getConnectorOutputPower());
 
-												if (obj.getConnectorCharges() != null && !obj.getConnectorCharges().isBlank())
+												if (obj.getConnectorCharges() != null
+														&& !obj.getConnectorCharges().isBlank())
 													conn.setConnectorCharges(obj.getConnectorCharges());
 
 												conn.setModifiedBy("Admin");
 												conn.setModifiedDate(idAndDateGenerator.dateSetter());
-												
+
 												connectorList.set(j, conn);
 												charger.setConnectors(connectorList);
 												charger.setModifiedDate(idAndDateGenerator.dateSetter());
@@ -800,7 +803,7 @@ public class StationServiceImpl implements StationServiceInterface {
 					e.getStackTrace()[0].getMethodName(), e.getStackTrace()[0].getLineNumber(),
 					"update connector using connector id ", e.getLocalizedMessage());
 		}
-	
+
 	}
 
 	/**
@@ -1624,27 +1627,28 @@ public class StationServiceImpl implements StationServiceInterface {
 	public List<StationDTO1> getAllStationforRadius(double longitude, double latitude, double maxDistance) {
 		logger.info("StationServiceImpl :: getAllStationforRadius : execution Started");
 		try {
-		if (latitude != 0 && longitude != 0 && maxDistance != 0) {
-			double longt = utility.sanitizeCoordinate(longitude);
-			double lat = utility.sanitizeCoordinate(latitude);
-			double minDistance = 10;
-			String type = "Point";
-			List<Station> stations = stationRepository.findByGeoLocation(type, longt, lat, maxDistance, minDistance);
-			List<StationDTO1> finalList = new ArrayList<>();
-			if (!stations.isEmpty()) {
+			if (latitude != 0 && longitude != 0 && maxDistance != 0) {
+				double longt = utility.sanitizeCoordinate(longitude);
+				double lat = utility.sanitizeCoordinate(latitude);
+				double minDistance = 10;
+				String type = "Point";
+				List<Station> stations = stationRepository.findByGeoLocation(type, longt, lat, maxDistance,
+						minDistance);
+				List<StationDTO1> finalList = new ArrayList<>();
+				if (!stations.isEmpty()) {
 
-				for (Station s : stations) {
-					if (s.isActive() == true) {
-						finalList.add(stationConveter.entitytoStationDTO1(s));
+					for (Station s : stations) {
+						if (s.isActive() == true) {
+							finalList.add(stationConveter.entitytoStationDTO1(s));
+						}
 					}
-				}
-				logger.info("StationServiceImpl :: getAllStationforRadius : execution ended");
-				return finalList;
+					logger.info("StationServiceImpl :: getAllStationforRadius : execution ended");
+					return finalList;
+				} else
+					return finalList;
 			} else
-				return finalList;
-		} else
-			throw new InValidIdExcepetion("Provided Correct Longitude, Latitude Please check and try again.");
-		
+				throw new InValidIdExcepetion("Provided Correct Longitude, Latitude Please check and try again.");
+
 		} catch (InValidIdExcepetion e) {
 			logger.error(e.getLocalizedMessage());
 			throw new StationIdNotAcceptableException(e.getLocalizedMessage());
@@ -1664,6 +1668,7 @@ public class StationServiceImpl implements StationServiceInterface {
 	 * Usage: remove charger using charger id
 	 * 
 	 * {@link @removeStationCharger} pass the station and charger id
+	 * 
 	 * @param chargerId
 	 * @return boolean (true/false)
 	 */
@@ -1672,18 +1677,18 @@ public class StationServiceImpl implements StationServiceInterface {
 	public boolean removeCharger(String chargerId) {
 		logger.info("StationServiceImpl :: removeCharger : execution Started");
 		try {
-		if (!chargerId.isBlank() && chargerId != null) {
-			Station station = stationRepository.findByChargerId(utility.stringSanitization(chargerId));
-			String stationId = station.getStationId();
-			if (removeStationCharger(stationId, chargerId) == true) {
-				logger.info("StationServiceImpl :: removeCharger : execution ended");
-				return true;
-			}else
-				return false;
-		} else
-			throw new InValidIdExcepetion(
-					"Invalid Charger ID. The ID provided is not valid. Please check and try again.");
-		
+			if (!chargerId.isBlank() && chargerId != null) {
+				Station station = stationRepository.findByChargerId(utility.stringSanitization(chargerId));
+				String stationId = station.getStationId();
+				if (removeStationCharger(stationId, chargerId) == true) {
+					logger.info("StationServiceImpl :: removeCharger : execution ended");
+					return true;
+				} else
+					return false;
+			} else
+				throw new InValidIdExcepetion(
+						"Invalid Charger ID. The ID provided is not valid. Please check and try again.");
+
 		} catch (InValidIdExcepetion e) {
 			logger.error(e.getLocalizedMessage());
 			throw new StationIdNotAcceptableException(e.getLocalizedMessage());
@@ -1710,10 +1715,10 @@ public class StationServiceImpl implements StationServiceInterface {
 	public StationFindDTO getNameAndAddressStation(String stationId) {
 		logger.info("StationServiceImpl :: getNameAndAddressStation : execution Started");
 		try {
-		Station station = stationRepository.findByStationId(utility.stringSanitization(stationId));
-		logger.info("StationServiceImpl :: getNameAndAddressStation : execution ended");
-		return stationConveter.entitytoStationFind(station);
-		
+			Station station = stationRepository.findByStationId(utility.stringSanitization(stationId));
+			logger.info("StationServiceImpl :: getNameAndAddressStation : execution ended");
+			return stationConveter.entitytoStationFind(station);
+
 		} catch (Exception e) {
 			logger.error("STN001", "ManageStation", e.getStackTrace()[0].getClassName(),
 					e.getStackTrace()[0].getMethodName(), e.getStackTrace()[0].getLineNumber(),
@@ -1725,146 +1730,85 @@ public class StationServiceImpl implements StationServiceInterface {
 		}
 	}
 
-	public List<String> am() {
-		ArrayList<String> list = new ArrayList<>();
-		list.add("Restrooms");
-		list.add("Lounge Area");
-		list.add("Food Service");
-		list.add("Shops");
-		list.add("Movie Theater");
-		return list;
+	/**
+	 * Usage: change the charger status active/ inactive
+	 * 
+	 * @param String stationId, List<String> chargerIdList, String status
+	 * @return true/false
+	 */
+	@Transactional
+	@Override
+	public boolean updateChargerStatus(String stationId, List<String> chargerIdList, String status) {
+		logger.info("StationServiceImpl :: updateChargerStatus : execution Started");
+		try {
+			if (stationId != null && !stationId.isBlank() && !chargerIdList.isEmpty()
+					&& status.equalsIgnoreCase("inactive") || status.equalsIgnoreCase("active")) {
 
-	}
+				Station station = stationRepository
+						.findByStationIdAndIsActiveTrue(utility.stringSanitization(stationId));
+				if (station != null) {
+					List<Charger> chargers = station.getChargers();
 
-	public void mul() {
-		Coordinate coordinate = new Coordinate();
-		for (int i = 0; i < 100; i++) {
-			Station station = new Station();
-			Location location = new Location();
-			Station obj = null;
-			while (true) {
-				String id = "STN" + idAndDateGenerator.idGenerator();
-				obj = stationRepository.findByStationId(id);
-				if (obj == null) {
-					station.setStationId(id);
-					break;
-				}
-			}
-			station.setStationName("Random");
-			station.setStationHostId("HST00" + i);
-			station.setStationVendorId("VTN00" + i);
-			station.setStationArea("Random");
-			double a[] = location.getCoordinates();
-//			a[0] = coordinates.generateLongitude(i);
-//			a[1] = coordinates.generateLatitude(i);
-			a[0] = coordinate.generatelongitude();
-			a[1] = coordinate.generatelatitude();
-			location.setCoordinates(a);
-			station.setLocation(location);
-			station.setStationLatitude(a[1]);
-			station.setStationLongitude(a[0]);
-			station.setStationLocationURL(
-					"https://www.google.com/maps/place/Electric+Vehicle+Charging+Station/@18.5542818,73.923676,14z/");
-			station.setStationParkingArea("150sqft");
-			station.setStationCity("Pune");
-			station.setStationAddressLineOne(
-					"108, 109, Pride Icon, Mundhwa - Kharadi Rd, next to Columbia Asia Hospital");
-			station.setStationAddressLineTwo("Thite Vasti, Thite Nagar, Hadapsar,Pune, Maharashtra");
-			station.setStationZipCode(" 411014");
-			station.setStationContactNumber("+919876543210");
-			station.setStationWorkingTime("9:00 AM - 10:00 PM");
-			station.setChargerNumber(i + 1);
-			station.setStationParkingType("Private");
-			station.setStationAmenity(am());
-			station.setStationShareId("ST000" + i);
-			station.setStationStatus("Busy");
-			station.setStationPowerStandard("IS-17017");
-			station.setCreatedDate(idAndDateGenerator.dateSetter());
-			station.setModifiedDate(idAndDateGenerator.dateSetter());
-			station.setCreatedBy("Admin");
-			station.setModifiedBy("Admin");
-			station.setActive(true);
-			try {
-				stationRepository.save(station);
-			} catch (Exception e) {
-				System.out.println(e);
-			}
+					if (!chargers.isEmpty()) {
+						for (String chargerId : chargerIdList) {
+
+							for (int i = 0; i < chargers.size(); i++) {
+								Charger charger = chargers.get(i);
+								if (charger.isActive()
+										&& charger.getChargerId().equals(utility.stringSanitization(chargerId))) {
+
+									List<Connector> connectors = charger.getConnectors();
+									for (int j = 0; j < connectors.size(); j++) {
+										Connector connector = connectors.get(j);
+										if (status.equalsIgnoreCase("Active")) {
+											connector.setConnectorStatus("Available");
+										} else
+											connector.setConnectorStatus("OutOfOrder");
+										charger.setChargerStatus(utility.toTitleCase(status));
+
+										connectors.set(j, connector);
+										charger.setConnectors(connectors);
+										chargers.set(i, charger);
+										station.setChargers(chargers);
+									}
+								}
+							}
+						}
+						if (stationRepository.save(station) != null) {
+							logger.info("StationServiceImpl :: updateChargerStatus : execution ended");
+							return true;
+						} else
+							return false;
+					} else
+						throw new ChargerNotFoundException(
+								"Chargers Not Found. There are no Chargers available in the Station. Please Check and try again");
+				} else
+					throw new StationNotFoundException(
+							"Station Not Found. There is not station available. Please Check and try again");
+			} else
+				throw new InValidDataException("Invalid ID, please provide valid data and try again");
+
+		} catch (InValidDataException e) {
+			logger.error(e.getLocalizedMessage());
+			throw new StationIdNotAcceptableException(e.getLocalizedMessage());
+
+		} catch (StationNotFoundException e) {
+			logger.error(e.getLocalizedMessage());
+			throw new StationIdNotAcceptableException(e.getLocalizedMessage());
+
+		} catch (ChargerNotFoundException e) {
+			logger.error(e.getLocalizedMessage());
+			throw new StationIdNotAcceptableException(e.getLocalizedMessage());
+
+		} catch (Exception e) {
+			logger.error("STN001", "ManageStation", e.getStackTrace()[0].getClassName(),
+					e.getStackTrace()[0].getMethodName(), e.getStackTrace()[0].getLineNumber(),
+					"change the charger status active/ inactive", e.getLocalizedMessage());
+
+			throw new StationException("STN001", "ManageStation", e.getStackTrace()[0].getClassName(),
+					e.getStackTrace()[0].getMethodName(), e.getStackTrace()[0].getLineNumber(),
+					"change the charger status active/ inactive", e.getLocalizedMessage());
 		}
-	}
 
-	public void addMultipleCharger() {
-
-		List<Station> stations = stationRepository.findAll();
-
-		for (int i = 0; i < stations.size(); i++) {
-
-			Station stn = stations.get(i);
-
-			Charger charger = new Charger();
-
-			charger.setChargerName("AC charger" + i);
-			charger.setChargerNumber(2);
-			charger.setChargerInputVoltage("220v");
-			charger.setChargerOutputVoltage("12V");
-			charger.setChargerMaxInputAmpere("10A");
-			charger.setChargerMaxInputAmpere("20A");
-			charger.setChargerOutputAmpere("50A");
-			charger.setChargerInputFrequency("50Hz");
-			charger.setChargerOutputFrequency("90Hz");
-			charger.setChargerIPRating("IP67");
-			charger.setChargerMountType("wall mounted");
-			charger.setIsRFID("true");
-			charger.setChargerSerialNumber("CHG1234" + i);
-			charger.setChargerOCPPProtocol("Modbus");
-			charger.setChargerConnectorType("type2");
-			charger.setIsAppSupport("true");
-			charger.setIsTBCutOff("false");
-			charger.setIsAntitheft("true");
-			charger.setIsLEDIndications("true");
-			charger.setIsLEDDisplay("true");
-			charger.setIsSmart("true");
-			charger.setChargerId("CHG" + idAndDateGenerator.idGenerator());
-			charger.setActive(true);
-			charger.setCreatedBy("Admin");
-			charger.setModifiedBy("Admin");
-			charger.setCreatedDate(idAndDateGenerator.dateSetter());
-			charger.setModifiedDate(idAndDateGenerator.dateSetter());
-			stn.getChargers().add(charger);
-			stationRepository.save(stn);
-		}
-	}
-
-	public void addMultipleConnector() {
-
-		List<Station> stations = stationRepository.findAll();
-
-		for (int i = 0; i < stations.size(); i++) {
-
-			Station stn = stations.get(i);
-
-			List<Charger> chargers = stn.getChargers();
-
-			for (int j = 0; j < chargers.size(); j++) {
-				Charger charger = chargers.get(j);
-				Connector connector = new Connector();
-
-				connector.setConnectorNumber(2);
-				connector.setConnectorType("Type 2");
-				connector.setConnectorSocket("Socket B");
-				connector.setConnectorStatus("available");
-				connector.setConnectorOutputPower("60W");
-				connector.setConnectorCharges("20RS");
-				connector.setConnectorId("CONN" + idAndDateGenerator.idGenerator());
-				connector.setActive(true);
-				connector.setCreatedBy("Admin");
-				connector.setCreatedDate(idAndDateGenerator.dateSetter());
-				connector.setModifiedBy("Admin");
-				connector.setModifiedDate(idAndDateGenerator.dateSetter());
-				charger.getConnectors().add(connector);
-				chargers.set(j, charger);
-				stn.setChargers(chargers);
-				stationRepository.save(stn);
-			}
-		}
 	}
 }

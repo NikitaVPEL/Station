@@ -1,5 +1,12 @@
 package com.vst.station.converter;
 
+/**
+* Station converter class is to convert the data of dto class to entity and entity class to dto to not expose the sensitive information.
+*
+* @author Nikita Chakole <nikita.chakole@vpel.in>
+* @since  21/12/2022
+*/
+
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -24,16 +31,6 @@ public class StationConveter {
 	public Station dtoToEntity(StationDTO stationDTO) {
 		Station station = new Station();
 		BeanUtils.copyProperties(stationDTO, station);
-
-		List<ChargerDTO> chargerList = stationDTO.getChargers();
-		if (chargerList != null) {
-			List<Charger> chargers = new ArrayList<>();
-
-			for (ChargerDTO chargerDTO : chargerList) {
-				chargers.add(chargerConverter.dtoToEntity(chargerDTO));
-			}
-			station.setChargers(chargers);
-		}
 		return station;
 	}
 

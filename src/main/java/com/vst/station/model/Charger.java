@@ -46,6 +46,7 @@ public class Charger {
 	private String isLEDDisplay;
 	private String isLEDIndications;
 	private String isSmart;
+	private String chargerStatus;
 	private Date createdDate;
 	private Date modifiedDate;
 	private String createdBy;

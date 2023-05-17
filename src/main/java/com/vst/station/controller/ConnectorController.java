@@ -26,58 +26,96 @@ import com.vst.station.service.StationServiceImpl;
 @CrossOrigin(origins = "*")
 @RestController
 public class ConnectorController {
-	
+
 	@Autowired
 	StationServiceImpl stationServiceImpl;
-	
-	boolean flag=false;
+
+	boolean flag = false;
 
 	public static final Logger logger = LogManager.getLogger(ConnectorController.class);
-	
+
+	/**
+	 * Usage: Add new Connector in specific station charger
+	 * 
+	 * HTTP method : POST and URL : manageConnector/addConnector
+	 * 
+	 * @param stationId, chargerId, connectorDTO
+	 * @return Http responce and string message "Connector added successfully"
+	 */
 	@PostMapping("/addConnector")
 	public ResponseEntity<String> addStationConnector(@RequestParam("stationId") String stationId,
 			@RequestParam("chargerId") String chargerId, @RequestBody ConnectorDTO connectorDTO) {
-		 flag = stationServiceImpl.addConnector(stationId, chargerId, connectorDTO);
+		flag = stationServiceImpl.addConnector(stationId, chargerId, connectorDTO);
 		if (flag == true)
 			return new ResponseEntity<>("Connector Added Successfully", HttpStatus.OK);
 		else
 			return new ResponseEntity<>("Connector not Added. Please check and try Again", HttpStatus.NOT_FOUND);
 	}
-	
+
+	/**
+	 * Usage: update the Connector details
+	 * 
+	 * HTTP method : PUT and URL : manageConnector/updateConnector
+	 * 
+	 * @param connectorId, connectorDTO
+	 * @return Http responce and string message "Connector updated successfully"
+	 */
 	@PutMapping("/updateConnector")
-	public ResponseEntity<String> updateConnectorDetailsById(@RequestParam("connectorId") String connectorId, @RequestBody ConnectorDTO connectorDTO){
+	public ResponseEntity<String> updateConnectorDetailsById(@RequestParam("connectorId") String connectorId,
+			@RequestBody ConnectorDTO connectorDTO) {
 		boolean flag = stationServiceImpl.updateConnectorById(connectorId, connectorDTO);
-		if(flag==true)
+		if (flag == true)
 			return new ResponseEntity<>("Connector Update Succesfully", HttpStatus.OK);
 		else
-			return new ResponseEntity<>("Connector Details not updated, Please check and try again", HttpStatus.NOT_FOUND);
+			return new ResponseEntity<>("Connector Details not updated, Please check and try again",
+					HttpStatus.NOT_FOUND);
 	}
-	
+
+	/**
+	 * Usage: Get/read the details of all the available connector in specific
+	 * station charger
+	 * 
+	 * HTTP method : GET and URL : manageConnector/getConnectors
+	 * 
+	 * @param stationId, chargerId
+	 * @return Http responce and list of connector object
+	 */
 	@GetMapping("/getConnectors")
 	public ResponseEntity<List<Connector>> getAllConnectors(@RequestParam("stationId") String stationId,
 			@RequestParam("chargerId") String chargerId) {
 		return ResponseEntity.ok(stationServiceImpl.getAllStationConnector(stationId, chargerId));
 	}
-	
+
+	/**
+	 * Usage: Get the Connector object/ details by Connector Id
+	 * 
+	 * HTTP method : GET and URL : manageConnector/getConnector
+	 * 
+	 * @param connectorId
+	 * @return Http responce and Connector object
+	 */
 	@GetMapping("/getConnector")
 	public ResponseEntity<Connector> getConnectorById(@RequestParam("connectorId") String connectorId) {
 		return ResponseEntity.ok(stationServiceImpl.getConnector(connectorId));
 	}
-	
+
+	/**
+	 * Usage: delete the specific Connector using connector Id
+	 * 
+	 * HTTP method : DELETE and URL : manageConnector/deleteConnector
+	 * 
+	 * @param connectorId
+	 * @return Http responce and string message "Connector successfully deleted"
+	 */
 	@DeleteMapping("/deleteConnector")
 	public ResponseEntity<String> deleteConnector(@RequestParam("connectorId") String connectorId) {
-		boolean flag =stationServiceImpl.removeConnector(connectorId);
-		if(flag==true)
+		boolean flag = stationServiceImpl.removeConnector(connectorId);
+		if (flag == true)
 			return new ResponseEntity<>("Connector Deleted Succesfully", HttpStatus.OK);
 		else
 			return new ResponseEntity<>("Connector Not Deleted. Please try again", HttpStatus.NOT_FOUND);
 	}
 	
-	@GetMapping("/addMultipleConnector")
-	public String multipleAdd() { 
-		stationServiceImpl.addMultipleConnector();
-		return "connector added successfully";
-	}
-			
-			
+
+
 }

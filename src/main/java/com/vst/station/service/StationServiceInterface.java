@@ -58,7 +58,8 @@ public interface StationServiceInterface {
 	
 	List<StationDTO1> getAllStationforRadius (double longitude, double latitude, double maxDistance);
 	
-
+	public boolean updateChargerStatus(String stationId, List<String> chargerIdList, String status);
+	
 	
 	public boolean removeCharger(String chargerId);
 	

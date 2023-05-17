@@ -1,6 +1,6 @@
 package com.vst.station.controller;
 
-
+import java.util.List;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -25,47 +25,79 @@ import com.vst.station.service.StationServiceImpl;
 @CrossOrigin(origins = "*")
 @RestController
 public class ChargerController {
-	
+
 	@Autowired
 	StationServiceImpl stationServiceImpl;
-	
-	boolean flag=false;
+
+	boolean flag = false;
 
 	public static final Logger logger = LogManager.getLogger(ChargerController.class);
-	
+
+	/**
+	 * Usage: Add new Charger specific station
+	 * 
+	 * HTTP method : POST and URL : manageCharger/addCharger
+	 * 
+	 * @param stationId, chargerDTO
+	 * @return Http responce and string message "Charger added successfully"
+	 */
 	@PostMapping("/addCharger")
 	public ResponseEntity<String> addStationChargers(@RequestParam("stationId") String stationId,
 			@RequestBody ChargerDTO chargerDTO) {
-		 flag = stationServiceImpl.addCharger(stationId, chargerDTO);
+		flag = stationServiceImpl.addCharger(stationId, chargerDTO);
 		if (flag == true)
 			return new ResponseEntity<>("Charger Added Successfully", HttpStatus.OK);
 		else
 			return new ResponseEntity<>("Please Check and try Again", HttpStatus.NOT_FOUND);
 	}
-	
+
+	/**
+	 * Usage: update the Charger details
+	 * 
+	 * HTTP method : PUT and URL : manageCharger/udpateCharger
+	 * 
+	 * @param stationId, chargerId, chargerDTO
+	 * @return Http responce and string message "Charger updated successfully"
+	 */
 	@PutMapping("/udpateCharger")
 	public ResponseEntity<String> chargerUpdate(@RequestParam("stationId") String stationId,
 			@RequestParam("chargerId") String chargerId, @RequestBody ChargerDTO chargerDTO) {
 		System.out.println("executed");
-		flag =stationServiceImpl.updateCharger(stationId, chargerId, chargerDTO);
-		if(flag==true)
-		return new ResponseEntity<>("Charger Details Updated Succesfully", HttpStatus.OK);
+		flag = stationServiceImpl.updateCharger(stationId, chargerId, chargerDTO);
+		if (flag == true)
+			return new ResponseEntity<>("Charger Details Updated Succesfully", HttpStatus.OK);
 		else
 			return new ResponseEntity<>("Please Check and try Again", HttpStatus.NOT_FOUND);
 	}
-	
+
+	/**
+	 * Usage: delete the specific Charger using Station Id
+	 * 
+	 * HTTP method : DELETE and URL : manageCharger/deleteCharger
+	 * 
+	 * @param chargerId
+	 * @return Http responce and string message "Charger successfully deleted"
+	 */
 	@DeleteMapping("/deleteCharger")
 	public ResponseEntity<String> deleteCharger(@RequestParam("chargerId") String chargerId) {
-		 flag = stationServiceImpl.removeCharger(chargerId);
+		flag = stationServiceImpl.removeCharger(chargerId);
 		if (flag == true) {
 			return new ResponseEntity<>("Charger Deleted Successfully", HttpStatus.OK);
 		} else
 			return new ResponseEntity<>("Charger Not Deleted.Please Check and Try again.", HttpStatus.NOT_FOUND);
 	}
-	
+
+	/**
+	 * Usage: Get the details of all the available Chargers in specific station
+	 * 
+	 * HTTP method : GET and URL : manageCharger/getChargers
+	 * 
+	 * @param stationId
+	 * @return Http responce and list of Charger object
+	 */
 	@GetMapping("/getChargers")
-	public ResponseEntity<?> getStationChargers(@RequestParam("stationId") String stationId) {
-	
+	public ResponseEntity<List<Charger>> getStationChargers(@RequestParam("stationId") String stationId) {
+
 		return ResponseEntity.ok(stationServiceImpl.getAllStationChargers(stationId));
 //		List<Charger> list = stationServiceImpl.getAllStationChargers(stationId);
 //		if (!list.isEmpty())
@@ -73,7 +105,15 @@ public class ChargerController {
 //		else
 //			return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Charger Not Available in Station. Please Check another Station");
 	}
-	
+
+	/**
+	 * Usage: Get the Charger object/ details by Charger Id
+	 * 
+	 * HTTP method : GET and URL : manageCharger/getCharger
+	 * 
+	 * @param chargerId
+	 * @return Http responce and Charger object
+	 */
 	@GetMapping("/getCharger")
 	public ResponseEntity<?> getStationCharger(@RequestParam("chargerId") String chargerId) {
 		Charger charger = stationServiceImpl.getCharger(chargerId);
@@ -82,11 +122,24 @@ public class ChargerController {
 		else
 			return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Charger Not Present of the Specified of ID");
 	}
-	
-	@GetMapping("/addMultipleCharger")
-	public String addMultipleCharger() {
-		stationServiceImpl.addMultipleCharger();
-		return "charger saved successfully";
+
+	/**
+	 * Usage: update the Charger status to active/inactive
+	 * 
+	 * HTTP method : PUT and URL : manageCharger/udpateChargerStatus
+	 * 
+	 * @param stationId, charrgerIdList, status
+	 * @return Http responce and string message "Charger activated successfully"
+	 */
+	@PutMapping("/updateChargerStatus")
+	public ResponseEntity<String> updtaeChargerStatus(@RequestParam("stationId") String stationId,
+			@RequestParam("chargerId") List<String> charrgerIdList, @RequestParam("chargerStatus") String status) {
+		if (stationServiceImpl.updateChargerStatus(stationId, charrgerIdList, status) == true) {
+			return new ResponseEntity<>("Charger "+status + "ted Successfully", HttpStatus.OK);
+		}else 
+		return new ResponseEntity<>("Charger not "+status , HttpStatus.NOT_MODIFIED);
+		
+
 	}
 
 }

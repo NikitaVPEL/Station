@@ -45,6 +45,7 @@ public class ChargerDTO {
 	private String isLEDDisplay;
 	private String isLEDIndications;
 	private String isSmart;
+	private String chargerStatus;
 	private Date createdDate;
 	private Date modifiedDate;
 	private String createdBy;
