@@ -236,4 +236,25 @@ public class StationController {
 		return ResponseEntity.ok(stationServiceImpl.getNameAndAddressStation(stationId));
 	}
 
+	@PostMapping("/addUserAccess")
+	public ResponseEntity<String> addUserAccess(@RequestParam("stationId") String stationId,
+			@RequestParam("contactNo") String contactNo, @RequestParam("emailId") String emailId) {
+		if (stationServiceImpl.addUserAccess(stationId, contactNo, emailId)==true) {
+			return ResponseEntity.ok("user access added successfully");
+		}else
+			return new ResponseEntity<>("user access already exist",HttpStatus.NOT_FOUND);
+	}
+	
+	@GetMapping("/getUserAccess")
+	public ResponseEntity<String> showUserAccess(@RequestParam("stationId") String stationId,
+			@RequestParam("contactNo") String contactNo, @RequestParam("emailId") String emailId) {
+		String userId = stationServiceImpl.showUserAccess(stationId, contactNo, emailId);
+		if (userId!=null) {
+			return ResponseEntity.ok("User Found");
+		}else
+			return new ResponseEntity<>("User Not Found",HttpStatus.NOT_FOUND);
+           
+		
+	}
+
 }

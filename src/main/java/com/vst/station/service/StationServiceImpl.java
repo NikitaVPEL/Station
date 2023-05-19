@@ -1,5 +1,10 @@
 package com.vst.station.service;
 
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.URL;
+
 /**
 * Service layer to write the business logic and throw the exception. 
 *
@@ -11,6 +16,7 @@ package com.vst.station.service;
 
 import java.time.Instant;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 import javax.transaction.Transactional;
@@ -139,9 +145,9 @@ public class StationServiceImpl implements StationServiceInterface {
 
 		} catch (Exception e) {
 
-			logger.error("STN001", "ManageStation", e.getStackTrace()[0].getClassName(),
+			logger.error(new StationException("STN001", "ManageStation", e.getStackTrace()[0].getClassName(),
 					e.getStackTrace()[0].getMethodName(), e.getStackTrace()[0].getLineNumber(), "Add New Station",
-					e.getLocalizedMessage());
+					e.getLocalizedMessage()));
 
 			throw new StationException("STN001", "ManageStation", e.getStackTrace()[0].getClassName(),
 					e.getStackTrace()[0].getMethodName(), e.getStackTrace()[0].getLineNumber(), "Add New Station",
@@ -210,9 +216,9 @@ public class StationServiceImpl implements StationServiceInterface {
 
 		} catch (Exception e) {
 
-			logger.error("STN001", "ManageStation", e.getStackTrace()[0].getClassName(),
+			logger.error(new StationException("STN001", "ManageStation", e.getStackTrace()[0].getClassName(),
 					e.getStackTrace()[0].getMethodName(), e.getStackTrace()[0].getLineNumber(), "Add New Charger",
-					e.getLocalizedMessage());
+					e.getLocalizedMessage()));
 
 			throw new StationException("STN001", "ManageStation", e.getStackTrace()[0].getClassName(),
 					e.getStackTrace()[0].getMethodName(), e.getStackTrace()[0].getLineNumber(), "Add New Charger",
@@ -298,9 +304,9 @@ public class StationServiceImpl implements StationServiceInterface {
 
 		} catch (Exception e) {
 
-			logger.error("STN001", "ManageStation", e.getStackTrace()[0].getClassName(),
+			logger.error(new StationException("STN001", "ManageStation", e.getStackTrace()[0].getClassName(),
 					e.getStackTrace()[0].getMethodName(), e.getStackTrace()[0].getLineNumber(), "Add New Connector",
-					e.getLocalizedMessage());
+					e.getLocalizedMessage()));
 
 			throw new StationException("STN001", "ManageStation", e.getStackTrace()[0].getClassName(),
 					e.getStackTrace()[0].getMethodName(), e.getStackTrace()[0].getLineNumber(), "Add New Connector",
@@ -466,9 +472,9 @@ public class StationServiceImpl implements StationServiceInterface {
 
 		} catch (Exception e) {
 
-			logger.error("STN001", "ManageStation", e.getStackTrace()[0].getClassName(),
+			logger.error(new StationException("STN001", "ManageStation", e.getStackTrace()[0].getClassName(),
 					e.getStackTrace()[0].getMethodName(), e.getStackTrace()[0].getLineNumber(),
-					"update station using Station Id", e.getLocalizedMessage());
+					"update station using Station Id", e.getLocalizedMessage()));
 
 			throw new StationException("STN001", "ManageStation", e.getStackTrace()[0].getClassName(),
 					e.getStackTrace()[0].getMethodName(), e.getStackTrace()[0].getLineNumber(),
@@ -673,9 +679,9 @@ public class StationServiceImpl implements StationServiceInterface {
 
 		} catch (Exception e) {
 
-			logger.error("STN001", "ManageStation", e.getStackTrace()[0].getClassName(),
+			logger.error(new StationException("STN001", "ManageStation", e.getStackTrace()[0].getClassName(),
 					e.getStackTrace()[0].getMethodName(), e.getStackTrace()[0].getLineNumber(),
-					"update charger using Station Id and charger id ", e.getLocalizedMessage());
+					"update charger using Station Id and charger id ", e.getLocalizedMessage()));
 
 			throw new StationException("STN001", "ManageStation", e.getStackTrace()[0].getClassName(),
 					e.getStackTrace()[0].getMethodName(), e.getStackTrace()[0].getLineNumber(),
@@ -795,9 +801,9 @@ public class StationServiceImpl implements StationServiceInterface {
 			throw new InValidIdExcepetion(e.getLocalizedMessage());
 
 		} catch (Exception e) {
-			logger.error("STN001", "ManageStation", e.getStackTrace()[0].getClassName(),
+			logger.error(new StationException("STN001", "ManageStation", e.getStackTrace()[0].getClassName(),
 					e.getStackTrace()[0].getMethodName(), e.getStackTrace()[0].getLineNumber(),
-					"update connector using connector id ", e.getLocalizedMessage());
+					"update connector using connector id ", e.getLocalizedMessage()));
 
 			throw new StationException("STN001", "ManageStation", e.getStackTrace()[0].getClassName(),
 					e.getStackTrace()[0].getMethodName(), e.getStackTrace()[0].getLineNumber(),
@@ -848,9 +854,9 @@ public class StationServiceImpl implements StationServiceInterface {
 			throw new StationNotFoundException(e.getLocalizedMessage());
 
 		} catch (Exception e) {
-			logger.error("STN001", "ManageStation", e.getStackTrace()[0].getClassName(),
+			logger.error(new StationException("STN001", "ManageStation", e.getStackTrace()[0].getClassName(),
 					e.getStackTrace()[0].getMethodName(), e.getStackTrace()[0].getLineNumber(),
-					"remove station using Station id ", e.getLocalizedMessage());
+					"remove station using station id", e.getLocalizedMessage()));
 
 			throw new StationException("STN001", "ManageStation", e.getStackTrace()[0].getClassName(),
 					e.getStackTrace()[0].getMethodName(), e.getStackTrace()[0].getLineNumber(),
@@ -942,9 +948,9 @@ public class StationServiceImpl implements StationServiceInterface {
 			throw new InValidIdExcepetion(e.getLocalizedMessage());
 
 		} catch (Exception e) {
-			logger.error("STN001", "ManageStation", e.getStackTrace()[0].getClassName(),
+			logger.error(new StationException("STN001", "ManageStation", e.getStackTrace()[0].getClassName(),
 					e.getStackTrace()[0].getMethodName(), e.getStackTrace()[0].getLineNumber(),
-					"remove charger using Station Id,charger id ", e.getLocalizedMessage());
+					"remove charger using Station Id, charger id", e.getLocalizedMessage()));
 
 			throw new StationException("STN001", "ManageStation", e.getStackTrace()[0].getClassName(),
 					e.getStackTrace()[0].getMethodName(), e.getStackTrace()[0].getLineNumber(),
@@ -1039,9 +1045,9 @@ public class StationServiceImpl implements StationServiceInterface {
 			throw new InValidIdExcepetion(e.getLocalizedMessage());
 
 		} catch (Exception e) {
-			logger.error("STN001", "ManageStation", e.getStackTrace()[0].getClassName(),
+			logger.error(new StationException("STN001", "ManageStation", e.getStackTrace()[0].getClassName(),
 					e.getStackTrace()[0].getMethodName(), e.getStackTrace()[0].getLineNumber(),
-					"remove connector using connector id ", e.getLocalizedMessage());
+					"remove connector using connector id ", e.getLocalizedMessage()));
 
 			throw new StationException("STN001", "ManageStation", e.getStackTrace()[0].getClassName(),
 					e.getStackTrace()[0].getMethodName(), e.getStackTrace()[0].getLineNumber(),
@@ -1071,9 +1077,9 @@ public class StationServiceImpl implements StationServiceInterface {
 			throw new StationNotFoundException(e.getLocalizedMessage());
 
 		} catch (Exception e) {
-			logger.error("STN001", "ManageStation", e.getStackTrace()[0].getClassName(),
+			logger.error(new StationException("STN001", "ManageStation", e.getStackTrace()[0].getClassName(),
 					e.getStackTrace()[0].getMethodName(), e.getStackTrace()[0].getLineNumber(),
-					"show all the active station ", e.getLocalizedMessage());
+					"show all the active station", e.getLocalizedMessage()));
 
 			throw new StationException("STN001", "ManageStation", e.getStackTrace()[0].getClassName(),
 					e.getStackTrace()[0].getMethodName(), e.getStackTrace()[0].getLineNumber(),
@@ -1099,7 +1105,7 @@ public class StationServiceImpl implements StationServiceInterface {
 					Station finalStation = station;
 					List<Charger> charger = station.getChargers();
 					List<Charger> finalList = new ArrayList<>();
-
+										
 					for (Charger list : charger) {
 						if (list.isActive() == true) {
 							List<Connector> connectors = list.getConnectors();
@@ -1132,13 +1138,13 @@ public class StationServiceImpl implements StationServiceInterface {
 			throw new StationNotFoundException(e.getLocalizedMessage());
 
 		} catch (Exception e) {
-			logger.error("STN001", "ManageStation", e.getStackTrace()[0].getClassName(),
+			logger.error(new StationException("STN001", "ManageStation", e.getStackTrace()[0].getClassName(),
 					e.getStackTrace()[0].getMethodName(), e.getStackTrace()[0].getLineNumber(),
-					"update connector using Station Id, charger id and connector id ", e.getLocalizedMessage());
+					"show station using station id", e.getLocalizedMessage()));
 
 			throw new StationException("STN001", "ManageStation", e.getStackTrace()[0].getClassName(),
 					e.getStackTrace()[0].getMethodName(), e.getStackTrace()[0].getLineNumber(),
-					"update connector using Station Id, charger id and connector id ", e.getLocalizedMessage());
+					"show station using station id", e.getLocalizedMessage());
 		}
 	}
 
@@ -1173,9 +1179,9 @@ public class StationServiceImpl implements StationServiceInterface {
 			throw new StationNotFoundException(e.getLocalizedMessage());
 
 		} catch (Exception e) {
-			logger.error("STN001", "ManageStation", e.getStackTrace()[0].getClassName(),
+			logger.error(new StationException("STN001", "ManageStation", e.getStackTrace()[0].getClassName(),
 					e.getStackTrace()[0].getMethodName(), e.getStackTrace()[0].getLineNumber(),
-					"get list of station by Host id ", e.getLocalizedMessage());
+					"Get List Of Station By Host Id", e.getLocalizedMessage()));
 
 			throw new StationException("STN001", "ManageStation", e.getStackTrace()[0].getClassName(),
 					e.getStackTrace()[0].getMethodName(), e.getStackTrace()[0].getLineNumber(),
@@ -1249,9 +1255,9 @@ public class StationServiceImpl implements StationServiceInterface {
 			throw new StationNotFoundException(e.getLocalizedMessage());
 
 		} catch (Exception e) {
-			logger.error("STN001", "ManageStation", e.getStackTrace()[0].getClassName(),
+			logger.error(new StationException("STN001", "ManageStation", e.getStackTrace()[0].getClassName(),
 					e.getStackTrace()[0].getMethodName(), e.getStackTrace()[0].getLineNumber(),
-					"get chargers of specific station by station id", e.getLocalizedMessage());
+					"get chargers of specific station by station id", e.getLocalizedMessage()));
 
 			throw new StationException("STN001", "ManageStation", e.getStackTrace()[0].getClassName(),
 					e.getStackTrace()[0].getMethodName(), e.getStackTrace()[0].getLineNumber(),
@@ -1334,9 +1340,9 @@ public class StationServiceImpl implements StationServiceInterface {
 			throw new StationNotFoundException(e.getLocalizedMessage());
 
 		} catch (Exception e) {
-			logger.error("STN001", "ManageStation", e.getStackTrace()[0].getClassName(),
+			logger.error(new StationException("STN001", "ManageStation", e.getStackTrace()[0].getClassName(),
 					e.getStackTrace()[0].getMethodName(), e.getStackTrace()[0].getLineNumber(),
-					"get all connector of specific station charger by station and charger id", e.getLocalizedMessage());
+					"get all connector of specific station charger by station and charger id", e.getLocalizedMessage()));
 
 			throw new StationException("STN001", "ManageStation", e.getStackTrace()[0].getClassName(),
 					e.getStackTrace()[0].getMethodName(), e.getStackTrace()[0].getLineNumber(),
@@ -1420,9 +1426,9 @@ public class StationServiceImpl implements StationServiceInterface {
 			throw new StationNotFoundException(e.getLocalizedMessage());
 
 		} catch (Exception e) {
-			logger.error("STN001", "ManageStation", e.getStackTrace()[0].getClassName(),
+			logger.error(new StationException("STN001", "ManageStation", e.getStackTrace()[0].getClassName(),
 					e.getStackTrace()[0].getMethodName(), e.getStackTrace()[0].getLineNumber(),
-					"get connector of specific station charger by connector id", e.getLocalizedMessage());
+					"get connector of specific station charger by connector id", e.getLocalizedMessage()));
 
 			throw new StationException("STN001", "ManageStation", e.getStackTrace()[0].getClassName(),
 					e.getStackTrace()[0].getMethodName(), e.getStackTrace()[0].getLineNumber(),
@@ -1454,9 +1460,9 @@ public class StationServiceImpl implements StationServiceInterface {
 				return dto1;
 
 		} catch (Exception e) {
-			logger.error("STN001", "ManageStation", e.getStackTrace()[0].getClassName(),
+			logger.error(new StationException("STN001", "ManageStation", e.getStackTrace()[0].getClassName(),
 					e.getStackTrace()[0].getMethodName(), e.getStackTrace()[0].getLineNumber(),
-					"get require details of station", e.getLocalizedMessage());
+					"get required details of station", e.getLocalizedMessage()));
 
 			throw new StationException("STN001", "ManageStation", e.getStackTrace()[0].getClassName(),
 					e.getStackTrace()[0].getMethodName(), e.getStackTrace()[0].getLineNumber(),
@@ -1494,9 +1500,9 @@ public class StationServiceImpl implements StationServiceInterface {
 			} else
 				return dtos;
 		} catch (Exception e) {
-			logger.error("STN001", "ManageStation", e.getStackTrace()[0].getClassName(),
+			logger.error(new StationException("STN001", "ManageStation", e.getStackTrace()[0].getClassName(),
 					e.getStackTrace()[0].getMethodName(), e.getStackTrace()[0].getLineNumber(),
-					"get station by keywords from search bar", e.getLocalizedMessage());
+					"get station by keyword from serch bar", e.getLocalizedMessage()));
 
 			throw new StationException("STN001", "ManageStation", e.getStackTrace()[0].getClassName(),
 					e.getStackTrace()[0].getMethodName(), e.getStackTrace()[0].getLineNumber(),
@@ -1535,9 +1541,9 @@ public class StationServiceImpl implements StationServiceInterface {
 			throw new StationNotFoundException(e.getLocalizedMessage());
 
 		} catch (Exception e) {
-			logger.error("STN001", "ManageStation", e.getStackTrace()[0].getClassName(),
+			logger.error(new StationException("STN001", "ManageStation", e.getStackTrace()[0].getClassName(),
 					e.getStackTrace()[0].getMethodName(), e.getStackTrace()[0].getLineNumber(),
-					"get station using station id", e.getLocalizedMessage());
+					"update station using station id ", e.getLocalizedMessage()));
 
 			throw new StationException("STN001", "ManageStation", e.getStackTrace()[0].getClassName(),
 					e.getStackTrace()[0].getMethodName(), e.getStackTrace()[0].getLineNumber(),
@@ -1606,9 +1612,9 @@ public class StationServiceImpl implements StationServiceInterface {
 			throw new StationNotFoundException(e.getLocalizedMessage());
 
 		} catch (Exception e) {
-			logger.error("STN001", "ManageStation", e.getStackTrace()[0].getClassName(),
+			logger.error(new StationException("STN001", "ManageStation", e.getStackTrace()[0].getClassName(),
 					e.getStackTrace()[0].getMethodName(), e.getStackTrace()[0].getLineNumber(),
-					"get specific charger using charger id ", e.getLocalizedMessage());
+					"get specific charger using charger id", e.getLocalizedMessage()));
 
 			throw new StationException("STN001", "ManageStation", e.getStackTrace()[0].getClassName(),
 					e.getStackTrace()[0].getMethodName(), e.getStackTrace()[0].getLineNumber(),
@@ -1654,9 +1660,9 @@ public class StationServiceImpl implements StationServiceInterface {
 			throw new StationIdNotAcceptableException(e.getLocalizedMessage());
 
 		} catch (Exception e) {
-			logger.error("STN001", "ManageStation", e.getStackTrace()[0].getClassName(),
+			logger.error(new StationException("STN001", "ManageStation", e.getStackTrace()[0].getClassName(),
 					e.getStackTrace()[0].getMethodName(), e.getStackTrace()[0].getLineNumber(),
-					"get stations of specific radius in map ", e.getLocalizedMessage());
+					"get stations of specific radius in map ", e.getLocalizedMessage()));
 
 			throw new StationException("STN001", "ManageStation", e.getStackTrace()[0].getClassName(),
 					e.getStackTrace()[0].getMethodName(), e.getStackTrace()[0].getLineNumber(),
@@ -1694,9 +1700,9 @@ public class StationServiceImpl implements StationServiceInterface {
 			throw new StationIdNotAcceptableException(e.getLocalizedMessage());
 
 		} catch (Exception e) {
-			logger.error("STN001", "ManageStation", e.getStackTrace()[0].getClassName(),
+			logger.error(new StationException("STN001", "ManageStation", e.getStackTrace()[0].getClassName(),
 					e.getStackTrace()[0].getMethodName(), e.getStackTrace()[0].getLineNumber(),
-					"remove charger by charger id and call the remove station charger method", e.getLocalizedMessage());
+					"remove charger by charger id and call the remove station charger method", e.getLocalizedMessage()));
 
 			throw new StationException("STN001", "ManageStation", e.getStackTrace()[0].getClassName(),
 					e.getStackTrace()[0].getMethodName(), e.getStackTrace()[0].getLineNumber(),
@@ -1720,9 +1726,9 @@ public class StationServiceImpl implements StationServiceInterface {
 			return stationConveter.entitytoStationFind(station);
 
 		} catch (Exception e) {
-			logger.error("STN001", "ManageStation", e.getStackTrace()[0].getClassName(),
+			logger.error(new StationException("STN001", "ManageStation", e.getStackTrace()[0].getClassName(),
 					e.getStackTrace()[0].getMethodName(), e.getStackTrace()[0].getLineNumber(),
-					"get name and address of a specific station", e.getLocalizedMessage());
+					"get name and address of a specific station", e.getLocalizedMessage()));
 
 			throw new StationException("STN001", "ManageStation", e.getStackTrace()[0].getClassName(),
 					e.getStackTrace()[0].getMethodName(), e.getStackTrace()[0].getLineNumber(),
@@ -1801,14 +1807,121 @@ public class StationServiceImpl implements StationServiceInterface {
 			throw new StationIdNotAcceptableException(e.getLocalizedMessage());
 
 		} catch (Exception e) {
-			logger.error("STN001", "ManageStation", e.getStackTrace()[0].getClassName(),
-					e.getStackTrace()[0].getMethodName(), e.getStackTrace()[0].getLineNumber(),
-					"change the charger status active/ inactive", e.getLocalizedMessage());
+			
+					logger.error(new StationException("STN001", "ManageStation", e.getStackTrace()[0].getClassName(),
+							e.getStackTrace()[0].getMethodName(), e.getStackTrace()[0].getLineNumber(),
+							"change the charger status to active/ inactive", e.getLocalizedMessage()));
 
 			throw new StationException("STN001", "ManageStation", e.getStackTrace()[0].getClassName(),
 					e.getStackTrace()[0].getMethodName(), e.getStackTrace()[0].getLineNumber(),
-					"change the charger status active/ inactive", e.getLocalizedMessage());
+					"change the charger status to active/ inactive", e.getLocalizedMessage());
 		}
+	}
+	
+	public boolean addUserAccess(String stationId, String contactNo, String emailId) {
+		
+		if(stationId!=null && !stationId.isBlank()) {
+			if (!contactNo.isBlank() || !emailId.isBlank()) {
+				
+			Station station = stationRepository.findByStationIdAndIsActiveTrue(stationId);
+			if (station!=null) {
+			
+			 String userId = null;
+			 boolean flag = false;
+			 try {
+				 URL url = new URL("http://192.168.0.41:8097/manageUser/getByEmailAndContactNo?userEmail="+emailId+"&userContactNo="+contactNo);
+		            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+		            connection.setRequestMethod("GET");
+		            System.out.println(connection);
 
+		            int responseCode = connection.getResponseCode();
+		            System.out.println(responseCode);
+		            if (responseCode == HttpURLConnection.HTTP_OK) {
+		                BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+		                String response = reader.readLine();
+		                userId = response.toString();
+		                System.out.println(response);
+		                reader.close();
+		            }else
+		            	throw new InValidDataException("not found"+responseCode);
+		            }catch (Exception e) {
+		            	throw new InValidDataException(e.getLocalizedMessage());
+		            	 }
+			if (userId!=null && !userId.isBlank()) {
+				
+				List<String> accessList = station.getUserAcceessList();
+				for(int i=0; i<accessList.size();i++) {
+					String access = accessList.get(i);
+					if(access.equals(userId)) {
+						flag = true;
+						break;
+					}
+				}
+				if (flag==false) {
+					accessList.add(userId);
+					System.out.println(userId);
+					station.setUserAcceessList(accessList);
+					System.out.println(accessList.toString());
+					stationRepository.save(station);
+					return true;
+				}else 
+					return false;
+			}else
+				throw new InValidDataException("user not found");
+			}else
+				throw new StationNotFoundException("station not found");
+			}else 
+				throw new InValidDataException("please provide email id or contact no");
+			}else
+				throw new StationIdNotAcceptableException("");
+	}
+	
+public String showUserAccess(String stationId, String contactNo, String emailId) {
+		
+		if(stationId!=null && !stationId.isBlank()) {
+			if (!contactNo.isBlank() || !emailId.isBlank()) {
+				
+			Station station = stationRepository.findByStationIdAndIsActiveTrue(stationId);
+			if (station!=null) {
+			 String userId = null;
+			 boolean flag = false;
+			 try {
+				 URL url = new URL("http://192.168.0.41:8097/manageUser/getByEmailAndContactNo?userEmail="+emailId+"&userContactNo="+contactNo);
+		            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+		            connection.setRequestMethod("GET");
+		            int responseCode = connection.getResponseCode();
+		            if (responseCode == HttpURLConnection.HTTP_OK) {
+		                BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+		                String response = reader.readLine();
+		                userId = response.toString();
+		                reader.close();
+		            }else
+		            	throw new InValidDataException("Not Found");
+		            }catch (Exception e) {
+		            	throw new InValidDataException(e.getLocalizedMessage());
+		            	 }
+		
+			if (userId!=null && !userId.isBlank()) {
+				
+				List<String> accessList = station.getUserAcceessList();
+				for(int i=0; i<accessList.size();i++) {
+					String access = accessList.get(i);
+					if(access.equals(userId)) {
+						flag = true;
+						break;
+					}
+				}
+				if (flag==true) {
+					return userId;
+					}else 
+					return null;
+			}else
+				throw new InValidDataException("user not found");
+			}else
+				throw new StationNotFoundException("station not found");
+			}else 
+				throw new InValidDataException("please provide email id or contact no");
+			}else
+				throw new StationIdNotAcceptableException("");
 	}
 }

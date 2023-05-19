@@ -61,8 +61,8 @@ public class StationApiError {
 		return errorMap;
 	}
 	
-	@ResponseStatus(HttpStatus.BAD_REQUEST)
 	@ExceptionHandler(MethodArgumentNotValidException.class)
+	@ResponseStatus(HttpStatus.BAD_REQUEST)
 	public Map<String, String> handleInvalidArgument(MethodArgumentNotValidException ex) {
 		Map<String, String> errorMap = new HashMap<>();
 		ex.getBindingResult().getFieldErrors().forEach(error -> {
@@ -99,12 +99,12 @@ public class StationApiError {
 	}
 	
 	@ExceptionHandler(StationException.class)
-	@ResponseStatus(HttpStatus.BAD_GATEWAY)
+	@ResponseStatus(HttpStatus.BAD_REQUEST)
 	public Map<String, Object> stationException(StationException ex) {
 		Map<String, Object> errorMap = new HashMap<>();
 		StationErrorResponse response = new StationErrorResponse();
 		
-		response.setStatus(HttpStatus.BAD_GATEWAY);
+		response.setStatus(HttpStatus.BAD_REQUEST);
 		response.setStatusCode("502");
 		response.setServiceName(ex.getServiceName());
 		response.setFunctionality(ex.getFunctionality());
