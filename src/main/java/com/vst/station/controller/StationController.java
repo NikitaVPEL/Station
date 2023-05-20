@@ -1,5 +1,9 @@
 package com.vst.station.controller;
 
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.List;
 
 import javax.validation.Valid;
@@ -7,6 +11,7 @@ import javax.validation.Valid;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -23,6 +28,7 @@ import com.vst.station.dto.StationDTO;
 import com.vst.station.dto.StationDTO1;
 import com.vst.station.dto.StationFindDTO;
 import com.vst.station.dto.StationUpdateDTO;
+import com.vst.station.exception.InValidDataException;
 import com.vst.station.model.Station;
 import com.vst.station.service.StationServiceImpl;
 
@@ -37,7 +43,8 @@ public class StationController {
 //	boolean flag=false;
 
 	public static final Logger logger = LogManager.getLogger(StationController.class);
-
+  
+	
 	/**
 	 * Usage: Add new station
 	 * 
@@ -48,6 +55,8 @@ public class StationController {
 	 */
 	@PostMapping("/addStation")
 	public ResponseEntity<String> saveStation(@Valid @RequestBody StationDTO stationDTO) {
+	
+		
 
 		if (stationServiceImpl.addStation(stationDTO) == true)
 			return new ResponseEntity<>("Station Added", HttpStatus.OK);
@@ -238,23 +247,14 @@ public class StationController {
 
 	@PostMapping("/addUserAccess")
 	public ResponseEntity<String> addUserAccess(@RequestParam("stationId") String stationId,
-			@RequestParam("contactNo") String contactNo, @RequestParam("emailId") String emailId) {
-		if (stationServiceImpl.addUserAccess(stationId, contactNo, emailId)==true) {
-			return ResponseEntity.ok("user access added successfully");
-		}else
-			return new ResponseEntity<>("user access already exist",HttpStatus.NOT_FOUND);
+			@RequestParam("type") String type, @RequestBody List<String> list) {
+		if (stationServiceImpl.addUserAccess(stationId, type, list)==true) {
+			return new ResponseEntity<String>("user added successfully", HttpStatus.OK);
+		}else {
+			return new ResponseEntity<String>("invalid details, user not added", HttpStatus.BAD_REQUEST);
+		}
 	}
 	
-	@GetMapping("/getUserAccess")
-	public ResponseEntity<String> showUserAccess(@RequestParam("stationId") String stationId,
-			@RequestParam("contactNo") String contactNo, @RequestParam("emailId") String emailId) {
-		String userId = stationServiceImpl.showUserAccess(stationId, contactNo, emailId);
-		if (userId!=null) {
-			return ResponseEntity.ok("User Found");
-		}else
-			return new ResponseEntity<>("User Not Found",HttpStatus.NOT_FOUND);
-           
-		
-	}
+	
 
 }

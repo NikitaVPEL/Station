@@ -112,7 +112,7 @@ public class StationDTO {
 	@NotNull(message = "Please enter a value.")
 	private String stationPowerStandard;
 	
-	List<String> userAcceessList;
+	private List<String> userAcceessList =  new ArrayList<>(); 
 	
 	private Date createdDate;
 	private Date modifiedDate;

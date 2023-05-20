@@ -4,6 +4,8 @@ import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 
 /**
 * Service layer to write the business logic and throw the exception. 
@@ -23,7 +25,9 @@ import javax.transaction.Transactional;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.hibernate.annotations.NotFound;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.stereotype.Service;
 
@@ -93,6 +97,11 @@ public class StationServiceImpl implements StationServiceInterface {
 	Instant time = Instant.now();
 
 	public static final Logger logger = LogManager.getLogger(StationServiceImpl.class);
+	
+	
+
+    @Value("${userServiceLink}")
+    private String userServiceLink;
 
 	/**
 	 * Usage: Add new Station
@@ -129,6 +138,12 @@ public class StationServiceImpl implements StationServiceInterface {
 				station.setStationLongitude(a[0]);
 				location.setCoordinates(a);
 				station.setLocation(location);
+
+				Station existingStation = stationRepository.findByStationId(station.getStationId());
+
+				if (existingStation != null) {
+					station.setStationId("STN" + idAndDateGenerator.idGenerator());
+				}
 				if (stationRepository.save(station) != null) {
 					logger.info("StationServiceImpl :: addStation : execution Ended");
 
@@ -166,9 +181,7 @@ public class StationServiceImpl implements StationServiceInterface {
 	public boolean addCharger(String stationId, ChargerDTO chargerDTO) {
 		logger.info("StationServiceImpl :: addCharger : execution Started");
 		try {
-
 			if (!stationId.isBlank() && stationId != null) {
-
 				if (chargerDTO != null) {
 
 					Station station = stationRepository
@@ -493,19 +506,15 @@ public class StationServiceImpl implements StationServiceInterface {
 	public boolean updateCharger(String stationId, String chargerId, ChargerDTO chargerDTO) {
 		logger.info("StationServiceImpl :: updateCharger : execution Started");
 		try {
-
 			if (!stationId.isBlank() && stationId != null) {
-
 				if (!chargerId.isBlank() && chargerId != null) {
 
-					Station station = stationRepository.findByStationIdAndIsActiveTrue(utility.toTitleCase(stationId));
-
+					Station station = stationRepository
+							.findByStationIdAndIsActiveTrue(utility.stringSanitization(stationId));
 					if (station != null) {
-
 						Charger obj = chargerConverter.dtoToEntity(chargerDTO);
 
 						List<Charger> chargers = station.getChargers();
-
 						if (!chargers.isEmpty()) {
 							Charger charger = null;
 							int index = 0;
@@ -516,7 +525,6 @@ public class StationServiceImpl implements StationServiceInterface {
 									break;
 								}
 							}
-
 							if (charger != null) {
 								boolean flag = false;
 
@@ -524,17 +532,14 @@ public class StationServiceImpl implements StationServiceInterface {
 									charger.setChargerName(utility.toTitleCase(obj.getChargerName()));
 									flag = true;
 								}
-
 								if (obj.getChargerNumber() != 0) {
 									charger.setChargerNumber(obj.getChargerNumber());
 									flag = true;
 								}
-
 								if (obj.getChargerInputVoltage() != null && !obj.getChargerInputVoltage().isBlank()) {
 									charger.setChargerInputVoltage(obj.getChargerInputVoltage());
 									flag = true;
 								}
-
 								if (obj.getChargerOutputVoltage() != null && !obj.getChargerOutputVoltage().isBlank()) {
 									charger.setChargerOutputVoltage(obj.getChargerOutputVoltage());
 									flag = true;
@@ -1105,7 +1110,7 @@ public class StationServiceImpl implements StationServiceInterface {
 					Station finalStation = station;
 					List<Charger> charger = station.getChargers();
 					List<Charger> finalList = new ArrayList<>();
-										
+
 					for (Charger list : charger) {
 						if (list.isActive() == true) {
 							List<Connector> connectors = list.getConnectors();
@@ -1342,7 +1347,8 @@ public class StationServiceImpl implements StationServiceInterface {
 		} catch (Exception e) {
 			logger.error(new StationException("STN001", "ManageStation", e.getStackTrace()[0].getClassName(),
 					e.getStackTrace()[0].getMethodName(), e.getStackTrace()[0].getLineNumber(),
-					"get all connector of specific station charger by station and charger id", e.getLocalizedMessage()));
+					"get all connector of specific station charger by station and charger id",
+					e.getLocalizedMessage()));
 
 			throw new StationException("STN001", "ManageStation", e.getStackTrace()[0].getClassName(),
 					e.getStackTrace()[0].getMethodName(), e.getStackTrace()[0].getLineNumber(),
@@ -1522,7 +1528,7 @@ public class StationServiceImpl implements StationServiceInterface {
 		logger.info("StationServiceImpl :: getStation : execution Started");
 		try {
 			if (!stationId.isBlank() && stationId != null) {
-				Station station = stationRepository.findStationByStationId(stationId);
+				Station station = stationRepository.findStationByStationId(utility.stringSanitization(stationId));
 				if (station != null) {
 					logger.info("StationServiceImpl :: getStation : execution ended");
 					return station;
@@ -1702,7 +1708,8 @@ public class StationServiceImpl implements StationServiceInterface {
 		} catch (Exception e) {
 			logger.error(new StationException("STN001", "ManageStation", e.getStackTrace()[0].getClassName(),
 					e.getStackTrace()[0].getMethodName(), e.getStackTrace()[0].getLineNumber(),
-					"remove charger by charger id and call the remove station charger method", e.getLocalizedMessage()));
+					"remove charger by charger id and call the remove station charger method",
+					e.getLocalizedMessage()));
 
 			throw new StationException("STN001", "ManageStation", e.getStackTrace()[0].getClassName(),
 					e.getStackTrace()[0].getMethodName(), e.getStackTrace()[0].getLineNumber(),
@@ -1807,121 +1814,120 @@ public class StationServiceImpl implements StationServiceInterface {
 			throw new StationIdNotAcceptableException(e.getLocalizedMessage());
 
 		} catch (Exception e) {
-			
-					logger.error(new StationException("STN001", "ManageStation", e.getStackTrace()[0].getClassName(),
-							e.getStackTrace()[0].getMethodName(), e.getStackTrace()[0].getLineNumber(),
-							"change the charger status to active/ inactive", e.getLocalizedMessage()));
+
+			logger.error(new StationException("STN001", "ManageStation", e.getStackTrace()[0].getClassName(),
+					e.getStackTrace()[0].getMethodName(), e.getStackTrace()[0].getLineNumber(),
+					"change the charger status to active/ inactive", e.getLocalizedMessage()));
 
 			throw new StationException("STN001", "ManageStation", e.getStackTrace()[0].getClassName(),
 					e.getStackTrace()[0].getMethodName(), e.getStackTrace()[0].getLineNumber(),
 					"change the charger status to active/ inactive", e.getLocalizedMessage());
 		}
 	}
-	
-	public boolean addUserAccess(String stationId, String contactNo, String emailId) {
-		
-		if(stationId!=null && !stationId.isBlank()) {
-			if (!contactNo.isBlank() || !emailId.isBlank()) {
-				
-			Station station = stationRepository.findByStationIdAndIsActiveTrue(stationId);
-			if (station!=null) {
-			
-			 String userId = null;
-			 boolean flag = false;
-			 try {
-				 URL url = new URL("http://192.168.0.41:8097/manageUser/getByEmailAndContactNo?userEmail="+emailId+"&userContactNo="+contactNo);
-		            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-		            connection.setRequestMethod("GET");
-		            System.out.println(connection);
 
-		            int responseCode = connection.getResponseCode();
-		            System.out.println(responseCode);
-		            if (responseCode == HttpURLConnection.HTTP_OK) {
-		                BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
-		                String response = reader.readLine();
-		                userId = response.toString();
-		                System.out.println(response);
-		                reader.close();
-		            }else
-		            	throw new InValidDataException("not found"+responseCode);
-		            }catch (Exception e) {
-		            	throw new InValidDataException(e.getLocalizedMessage());
-		            	 }
-			if (userId!=null && !userId.isBlank()) {
+	public boolean addUserAccess(String stationId, String type, List<String> list) {
+
+		if (!type.isBlank() && type!=null && !list.isEmpty()) {
+			
+		Station station = stationRepository.findByStationIdAndIsActiveTrue(utility.stringSanitization(stationId));
+		if (station != null) {
+
+			List<String> accessList = station.getUserAcceessList();
+			switch (type.toLowerCase()) {
+			case "contactno":
+
+						for (String id : list) {
+							boolean flag = false;
+							String userId = null;
+							try {
+								URL url = new URL(userServiceLink+"/manageUser/getByContactNo?userContactNo="+id);
+								HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+								connection.setRequestMethod("GET");
+								System.out.println(connection);
+								int responseCode = connection.getResponseCode();
+								if (responseCode == HttpURLConnection.HTTP_OK) {
+									BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+									 userId = reader.readLine();
+									reader.close();
+								} else 
+									logger.error(id + "Not Found ");
+								
+							} catch (Exception e) {
+								throw new InValidDataException(e.getLocalizedMessage());}
+
+							if (userId != null) {
+								if (!accessList.isEmpty()) {
+
+									for (String access : accessList) {
+										if (access.equals(userId)) {
+											flag = true;
+											break;
+										}
+									}
+									if (flag == false) {
+										accessList.add(userId);
+										station.setUserAcceessList(accessList);
+									}
+								} else {
+									accessList.add(userId);
+									station.setUserAcceessList(accessList);
+								}
+							}
+						}
+						stationRepository.save(station);
+						return true;
+					
+			case "emailid":
 				
-				List<String> accessList = station.getUserAcceessList();
-				for(int i=0; i<accessList.size();i++) {
-					String access = accessList.get(i);
-					if(access.equals(userId)) {
-						flag = true;
-						break;
-					}
-				}
-				if (flag==false) {
-					accessList.add(userId);
-					System.out.println(userId);
-					station.setUserAcceessList(accessList);
-					System.out.println(accessList.toString());
-					stationRepository.save(station);
-					return true;
-				}else 
-					return false;
-			}else
-				throw new InValidDataException("user not found");
-			}else
-				throw new StationNotFoundException("station not found");
-			}else 
-				throw new InValidDataException("please provide email id or contact no");
-			}else
-				throw new StationIdNotAcceptableException("");
-	}
-	
-public String showUserAccess(String stationId, String contactNo, String emailId) {
-		
-		if(stationId!=null && !stationId.isBlank()) {
-			if (!contactNo.isBlank() || !emailId.isBlank()) {
-				
-			Station station = stationRepository.findByStationIdAndIsActiveTrue(stationId);
-			if (station!=null) {
-			 String userId = null;
-			 boolean flag = false;
-			 try {
-				 URL url = new URL("http://192.168.0.41:8097/manageUser/getByEmailAndContactNo?userEmail="+emailId+"&userContactNo="+contactNo);
-		            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-		            connection.setRequestMethod("GET");
-		            int responseCode = connection.getResponseCode();
-		            if (responseCode == HttpURLConnection.HTTP_OK) {
-		                BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
-		                String response = reader.readLine();
-		                userId = response.toString();
-		                reader.close();
-		            }else
-		            	throw new InValidDataException("Not Found");
-		            }catch (Exception e) {
-		            	throw new InValidDataException(e.getLocalizedMessage());
-		            	 }
-		
-			if (userId!=null && !userId.isBlank()) {
-				
-				List<String> accessList = station.getUserAcceessList();
-				for(int i=0; i<accessList.size();i++) {
-					String access = accessList.get(i);
-					if(access.equals(userId)) {
-						flag = true;
-						break;
-					}
-				}
-				if (flag==true) {
-					return userId;
-					}else 
-					return null;
-			}else
-				throw new InValidDataException("user not found");
-			}else
-				throw new StationNotFoundException("station not found");
-			}else 
-				throw new InValidDataException("please provide email id or contact no");
-			}else
-				throw new StationIdNotAcceptableException("");
-	}
+						for (String id : list) {
+							boolean flag = false;
+							String userId = null;;
+							try {
+								URL url = new URL(userServiceLink+"/manageUser/getByEmail?userEmail="+id);
+								HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+								connection.setRequestMethod("GET");
+								System.out.println(connection);
+								int responseCode = connection.getResponseCode();
+								if (responseCode == HttpURLConnection.HTTP_OK) {
+									BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+									 userId = reader.readLine();
+									reader.close();
+								} else 
+									logger.error(id + "Not Found ");
+								
+							} catch (Exception e) {
+								throw new InValidDataException(e.getLocalizedMessage());}
+
+							if (userId != null) {
+								if (!accessList.isEmpty()) {
+									for (String access : accessList) {
+										if (access.equals(userId)) {
+											flag = true;
+											break;
+										}
+									}
+									if (flag == false) {
+										accessList.add(userId);
+										station.setUserAcceessList(accessList);
+									}
+								} else {
+									accessList.add(userId);
+									station.setUserAcceessList(accessList);
+								}
+							}
+						}
+						System.out.println(station.getUserAcceessList());
+						stationRepository.save(station);
+						return true;
+					
+			default:
+				throw new InValidDataException("please provide correct details and try again");
+			}
+
+		} else
+			throw new StationNotFoundException("user not found, please check the details and try again");
+		}else 
+			throw new InValidDataException("Please provide details and try again");
+			}
+
 }

@@ -50,7 +50,7 @@ public class Station {
 	private String stationShareId;
 	private String stationStatus;
 	private String stationPowerStandard;
-	List<String> userAcceessList;
+	private List<String> userAcceessList =  new ArrayList<>(); 
 	private Date createdDate;
 	private Date modifiedDate;
 	private String createdBy;
