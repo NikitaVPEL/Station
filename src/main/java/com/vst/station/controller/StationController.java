@@ -29,6 +29,7 @@ import com.vst.station.dto.StationDTO1;
 import com.vst.station.dto.StationFindDTO;
 import com.vst.station.dto.StationUpdateDTO;
 import com.vst.station.exception.InValidDataException;
+import com.vst.station.exception.StationException;
 import com.vst.station.model.Station;
 import com.vst.station.service.StationServiceImpl;
 
@@ -43,8 +44,7 @@ public class StationController {
 //	boolean flag=false;
 
 	public static final Logger logger = LogManager.getLogger(StationController.class);
-  
-	
+
 	/**
 	 * Usage: Add new station
 	 * 
@@ -55,8 +55,6 @@ public class StationController {
 	 */
 	@PostMapping("/addStation")
 	public ResponseEntity<String> saveStation(@Valid @RequestBody StationDTO stationDTO) {
-	
-		
 
 		if (stationServiceImpl.addStation(stationDTO) == true)
 			return new ResponseEntity<>("Station Added", HttpStatus.OK);
@@ -107,12 +105,14 @@ public class StationController {
 	 */
 	@GetMapping("/getStation")
 	public ResponseEntity<?> getStationById(@RequestParam("stationId") String stationId) {
+		
 		Station obj = stationServiceImpl.show(stationId);
 		if (obj != null)
 			return ResponseEntity.ok(obj);
 		else
 			return ResponseEntity.ok(obj);
 //			return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Station Not Available");
+		
 	}
 
 	/**
@@ -124,7 +124,9 @@ public class StationController {
 	 */
 	@GetMapping("/getStations")
 	public ResponseEntity<List<?>> getAllStation() {
+		
 		return ResponseEntity.ok(stationServiceImpl.showAll());
+
 	}
 
 	/**
@@ -242,19 +244,57 @@ public class StationController {
 	 */
 	@GetMapping("/getStationAddress")
 	public ResponseEntity<StationFindDTO> getAddrerss(@RequestParam("stationId") String stationId) {
-		return ResponseEntity.ok(stationServiceImpl.getNameAndAddressStation(stationId));
+		
+			return ResponseEntity.ok(stationServiceImpl.getNameAndAddressStation(stationId));
+
 	}
 
 	@PostMapping("/addUserAccess")
 	public ResponseEntity<String> addUserAccess(@RequestParam("stationId") String stationId,
 			@RequestParam("type") String type, @RequestBody List<String> list) {
-		if (stationServiceImpl.addUserAccess(stationId, type, list)==true) {
-			return new ResponseEntity<String>("user added successfully", HttpStatus.OK);
-		}else {
-			return new ResponseEntity<String>("invalid details, user not added", HttpStatus.BAD_REQUEST);
-		}
+			if (stationServiceImpl.addUserAccess(stationId, type, list) == true) {
+				return new ResponseEntity<String>("user added successfully", HttpStatus.OK);
+			} else {
+				return new ResponseEntity<String>("invalid details, user not added", HttpStatus.BAD_REQUEST);
+			}
+	}
+
+	@GetMapping("/getUserAccess")
+	public ResponseEntity<List<String>> getUserAccess(@RequestParam("stationId") String stationId) {
+
+			List<String> userAccess = stationServiceImpl.GetUserAccessList(stationId);
+			if (!userAccess.isEmpty() && userAccess != null) {
+				return new ResponseEntity<>(userAccess, HttpStatus.OK);
+			} else
+				return new ResponseEntity<>(userAccess, HttpStatus.NOT_FOUND);
 	}
 	
-	
+	@PostMapping("/addUserAccessList")
+	public ResponseEntity<String> addUserAccessList(@RequestParam("stationId") String stationId,
+			@RequestBody List<String> userIdList) {
 
+			if (stationServiceImpl.addUserAccessList(stationId, userIdList) == true) {
+				return new ResponseEntity<String>( "user added successfully", HttpStatus.OK);
+			} else {
+				 return new ResponseEntity<String>("Invalid details, user not added", HttpStatus.BAD_REQUEST);
+			}
+
+	}
+
+	@GetMapping("/getIsUserPresentInRestrictionList")
+			public ResponseEntity<Boolean> getIsUserPresentInRestrictionList(@RequestParam("stationId") String stationId, @RequestParam("userId") String userId) {
+		
+			return new ResponseEntity<Boolean>(stationServiceImpl.getIsUserPresentInRestrictionList(stationId, userId), HttpStatus.OK );	
+			
+	}
+	
+	@DeleteMapping("/deleteUserFromRestrictionList")
+	public ResponseEntity<String> deleteUserFromRestrictionList(@RequestParam("stationId") String stationId, @RequestParam("userId") String userId) {
+		
+		if (stationServiceImpl.deleteUserFromRestrictionList(stationId, userId) == true) {
+			return new ResponseEntity<String>( "user Deleted successfully", HttpStatus.OK);
+		} else {
+			 return new ResponseEntity<String>("Invalid User, user not Found", HttpStatus.NOT_FOUND);
+		}
+	}
 }

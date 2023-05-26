@@ -20,7 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.vst.station.dto.ConnectorDTO;
 import com.vst.station.model.Connector;
-import com.vst.station.service.StationServiceImpl;
+import com.vst.station.service.ChargerServiceImpl;
 
 @RequestMapping("/manageConnector")
 @CrossOrigin(origins = "*")
@@ -28,7 +28,7 @@ import com.vst.station.service.StationServiceImpl;
 public class ConnectorController {
 
 	@Autowired
-	StationServiceImpl stationServiceImpl;
+	ChargerServiceImpl chargerServiceImpl;
 
 	boolean flag = false;
 
@@ -45,7 +45,7 @@ public class ConnectorController {
 	@PostMapping("/addConnector")
 	public ResponseEntity<String> addStationConnector(@RequestParam("stationId") String stationId,
 			@RequestParam("chargerId") String chargerId, @RequestBody ConnectorDTO connectorDTO) {
-		flag = stationServiceImpl.addConnector(stationId, chargerId, connectorDTO);
+		flag = chargerServiceImpl.addConnector(stationId, chargerId, connectorDTO);
 		if (flag == true)
 			return new ResponseEntity<>("Connector Added Successfully", HttpStatus.OK);
 		else
@@ -63,7 +63,7 @@ public class ConnectorController {
 	@PutMapping("/updateConnector")
 	public ResponseEntity<String> updateConnectorDetailsById(@RequestParam("connectorId") String connectorId,
 			@RequestBody ConnectorDTO connectorDTO) {
-		boolean flag = stationServiceImpl.updateConnectorById(connectorId, connectorDTO);
+		boolean flag = chargerServiceImpl.updateConnectorById(connectorId, connectorDTO);
 		if (flag == true)
 			return new ResponseEntity<>("Connector Update Succesfully", HttpStatus.OK);
 		else
@@ -83,7 +83,7 @@ public class ConnectorController {
 	@GetMapping("/getConnectors")
 	public ResponseEntity<List<Connector>> getAllConnectors(@RequestParam("stationId") String stationId,
 			@RequestParam("chargerId") String chargerId) {
-		return ResponseEntity.ok(stationServiceImpl.getAllStationConnector(stationId, chargerId));
+		return ResponseEntity.ok(chargerServiceImpl.getAllStationConnector(stationId, chargerId));
 	}
 
 	/**
@@ -96,7 +96,7 @@ public class ConnectorController {
 	 */
 	@GetMapping("/getConnector")
 	public ResponseEntity<Connector> getConnectorById(@RequestParam("connectorId") String connectorId) {
-		return ResponseEntity.ok(stationServiceImpl.getConnector(connectorId));
+		return ResponseEntity.ok(chargerServiceImpl.getConnector(connectorId));
 	}
 
 	/**
@@ -109,13 +109,11 @@ public class ConnectorController {
 	 */
 	@DeleteMapping("/deleteConnector")
 	public ResponseEntity<String> deleteConnector(@RequestParam("connectorId") String connectorId) {
-		boolean flag = stationServiceImpl.removeConnector(connectorId);
+		boolean flag = chargerServiceImpl.removeConnector(connectorId);
 		if (flag == true)
 			return new ResponseEntity<>("Connector Deleted Succesfully", HttpStatus.OK);
 		else
 			return new ResponseEntity<>("Connector Not Deleted. Please try again", HttpStatus.NOT_FOUND);
 	}
-	
-
 
 }

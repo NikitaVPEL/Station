@@ -19,7 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.vst.station.dto.ChargerDTO;
 import com.vst.station.model.Charger;
-import com.vst.station.service.StationServiceImpl;
+import com.vst.station.service.ChargerServiceImpl;
 
 @RequestMapping("/manageCharger")
 @CrossOrigin(origins = "*")
@@ -27,7 +27,7 @@ import com.vst.station.service.StationServiceImpl;
 public class ChargerController {
 
 	@Autowired
-	StationServiceImpl stationServiceImpl;
+	ChargerServiceImpl chargerServiceImpl;
 
 	boolean flag = false;
 
@@ -44,7 +44,7 @@ public class ChargerController {
 	@PostMapping("/addCharger")
 	public ResponseEntity<String> addStationChargers(@RequestParam("stationId") String stationId,
 			@RequestBody ChargerDTO chargerDTO) {
-		flag = stationServiceImpl.addCharger(stationId, chargerDTO);
+		flag = chargerServiceImpl.addCharger(stationId, chargerDTO);
 		if (flag == true)
 			return new ResponseEntity<>("Charger Added Successfully", HttpStatus.OK);
 		else
@@ -62,8 +62,7 @@ public class ChargerController {
 	@PutMapping("/udpateCharger")
 	public ResponseEntity<String> chargerUpdate(@RequestParam("stationId") String stationId,
 			@RequestParam("chargerId") String chargerId, @RequestBody ChargerDTO chargerDTO) {
-		System.out.println("executed");
-		flag = stationServiceImpl.updateCharger(stationId, chargerId, chargerDTO);
+		flag = chargerServiceImpl.updateCharger(stationId, chargerId, chargerDTO);
 		if (flag == true)
 			return new ResponseEntity<>("Charger Details Updated Succesfully", HttpStatus.OK);
 		else
@@ -80,7 +79,7 @@ public class ChargerController {
 	 */
 	@DeleteMapping("/deleteCharger")
 	public ResponseEntity<String> deleteCharger(@RequestParam("chargerId") String chargerId) {
-		flag = stationServiceImpl.removeCharger(chargerId);
+		flag = chargerServiceImpl.removeCharger(chargerId);
 		if (flag == true) {
 			return new ResponseEntity<>("Charger Deleted Successfully", HttpStatus.OK);
 		} else
@@ -98,8 +97,8 @@ public class ChargerController {
 	@GetMapping("/getChargers")
 	public ResponseEntity<List<Charger>> getStationChargers(@RequestParam("stationId") String stationId) {
 
-		return ResponseEntity.ok(stationServiceImpl.getAllStationChargers(stationId));
-//		List<Charger> list = stationServiceImpl.getAllStationChargers(stationId);
+		return ResponseEntity.ok(chargerServiceImpl.getAllStationChargers(stationId));
+//		List<Charger> list = chargerServiceImpl.getAllStationChargers(stationId);
 //		if (!list.isEmpty())
 //			return ResponseEntity.ok(list);
 //		else
@@ -116,7 +115,7 @@ public class ChargerController {
 	 */
 	@GetMapping("/getCharger")
 	public ResponseEntity<?> getStationCharger(@RequestParam("chargerId") String chargerId) {
-		Charger charger = stationServiceImpl.getCharger(chargerId);
+		Charger charger = chargerServiceImpl.getCharger(chargerId);
 		if (charger != null)
 			return ResponseEntity.ok(charger);
 		else
@@ -134,7 +133,7 @@ public class ChargerController {
 	@PutMapping("/updateChargerStatus")
 	public ResponseEntity<String> updtaeChargerStatus(@RequestParam("stationId") String stationId,
 			@RequestParam("chargerId") List<String> charrgerIdList, @RequestParam("chargerStatus") String status) {
-		if (stationServiceImpl.updateChargerStatus(stationId, charrgerIdList, status) == true) {
+		if (chargerServiceImpl.updateChargerStatus(stationId, charrgerIdList, status) == true) {
 			return new ResponseEntity<>("Charger "+status + "ted Successfully", HttpStatus.OK);
 		}else 
 		return new ResponseEntity<>("Charger not "+status , HttpStatus.NOT_MODIFIED);
