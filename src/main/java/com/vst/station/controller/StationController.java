@@ -259,7 +259,7 @@ public class StationController {
 			}
 	}
 
-	@GetMapping("/getUserAccess")
+	@GetMapping("/getRestrictedUsers")
 	public ResponseEntity<List<String>> getUserAccess(@RequestParam("stationId") String stationId) {
 
 			List<String> userAccess = stationServiceImpl.GetUserAccessList(stationId);
