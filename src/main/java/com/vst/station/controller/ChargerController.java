@@ -39,7 +39,7 @@ public class ChargerController {
 	 * HTTP method : POST and URL : manageCharger/addCharger
 	 * 
 	 * @param stationId, chargerDTO
-	 * @return Http responce and string message "Charger added successfully"
+	 * @return Http response and string message "Charger added successfully"
 	 */
 	@PostMapping("/addCharger")
 	public ResponseEntity<String> addStationChargers(@RequestParam("stationId") String stationId,
@@ -57,14 +57,14 @@ public class ChargerController {
 	 * HTTP method : PUT and URL : manageCharger/udpateCharger
 	 * 
 	 * @param stationId, chargerId, chargerDTO
-	 * @return Http responce and string message "Charger updated successfully"
+	 * @return Http response and string message "Charger updated successfully"
 	 */
 	@PutMapping("/udpateCharger")
 	public ResponseEntity<String> chargerUpdate(@RequestParam("stationId") String stationId,
 			@RequestParam("chargerId") String chargerId, @RequestBody ChargerDTO chargerDTO) {
 		flag = chargerServiceImpl.updateCharger(stationId, chargerId, chargerDTO);
 		if (flag == true)
-			return new ResponseEntity<>("Charger Details Updated Succesfully", HttpStatus.OK);
+			return new ResponseEntity<>("Charger Details Updated Successfully", HttpStatus.OK);
 		else
 			return new ResponseEntity<>("Please Check and try Again", HttpStatus.NOT_FOUND);
 	}
@@ -75,7 +75,7 @@ public class ChargerController {
 	 * HTTP method : DELETE and URL : manageCharger/deleteCharger
 	 * 
 	 * @param chargerId
-	 * @return Http responce and string message "Charger successfully deleted"
+	 * @return Http response and string message "Charger successfully deleted"
 	 */
 	@DeleteMapping("/deleteCharger")
 	public ResponseEntity<String> deleteCharger(@RequestParam("chargerId") String chargerId) {
@@ -92,7 +92,7 @@ public class ChargerController {
 	 * HTTP method : GET and URL : manageCharger/getChargers
 	 * 
 	 * @param stationId
-	 * @return Http responce and list of Charger object
+	 * @return Http response and list of Charger object
 	 */
 	@GetMapping("/getChargers")
 	public ResponseEntity<List<Charger>> getStationChargers(@RequestParam("stationId") String stationId) {
@@ -111,7 +111,7 @@ public class ChargerController {
 	 * HTTP method : GET and URL : manageCharger/getCharger
 	 * 
 	 * @param chargerId
-	 * @return Http responce and Charger object
+	 * @return Http response and Charger object
 	 */
 	@GetMapping("/getCharger")
 	public ResponseEntity<?> getStationCharger(@RequestParam("chargerId") String chargerId) {
@@ -128,17 +128,30 @@ public class ChargerController {
 	 * HTTP method : PUT and URL : manageCharger/udpateChargerStatus
 	 * 
 	 * @param stationId, charrgerIdList, status
-	 * @return Http responce and string message "Charger activated successfully"
+	 * @return Http response and string message "Charger activated successfully"
 	 */
 	@PutMapping("/updateChargerStatus")
 	public ResponseEntity<String> updtaeChargerStatus(@RequestParam("stationId") String stationId,
 			@RequestParam("chargerId") List<String> charrgerIdList, @RequestParam("chargerStatus") String status) {
 		if (chargerServiceImpl.updateChargerStatus(stationId, charrgerIdList, status) == true) {
-			return new ResponseEntity<>("Charger "+status + "ted Successfully", HttpStatus.OK);
+			return new ResponseEntity<>("Charger "+status + "updated Successfully", HttpStatus.OK);
 		}else 
 		return new ResponseEntity<>("Charger not "+status , HttpStatus.NOT_MODIFIED);
 		
 
 	}
+	
+	@SuppressWarnings("unused")
+	@GetMapping("/getChargerStatusByChargerSerialNumber")
+	public ResponseEntity<?> getChargerStatus(@RequestParam("chargerSerialNumber") String chargerSerialNumber) {
+	    Boolean isActive = chargerServiceImpl.getChargerStatusByChargerSerialNumber(chargerSerialNumber);
+
+	    if (isActive == null) {
+	        return ResponseEntity.notFound().build();
+	    } else {
+	        return ResponseEntity.ok(isActive); 
+	    }
+	}
 
 }
+

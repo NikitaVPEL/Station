@@ -32,5 +32,7 @@ public interface ChargerServiceInterface {
 	public boolean updateChargerStatus(String stationId, List<String> chargerIdList, String status);
 
 	public boolean removeCharger(String chargerId);
+	
+	public boolean getChargerStatusByChargerSerialNumber(String chargerSerialNumber);
 
 }

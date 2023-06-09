@@ -65,6 +65,12 @@ public interface StationRepository extends MongoRepository<Station, String> {
 	@Query(value = "{'chargers._id':?0}", fields = "{'chargers.$':1}")
 	Station findByChargerId(String chargerId);
 	
+//	@Query(value = "{'chargers.chargerSerialNumber': ?0}", fields = "{'chargers.isActive': 1}")
+//	Station findByChargerSerialNumber(String chargerSerialNumber);
+	
+	 Station findByChargersChargerSerialNumberAndIsActiveTrue(String chargerSerialNumber);
+
+	
 //	({'chargers._id':'CHG20230419174707799'},{'chargers.$':1})
 
 	@Query(value = "{'stationId':?0, 'isActive':true}", fields = "{'chargers':0}")
@@ -94,5 +100,7 @@ public interface StationRepository extends MongoRepository<Station, String> {
 	
 	@Query("{ 'location' : { '$nearSphere' : { '$geometry' : { 'type' : ?0, 'coordinates': [?1, ?2] }, '$maxDistance': ?3, '$minDistance': ?4 } } }")
 	List<Station> findByGeoLocation(String type, double longitude, double latitude, double maxDistance, double minDistance);
+
+
 }
 

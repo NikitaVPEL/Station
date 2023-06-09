@@ -1,9 +1,5 @@
 package com.vst.station.controller;
 
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
-import java.net.URL;
 import java.util.List;
 
 import javax.validation.Valid;
@@ -51,7 +47,7 @@ public class StationController {
 	 * HTTP method : POST and URL : manageStation/addStation
 	 * 
 	 * @param stationDto
-	 * @return Http responce and string message "Station added successfully"
+	 * @return Http response and string message "Station added successfully"
 	 */
 	@PostMapping("/addStation")
 	public ResponseEntity<String> saveStation(@Valid @RequestBody StationDTO stationDTO) {
@@ -59,7 +55,7 @@ public class StationController {
 		if (stationServiceImpl.addStation(stationDTO) == true)
 			return new ResponseEntity<>("Station Added", HttpStatus.OK);
 		else
-			return new ResponseEntity<>("Somthing Went Wrong", HttpStatus.BAD_REQUEST);
+			return new ResponseEntity<>("Something Went Wrong", HttpStatus.BAD_REQUEST);
 	}
 
 	/**
@@ -68,15 +64,15 @@ public class StationController {
 	 * HTTP method : PUT and URL : manageStation/updateStation
 	 * 
 	 * @param stationId, stationDto
-	 * @return Http responce and string message "Station updated successfully"
+	 * @return Http response and string message "Station updated successfully"
 	 */
 	@PutMapping("/updateStation")
 	public ResponseEntity<String> updateStationDetails(@RequestParam("stationId") String stationId,
 			@RequestBody StationUpdateDTO stationUpdateDTO) {
 		if (stationServiceImpl.updateStation(stationId, stationUpdateDTO) == true)
-			return new ResponseEntity<>("Station Details Updated Succesfully", HttpStatus.OK);
+			return new ResponseEntity<>("Station Details Updated Successfully", HttpStatus.OK);
 		else
-			return new ResponseEntity<>("Somthing Went Wrong", HttpStatus.NOT_FOUND);
+			return new ResponseEntity<>("Something Went Wrong", HttpStatus.NOT_FOUND);
 	}
 
 	/**
@@ -85,14 +81,14 @@ public class StationController {
 	 * HTTP method : DELETE and URL : manageStation/deleteStation
 	 * 
 	 * @param stationId
-	 * @return Http responce and string message "Station successfully deleted"
+	 * @return Http response and string message "Station successfully deleted"
 	 */
 	@DeleteMapping("/deleteStation")
 	public ResponseEntity<String> deleteStationDetails(@RequestParam("stationId") String stationId) {
 		if (stationServiceImpl.removeStation(stationId) == true)
-			return new ResponseEntity<>("Station Deleted Succesfully", HttpStatus.OK);
+			return new ResponseEntity<>("Station Deleted Successfully", HttpStatus.OK);
 		else
-			return new ResponseEntity<>("Somthing Went Wrong", HttpStatus.NOT_FOUND);
+			return new ResponseEntity<>("Something Went Wrong", HttpStatus.NOT_FOUND);
 	}
 
 	/**
@@ -101,7 +97,7 @@ public class StationController {
 	 * HTTP method : GET and URL : manageStation/getStation
 	 * 
 	 * @param stationId
-	 * @return Http responce and Station object
+	 * @return Http response and Station object
 	 */
 	@GetMapping("/getStation")
 	public ResponseEntity<?> getStationById(@RequestParam("stationId") String stationId) {
@@ -120,7 +116,7 @@ public class StationController {
 	 * 
 	 * HTTP method : GET and URL : manageStation/getStations
 	 * 
-	 * @return Http responce and list of Station object
+	 * @return Http response and list of Station object
 	 */
 	@GetMapping("/getStations")
 	public ResponseEntity<List<?>> getAllStation() {
@@ -135,7 +131,7 @@ public class StationController {
 	 * HTTP method : GET and URL : manageStation/getStationHost
 	 * 
 	 * @param stationHostId
-	 * @return Http responce and list of Station object
+	 * @return Http response and list of Station object
 	 */
 	@GetMapping("/getStationHost")
 	public ResponseEntity<List<Station>> getStationByHostId(@RequestParam("stationHostId") String stationHostId) {
@@ -152,7 +148,7 @@ public class StationController {
 	 * HTTP method : GET and URL : manageStation/getStationVendor
 	 * 
 	 * @param stationVendorId
-	 * @return Http responce and list of Station object
+	 * @return Http response and list of Station object
 	 */
 	@GetMapping("/getStationVendor")
 	public ResponseEntity<List<Station>> getStationByVendorId(@RequestParam("stationVendorId") String stationVendorId) {
@@ -178,7 +174,7 @@ public class StationController {
 	 * HTTP method : GET and URL : manageStation/getStationById
 	 * 
 	 * @param stationId
-	 * @return Http responce and Station object without chargers and connectors
+	 * @return Http response and Station object without chargers and connectors
 	 */
 	@GetMapping("/getStationById")
 	public ResponseEntity<Station> getStationData(@RequestParam("stationId") String stationId) {
@@ -191,7 +187,7 @@ public class StationController {
 	 * 
 	 * HTTP method : GET and URL : manageStation/getStationInterface
 	 * 
-	 * @return Http responce and list of Station object without chargers and
+	 * @return Http response and list of Station object without chargers and
 	 *         connectors
 	 */
 	@GetMapping("/getStationInterface")
@@ -205,7 +201,7 @@ public class StationController {
 	 * HTTP method : GET and URL : manageStation/getStationsByKeyword
 	 * 
 	 * @param query(keyword)
-	 * @return Http responce and list of Station object without chargers and
+	 * @return Http response and list of Station object without chargers and
 	 *         connectors
 	 */
 	@GetMapping("/getStationsByKeyword")
@@ -225,7 +221,7 @@ public class StationController {
 	 * HTTP method : GET and URL : manageStation/getStationsLocation
 	 * 
 	 * @param longitude, latitude, maxDistance
-	 * @return Http responce and list of Station object present in that perticular
+	 * @return Http response and list of Station object present in that particular
 	 *         radius
 	 */
 	@GetMapping("/getStationsLocation")
@@ -240,7 +236,7 @@ public class StationController {
 	 * HTTP method : GET and URL : manageStation/getStationAddress
 	 * 
 	 * @param stationId
-	 * @return Http responce and Station object
+	 * @return Http response and Station object
 	 */
 	@GetMapping("/getStationAddress")
 	public ResponseEntity<StationFindDTO> getAddrerss(@RequestParam("stationId") String stationId) {

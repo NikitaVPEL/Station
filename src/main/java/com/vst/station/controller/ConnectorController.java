@@ -40,7 +40,7 @@ public class ConnectorController {
 	 * HTTP method : POST and URL : manageConnector/addConnector
 	 * 
 	 * @param stationId, chargerId, connectorDTO
-	 * @return Http responce and string message "Connector added successfully"
+	 * @return Http response and string message "Connector added successfully"
 	 */
 	@PostMapping("/addConnector")
 	public ResponseEntity<String> addStationConnector(@RequestParam("stationId") String stationId,
@@ -58,14 +58,14 @@ public class ConnectorController {
 	 * HTTP method : PUT and URL : manageConnector/updateConnector
 	 * 
 	 * @param connectorId, connectorDTO
-	 * @return Http responce and string message "Connector updated successfully"
+	 * @return Http response and string message "Connector updated successfully"
 	 */
 	@PutMapping("/updateConnector")
 	public ResponseEntity<String> updateConnectorDetailsById(@RequestParam("connectorId") String connectorId,
 			@RequestBody ConnectorDTO connectorDTO) {
 		boolean flag = chargerServiceImpl.updateConnectorById(connectorId, connectorDTO);
 		if (flag == true)
-			return new ResponseEntity<>("Connector Update Succesfully", HttpStatus.OK);
+			return new ResponseEntity<>("Connector Update Successfully", HttpStatus.OK);
 		else
 			return new ResponseEntity<>("Connector Details not updated, Please check and try again",
 					HttpStatus.NOT_FOUND);
@@ -78,7 +78,7 @@ public class ConnectorController {
 	 * HTTP method : GET and URL : manageConnector/getConnectors
 	 * 
 	 * @param stationId, chargerId
-	 * @return Http responce and list of connector object
+	 * @return Http response and list of connector object
 	 */
 	@GetMapping("/getConnectors")
 	public ResponseEntity<List<Connector>> getAllConnectors(@RequestParam("stationId") String stationId,
@@ -92,7 +92,7 @@ public class ConnectorController {
 	 * HTTP method : GET and URL : manageConnector/getConnector
 	 * 
 	 * @param connectorId
-	 * @return Http responce and Connector object
+	 * @return Http response and Connector object
 	 */
 	@GetMapping("/getConnector")
 	public ResponseEntity<Connector> getConnectorById(@RequestParam("connectorId") String connectorId) {
@@ -105,13 +105,13 @@ public class ConnectorController {
 	 * HTTP method : DELETE and URL : manageConnector/deleteConnector
 	 * 
 	 * @param connectorId
-	 * @return Http responce and string message "Connector successfully deleted"
+	 * @return Http response and string message "Connector successfully deleted"
 	 */
 	@DeleteMapping("/deleteConnector")
 	public ResponseEntity<String> deleteConnector(@RequestParam("connectorId") String connectorId) {
 		boolean flag = chargerServiceImpl.removeConnector(connectorId);
 		if (flag == true)
-			return new ResponseEntity<>("Connector Deleted Succesfully", HttpStatus.OK);
+			return new ResponseEntity<>("Connector Deleted Successfully", HttpStatus.OK);
 		else
 			return new ResponseEntity<>("Connector Not Deleted. Please try again", HttpStatus.NOT_FOUND);
 	}

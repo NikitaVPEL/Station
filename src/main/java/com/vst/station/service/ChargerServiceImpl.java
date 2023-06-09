@@ -1159,4 +1159,39 @@ public class ChargerServiceImpl implements ChargerServiceInterface {
 		}
 	}
 
+	
+	
+	  public boolean getChargerStatusByChargerSerialNumber(String chargerSerialNumber) {
+		  try {
+			  
+		  if(!chargerSerialNumber.isBlank() && chargerSerialNumber!= null ) {
+	        Station station = stationRepository.findByChargersChargerSerialNumberAndIsActiveTrue(chargerSerialNumber);
+	        if (station!=null) {
+	        	
+	            List<Charger> chargers = station.getChargers();
+
+	            for (Charger charger : chargers) {
+	                if (charger.getChargerSerialNumber().equals(chargerSerialNumber)) {
+	                    return charger.isActive();
+	                }
+	            }
+	        }
+	    }else
+			throw new InValidIdExcepetion(
+					"Invalid ChargerSerialNumber. The ChargerSerialNumber provided is not valid. Please check and try again.");
+	}catch (InValidDataException e) {
+		logger.error(e.getLocalizedMessage());
+		throw new InValidDataException(e.getLocalizedMessage());
+	} catch (Exception e) {
+
+		logger.error(new StationException("STN001", "ManageStation", e.getStackTrace()[0].getClassName(),
+				e.getStackTrace()[0].getMethodName(), e.getStackTrace()[0].getLineNumber(), "Something went wrong",
+				e.getLocalizedMessage()));
+
+		throw new StationException("STN001", "ManageStation", e.getStackTrace()[0].getClassName(),
+				e.getStackTrace()[0].getMethodName(), e.getStackTrace()[0].getLineNumber(), "Something went wrong",
+				e.getLocalizedMessage());
+	}
+		return false;
+	  }
 }
