@@ -80,6 +80,7 @@ public class StationDTO {
 
 	@NotBlank(message = "Please enter a value.")
 	@NotNull(message = "Please enter a value.")
+	@Pattern(regexp = "^\\d+(\\.\\d+)?$",message= "Enter a valid station parking area")
 	private String stationParkingArea;
 
 	@NotBlank(message = "Please enter a Contact. Contact Details cannot be left blank.")

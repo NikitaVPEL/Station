@@ -2,6 +2,8 @@ package com.vst.station.controller;
 
 import java.util.List;
 
+import javax.validation.Valid;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,7 +35,7 @@ public class ChargerController {
 
 	public static final Logger logger = LogManager.getLogger(ChargerController.class);
 
-	/**
+	/**	
 	 * Usage: Add new Charger specific station
 	 * 
 	 * HTTP method : POST and URL : manageCharger/addCharger
@@ -43,7 +45,7 @@ public class ChargerController {
 	 */
 	@PostMapping("/addCharger")
 	public ResponseEntity<String> addStationChargers(@RequestParam("stationId") String stationId,
-			@RequestBody ChargerDTO chargerDTO) {
+			@Valid @RequestBody ChargerDTO chargerDTO) {
 		flag = chargerServiceImpl.addCharger(stationId, chargerDTO);
 		if (flag == true)
 			return new ResponseEntity<>("Charger Added Successfully", HttpStatus.OK);

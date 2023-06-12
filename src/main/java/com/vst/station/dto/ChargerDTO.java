@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import javax.validation.constraints.Pattern;
+
 import org.springframework.data.annotation.Id;
 
 import lombok.AllArgsConstructor;
@@ -25,8 +27,12 @@ public class ChargerDTO {
 	private String chargerId;
 	private String chargerName;
 	private int chargerNumber;
+	@Pattern(regexp = "^\\d+(\\.\\d+)?$",message="Enter correct charger input voltage")
+	
 	private String chargerInputVoltage;
+	@Pattern(regexp = "^\\d+(\\.\\d+)?$",message="Enter correct charger output voltage")
 	private String chargerOutputVoltage;
+	
 	private String chargerMinInputAmpere;
 	private String chargerMaxInputAmpere;
 	private String chargerOutputAmpere;

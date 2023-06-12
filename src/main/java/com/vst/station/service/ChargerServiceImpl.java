@@ -377,13 +377,13 @@ public class ChargerServiceImpl implements ChargerServiceInterface {
 									"No Charger Data. There is no data available for chargers at the moment. Please check again");
 					} else
 						throw new StationNotFoundException(
-								"Station Not Found. The station with the provided ID does not exist. Please verify the station ID and try again");
+								"Station Not Found,Please verify the station ID and try again");
 				} else
 					throw new InValidIdExcepetion(
 							"Invalid charger ID. The ID provided is not valid. Please check and try again.");
 			} else
 				throw new InValidIdExcepetion(
-						"Invalid station ID. The ID provided is not valid. Please check and try again.");
+						"Invalid station ID, Please check and try again.");
 
 		} catch (InValidDataException e) {
 			logger.error(e.getLocalizedMessage());
@@ -507,7 +507,7 @@ public class ChargerServiceImpl implements ChargerServiceInterface {
 								"No Chargers Found. There are no Charger available in the system. Please verify and try again");
 				} else
 					throw new StationNotFoundException(
-							"Station Not Found. The station with the provided ID does not exist. Please verify and try again ");
+							"Station Not Found,Please verify and try again ");
 			} else
 				throw new InValidIdExcepetion(
 						"Invalid Connector ID. The ID provided is not valid. Please check and try again.");
@@ -577,10 +577,10 @@ public class ChargerServiceImpl implements ChargerServiceInterface {
 						return null;
 				} else
 					throw new StationNotFoundException(
-							"No Station Found. There are no Station available in the system. Please Check and try again");
+							"No Station Found,Please Check and try again");
 			} else
 				throw new StationIdNotAcceptableException(
-						"Invalid Station ID. The ID provided is not valid. Please check and try again.");
+						"Invalid Station ID, Please check and try again.");
 
 		} catch (StationIdNotAcceptableException e) {
 			logger.error(e.getLocalizedMessage());
@@ -696,7 +696,8 @@ public class ChargerServiceImpl implements ChargerServiceInterface {
 								if (c.getChargerId().equals(chargerId)) {
 									chargerOne = c;
 									break;
-								}
+								}throw new InValidIdExcepetion(
+										"Invalid Charger ID. The ID provided is not valid. Please check and try again.");
 							}
 							if (chargerOne != null) {
 
@@ -899,8 +900,7 @@ public class ChargerServiceImpl implements ChargerServiceInterface {
 							throw new ChargerNotFoundException(
 									"No Chargers Found. There are no Charger available in the system. Please verify and try again");
 					} else
-						throw new StationNotFoundException("Station Not Found. The station with the pr"
-								+ "ovided ID does not exist. Please verify and try again");
+						throw new StationNotFoundException("Station Not Found, Please verify and try again");
 				} else
 					throw new InValidIdExcepetion(
 							"Invalid Charger ID. The ID provided is not valid. Please check and try again.");
@@ -1045,7 +1045,7 @@ public class ChargerServiceImpl implements ChargerServiceInterface {
 								"No Chargers Found. There are no Charger available in the system. Please verify and try again");
 				} else
 					throw new StationNotFoundException(
-							"Station Not Found. The station with the provided ID does not exist. Please verify and try again ");
+							"Station Not Found, Please verify and try again ");
 			} else
 				throw new InValidIdExcepetion(
 						"Invalid Connector ID. The ID provided is not valid. Please check and try again.");
@@ -1131,7 +1131,7 @@ public class ChargerServiceImpl implements ChargerServiceInterface {
 								"Chargers Not Found. There are no Chargers available in the Station. Please Check and try again");
 				} else
 					throw new StationNotFoundException(
-							"Station Not Found. There is not station available. Please Check and try again");
+							"Station Not Found, Please Check and try again");
 			} else
 				throw new InValidDataException("Invalid ID, please provide valid data and try again");
 
