@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.vst.station.dto.ChargerDTO;
+import com.vst.station.dto.ChargerUpdateDTO;
 import com.vst.station.model.Charger;
 import com.vst.station.service.ChargerServiceImpl;
 
@@ -41,7 +42,7 @@ public class ChargerController {
 	 * HTTP method : POST and URL : manageCharger/addCharger
 	 * 
 	 * @param stationId, chargerDTO
-	 * @return Http response and string message "Charger added successfully"
+	 * @return Http response and string message "Charger added successfully" 
 	 */
 	@PostMapping("/addCharger")
 	public ResponseEntity<String> addStationChargers(@RequestParam("stationId") String stationId,
@@ -63,7 +64,7 @@ public class ChargerController {
 	 */
 	@PutMapping("/udpateCharger")
 	public ResponseEntity<String> chargerUpdate(@RequestParam("stationId") String stationId,
-			@RequestParam("chargerId") String chargerId, @RequestBody ChargerDTO chargerDTO) {
+			@RequestParam("chargerId") String chargerId, @Valid @RequestBody ChargerUpdateDTO chargerDTO) {
 		flag = chargerServiceImpl.updateCharger(stationId, chargerId, chargerDTO);
 		if (flag == true)
 			return new ResponseEntity<>("Charger Details Updated Successfully", HttpStatus.OK);

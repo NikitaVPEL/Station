@@ -28,7 +28,7 @@ public class StationDTO {
 
 	@Id
 	private String stationId;
-	
+
 	@NotBlank(message = "Please enter a value.")
 	@NotNull(message = "Please enter a value.")
 //	@Pattern(regexp = "^[a-zA-Z0-9]*$",message = "Please Enter Correct Name")
@@ -37,23 +37,22 @@ public class StationDTO {
 	@NotBlank(message = "Please enter a value.")
 	@NotNull(message = "Please enter a value.")
 	private String stationHostId;
-	
+
 	@NotBlank(message = "Please enter a value.")
 	@NotNull(message = "Please enter a value.")
 	private String stationVendorId;
-	
+
 	@NotBlank(message = "Please enter a value.")
 	@NotNull(message = "Please enter a value.")
 	private String stationArea;
-	
+
 	@NotBlank(message = "Please enter a value.")
 	@NotNull(message = "Please enter a value.")
 	private String stationAddressLineOne;
-	
+
 	@NotBlank(message = "Please enter a value.")
 	@NotNull(message = "Please enter a value.")
 	private String stationAddressLineTwo;
-
 
 	@NotNull(message = "This PIN Code cannot be left blank. Please enter a valid input to continue.")
 	@Pattern(regexp = "^[1-9][0-9]{5}$", message = "Please Enter Correct PIN Code")
@@ -65,56 +64,53 @@ public class StationDTO {
 	@NotNull(message = "Please enter a value.")
 	private String stationCity;
 
-//	@NotBlank(message = "Please enter a value.")
-//	@NotNull(message = "Please enter a value.")
 	private double stationLatitude;
 
-//	@NotBlank(message = "Please enter a value.")
-//	@NotNull(message = "Please enter a value.")
 	private double stationLongitude;
 
 	@NotBlank(message = "Please enter a value.")
 	@NotNull(message = "Please enter a value.")
-	@URL(message ="Please Check URL. Try Again")
+	@URL(message = "Please Check URL,Try Again")
 	private String stationLocationURL;
 
 	@NotBlank(message = "Please enter a value.")
 	@NotNull(message = "Please enter a value.")
-	@Pattern(regexp = "^\\d+(\\.\\d+)?$",message= "Enter a valid station parking area")
+	@Pattern(regexp = "^\\d+(\\.\\d+)?$", message = "Enter a valid station parking area")
 	private String stationParkingArea;
 
 	@NotBlank(message = "Please enter a Contact. Contact Details cannot be left blank.")
 	@NotNull(message = "This PIN Code cannot be left blank. Please enter a valid input to continue.")
-//	@Pattern(regexp = ("(0|91)?[6-9][0-9]{9}"), message = "please Enter Valid ContactNo")
+	@Pattern(regexp = "^[6-9]\\d{9}$", message = "Please enter a valid 10-digit contact number.")
 	private String stationContactNumber;
-	
-	@NotBlank(message ="Please Enter Valid Working Time")
-	@NotNull(message ="Please Enter Valid Working Time")
-//	@Pattern(regexp = "^(24\\/7)|(([01]\\d|2[0-3]):[0-5]\\d-([01]\\d|2[0-3]):[0-5]\\d)$",message="Please Enter Correct Time")
-	private String stationWorkingTime;
-	
+
+	@NotBlank(message = "Please Enter Valid Opening Time")
+	@NotNull(message = "Please Enter Valid Opening Time")
+	private String stationOpeningTime;
+
+	@NotBlank(message = "Please Enter Valid Closing Time")
+	@NotNull(message = "Please Enter Valid Closing Time")
+	private String stationClosingTime;
+
 //	@NotBlank(message = "Please enter a value.")
 //	@NotNull(message = "Please enter a value.")
 	private int chargerNumber;
-	
+
 	@NotBlank(message = "Please enter a value.")
 	@NotNull(message = "Please enter a value.")
-	@Pattern(regexp = "^[a-zA-Z]*$", message="Enter Valid Parking Type")
 	private String stationParkingType;
-	
-	private List<String> stationAmenity = new ArrayList<>();
-	private List<ChargerDTO> chargers = new ArrayList<>();
-	
+
 	@NotBlank(message = "Please enter a value.")
 	@NotNull(message = "Please enter a value.")
 	private String stationStatus;
-	
+
 	@NotBlank(message = "Please enter a value.")
 	@NotNull(message = "Please enter a value.")
 	private String stationPowerStandard;
-	
-	private List<String> userAcceessList =  new ArrayList<>(); 
-	
+
+	private List<String> stationAmenity = new ArrayList<>();
+	private List<ChargerDTO> chargers = new ArrayList<>();
+	private List<String> userAcceessList = new ArrayList<>();
+
 	private Date createdDate;
 	private Date modifiedDate;
 	private String createdBy;

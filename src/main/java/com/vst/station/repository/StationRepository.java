@@ -32,8 +32,6 @@ public interface StationRepository extends MongoRepository<Station, String> {
 
 	List<Station> findByStationParkingAreaAndIsActiveTrue(String stationParkingArea);
 
-	List<Station> findByStationWorkingTimeAndIsActiveTrue(String stationWorkingTime);
-
 	List<Station> findByStationParkingTypeAndIsActiveTrue(String stationParkingType);
 
 	List<Station> findAllByIsActiveFalse();

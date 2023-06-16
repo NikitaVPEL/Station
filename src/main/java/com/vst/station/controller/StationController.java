@@ -68,7 +68,7 @@ public class StationController {
 	 */
 	@PutMapping("/updateStation")
 	public ResponseEntity<String> updateStationDetails(@RequestParam("stationId") String stationId,
-			@RequestBody StationUpdateDTO stationUpdateDTO) {
+			@Valid @RequestBody StationUpdateDTO stationUpdateDTO) {
 		if (stationServiceImpl.updateStation(stationId, stationUpdateDTO) == true)
 			return new ResponseEntity<>("Station Details Updated Successfully", HttpStatus.OK);
 		else

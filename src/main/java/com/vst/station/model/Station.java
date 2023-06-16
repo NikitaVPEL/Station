@@ -42,14 +42,15 @@ public class Station {
 	private String stationLocationURL;
 	private String stationParkingArea;
 	private String stationContactNumber;
-	private String stationWorkingTime;
+	private String stationOpeningTime;
+	private String stationClosingTime;
 	private int chargerNumber;
 	private String stationParkingType;
-	private List<String> stationAmenity= new ArrayList<>();
-	private List<Charger> chargers =new ArrayList<>();
 	private String stationShareId;
 	private String stationStatus;
 	private String stationPowerStandard;
+	private List<String> stationAmenity= new ArrayList<>();
+	private List<Charger> chargers =new ArrayList<>();
 	private List<String> userAcceessList =  new ArrayList<>(); 
 	private Date createdDate;
 	private Date modifiedDate;

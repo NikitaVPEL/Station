@@ -2,6 +2,8 @@ package com.vst.station.controller;
 
 import java.util.List;
 
+import javax.validation.Valid;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,6 +21,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.vst.station.dto.ConnectorDTO;
+import com.vst.station.dto.ConnectorUpdateDTO;
 import com.vst.station.model.Connector;
 import com.vst.station.service.ChargerServiceImpl;
 
@@ -44,7 +47,7 @@ public class ConnectorController {
 	 */
 	@PostMapping("/addConnector")
 	public ResponseEntity<String> addStationConnector(@RequestParam("stationId") String stationId,
-			@RequestParam("chargerId") String chargerId, @RequestBody ConnectorDTO connectorDTO) {
+			@RequestParam("chargerId") String chargerId, @Valid @RequestBody ConnectorDTO connectorDTO) {
 		flag = chargerServiceImpl.addConnector(stationId, chargerId, connectorDTO);
 		if (flag == true)
 			return new ResponseEntity<>("Connector Added Successfully", HttpStatus.OK);
@@ -62,7 +65,7 @@ public class ConnectorController {
 	 */
 	@PutMapping("/updateConnector")
 	public ResponseEntity<String> updateConnectorDetailsById(@RequestParam("connectorId") String connectorId,
-			@RequestBody ConnectorDTO connectorDTO) {
+			@Valid @RequestBody ConnectorUpdateDTO connectorDTO) {
 		boolean flag = chargerServiceImpl.updateConnectorById(connectorId, connectorDTO);
 		if (flag == true)
 			return new ResponseEntity<>("Connector Update Successfully", HttpStatus.OK);

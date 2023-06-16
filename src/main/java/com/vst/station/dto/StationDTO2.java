@@ -23,7 +23,9 @@ public class StationDTO2 {
 	private String stationLocation;
     private String stationName;
     private String stationLocationURL;
-    private String stationWorkingTime;
+	private String stationOpeningTime;
+	private String stationClosingTime;
+
     private List<String> stationAmenity = new ArrayList<>();
 	
     

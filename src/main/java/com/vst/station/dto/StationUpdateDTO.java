@@ -48,17 +48,18 @@ public class StationUpdateDTO {
 	@URL(message = "Please Check URL. Try Again")
 	private String stationLocationURL;
 
+	@Pattern(regexp = "^\\d+(\\.\\d+)?$", message = "Enter a valid station parking area")
 	private String stationParkingArea;
 
-	@Pattern(regexp = ("(0|91)?[6-9][0-9]{9}"), message = "please Enter Valid ContactNo")
+	@Pattern(regexp = "^[6-9]\\d{9}$", message = "Please enter a valid 10-digit contact number.")
 	private String stationContactNumber;
 
-//	@Pattern(regexp = "^(24\\/7)|(([01]\\d|2[0-3]):[0-5]\\d-([01]\\d|2[0-3]):[0-5]\\d)$", message = "Please Enter Correct Time")
-	private String stationWorkingTime;
+	private String stationOpeningTime;
+
+	private String stationClosingTime;
 
 	private int chargerNumber;
 
-	@Pattern(regexp = "^[a-zA-Z]*$", message = "Enter Valid Parking Type")
 	private String stationParkingType;
 
 	private List<String> stationAmenity = new ArrayList<>();

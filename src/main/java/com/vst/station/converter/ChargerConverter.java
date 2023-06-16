@@ -6,6 +6,7 @@ import org.springframework.stereotype.Component;
 
 import com.vst.station.dto.ChargerDTO;
 import com.vst.station.dto.ChargerGetDTO;
+import com.vst.station.dto.ChargerUpdateDTO;
 import com.vst.station.model.Charger;
 
 @Component
@@ -30,5 +31,11 @@ public class ChargerConverter {
 		ChargerGetDTO chargerGetDTO = new ChargerGetDTO();
 		BeanUtils.copyProperties(charger, chargerGetDTO);
 		return chargerGetDTO;
+	}
+	
+	public Charger dtoToEntity1(ChargerUpdateDTO chargerDTO) {
+		Charger charger = new Charger();
+		BeanUtils.copyProperties(chargerDTO, charger);
+		return charger;
 	}
 }

@@ -257,9 +257,14 @@ public class StationServiceImpl implements StationServiceInterface {
 							flag = true;
 						}
 
-						if (stationObj.getStationWorkingTime() != null
-								&& !stationObj.getStationWorkingTime().isBlank()) {
-							obj.setStationWorkingTime(stationObj.getStationWorkingTime());
+						if (stationObj.getStationOpeningTime() != null
+								&& !stationObj.getStationOpeningTime().isBlank()) {
+							obj.setStationOpeningTime(stationObj.getStationOpeningTime());
+							flag = true;
+						}
+						if (stationObj.getStationClosingTime() != null
+								&& !stationObj.getStationClosingTime().isBlank()) {
+							obj.setStationClosingTime(stationObj.getStationClosingTime());
 							flag = true;
 						}
 

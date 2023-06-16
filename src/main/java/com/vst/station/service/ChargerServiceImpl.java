@@ -13,7 +13,9 @@ import org.springframework.stereotype.Service;
 import com.vst.station.converter.ChargerConverter;
 import com.vst.station.converter.ConnectorConverter;
 import com.vst.station.dto.ChargerDTO;
+import com.vst.station.dto.ChargerUpdateDTO;
 import com.vst.station.dto.ConnectorDTO;
+import com.vst.station.dto.ConnectorUpdateDTO;
 import com.vst.station.exception.ChargerNotFoundException;
 import com.vst.station.exception.InValidDataException;
 import com.vst.station.exception.InValidIdExcepetion;
@@ -28,7 +30,7 @@ import com.vst.station.utils.IdAndDateGenerator;
 import com.vst.station.utils.Utility;
 
 /**
- * @exception : @throws : {@link @stationException} if any error occure while
+ * @exception : @throws : {@link @stationException} if any error occur while
  *              the code.
  * @exception : @throws : {@link @InValidIdExcepetion} if received id is null.
  * @exception : @throws : {@link @InValidDataException} if received object is
@@ -226,7 +228,7 @@ public class ChargerServiceImpl implements ChargerServiceInterface {
 	 */
 	@Transactional
 	@Override
-	public boolean updateCharger(String stationId, String chargerId, ChargerDTO chargerDTO) {
+	public boolean updateCharger(String stationId, String chargerId, ChargerUpdateDTO chargerDTO) {
 		logger.info("StationServiceImpl :: updateCharger : execution Started");
 		try {
 			if (!stationId.isBlank() && stationId != null) {
@@ -235,7 +237,7 @@ public class ChargerServiceImpl implements ChargerServiceInterface {
 					Station station = stationRepository
 							.findByStationIdAndIsActiveTrue(utility.stringSanitization(stationId));
 					if (station != null) {
-						Charger obj = chargerConverter.dtoToEntity(chargerDTO);
+						Charger obj = chargerConverter.dtoToEntity1(chargerDTO);
 
 						List<Charger> chargers = station.getChargers();
 						if (!chargers.isEmpty()) {
@@ -425,7 +427,7 @@ public class ChargerServiceImpl implements ChargerServiceInterface {
 	 */
 	@Transactional
 	@Override
-	public boolean updateConnectorById(String connectorId, ConnectorDTO connectorDTO) {
+	public boolean updateConnectorById(String connectorId, ConnectorUpdateDTO connectorDTO) {
 
 		logger.info("StationServiceImpl :: updateConnectorById : execution Started");
 		try {
@@ -449,7 +451,7 @@ public class ChargerServiceImpl implements ChargerServiceInterface {
 
 										if (conn.getConnectorId().equals(utility.stringSanitization(connectorId))) {
 											if (conn.isActive() == true) {
-												Connector obj = connectorConverter.dtoToEntity(connectorDTO);
+												Connector obj = connectorConverter.dtoToEntity1(connectorDTO);
 
 												if (obj.getConnectorNumber() != 0)
 													conn.setConnectorNumber(obj.getConnectorNumber());
