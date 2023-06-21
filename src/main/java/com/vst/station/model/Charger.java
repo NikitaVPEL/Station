@@ -47,6 +47,11 @@ public class Charger {
 	private String isLEDIndications;
 	private String isSmart;
 	private String chargerStatus;
+	private String chargePointVendor;
+	private String chargePointModel;
+	private String chargeBoxSerialNumber;
+	private String meterType;
+	private String firmwareVersion;
 	private Date createdDate;
 	private Date modifiedDate;
 	private String createdBy;

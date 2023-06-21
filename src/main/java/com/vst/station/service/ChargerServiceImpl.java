@@ -16,6 +16,7 @@ import com.vst.station.dto.ChargerDTO;
 import com.vst.station.dto.ChargerUpdateDTO;
 import com.vst.station.dto.ConnectorDTO;
 import com.vst.station.dto.ConnectorUpdateDTO;
+import com.vst.station.dto.ocppVerificationDTO;
 import com.vst.station.exception.ChargerNotFoundException;
 import com.vst.station.exception.InValidDataException;
 import com.vst.station.exception.InValidIdExcepetion;
@@ -30,8 +31,8 @@ import com.vst.station.utils.IdAndDateGenerator;
 import com.vst.station.utils.Utility;
 
 /**
- * @exception : @throws : {@link @stationException} if any error occur while
- *              the code.
+ * @exception : @throws : {@link @stationException} if any error occur while the
+ *              code.
  * @exception : @throws : {@link @InValidIdExcepetion} if received id is null.
  * @exception : @throws : {@link @InValidDataException} if received object is
  *              null.
@@ -384,8 +385,7 @@ public class ChargerServiceImpl implements ChargerServiceInterface {
 					throw new InValidIdExcepetion(
 							"Invalid charger ID. The ID provided is not valid. Please check and try again.");
 			} else
-				throw new InValidIdExcepetion(
-						"Invalid station ID, Please check and try again.");
+				throw new InValidIdExcepetion("Invalid station ID, Please check and try again.");
 
 		} catch (InValidDataException e) {
 			logger.error(e.getLocalizedMessage());
@@ -508,8 +508,7 @@ public class ChargerServiceImpl implements ChargerServiceInterface {
 						throw new ChargerNotFoundException(
 								"No Chargers Found. There are no Charger available in the system. Please verify and try again");
 				} else
-					throw new StationNotFoundException(
-							"Station Not Found,Please verify and try again ");
+					throw new StationNotFoundException("Station Not Found,Please verify and try again ");
 			} else
 				throw new InValidIdExcepetion(
 						"Invalid Connector ID. The ID provided is not valid. Please check and try again.");
@@ -578,11 +577,9 @@ public class ChargerServiceImpl implements ChargerServiceInterface {
 					} else
 						return null;
 				} else
-					throw new StationNotFoundException(
-							"No Station Found,Please Check and try again");
+					throw new StationNotFoundException("No Station Found,Please Check and try again");
 			} else
-				throw new StationIdNotAcceptableException(
-						"Invalid Station ID, Please check and try again.");
+				throw new StationIdNotAcceptableException("Invalid Station ID, Please check and try again.");
 
 		} catch (StationIdNotAcceptableException e) {
 			logger.error(e.getLocalizedMessage());
@@ -698,7 +695,8 @@ public class ChargerServiceImpl implements ChargerServiceInterface {
 								if (c.getChargerId().equals(chargerId)) {
 									chargerOne = c;
 									break;
-								}throw new InValidIdExcepetion(
+								}
+								throw new InValidIdExcepetion(
 										"Invalid Charger ID. The ID provided is not valid. Please check and try again.");
 							}
 							if (chargerOne != null) {
@@ -1046,8 +1044,7 @@ public class ChargerServiceImpl implements ChargerServiceInterface {
 						throw new ChargerNotFoundException(
 								"No Chargers Found. There are no Charger available in the system. Please verify and try again");
 				} else
-					throw new StationNotFoundException(
-							"Station Not Found, Please verify and try again ");
+					throw new StationNotFoundException("Station Not Found, Please verify and try again ");
 			} else
 				throw new InValidIdExcepetion(
 						"Invalid Connector ID. The ID provided is not valid. Please check and try again.");
@@ -1132,8 +1129,7 @@ public class ChargerServiceImpl implements ChargerServiceInterface {
 						throw new ChargerNotFoundException(
 								"Chargers Not Found. There are no Chargers available in the Station. Please Check and try again");
 				} else
-					throw new StationNotFoundException(
-							"Station Not Found, Please Check and try again");
+					throw new StationNotFoundException("Station Not Found, Please Check and try again");
 			} else
 				throw new InValidDataException("Invalid ID, please provide valid data and try again");
 
@@ -1161,39 +1157,114 @@ public class ChargerServiceImpl implements ChargerServiceInterface {
 		}
 	}
 
-	
-	
-	  public boolean getChargerStatusByChargerSerialNumber(String chargerSerialNumber) {
-		  try {
-			  
-		  if(!chargerSerialNumber.isBlank() && chargerSerialNumber!= null ) {
-	        Station station = stationRepository.findByChargersChargerSerialNumberAndIsActiveTrue(chargerSerialNumber);
-	        if (station!=null) {
-	        	
-	            List<Charger> chargers = station.getChargers();
+	public boolean getChargerStatusByChargerSerialNumber(String chargerSerialNumber) {
+		try {
 
-	            for (Charger charger : chargers) {
-	                if (charger.getChargerSerialNumber().equals(chargerSerialNumber)) {
-	                    return charger.isActive();
-	                }
-	            }
-	        }
-	    }else
-			throw new InValidIdExcepetion(
-					"Invalid ChargerSerialNumber. The ChargerSerialNumber provided is not valid. Please check and try again.");
-	}catch (InValidDataException e) {
-		logger.error(e.getLocalizedMessage());
-		throw new InValidDataException(e.getLocalizedMessage());
-	} catch (Exception e) {
+			if (!chargerSerialNumber.isBlank() && chargerSerialNumber != null) {
+				Station station = stationRepository
+						.findByChargersChargerSerialNumberAndIsActiveTrue(chargerSerialNumber);
+				if (station != null) {
 
-		logger.error(new StationException("STN001", "ManageStation", e.getStackTrace()[0].getClassName(),
-				e.getStackTrace()[0].getMethodName(), e.getStackTrace()[0].getLineNumber(), "Something went wrong",
-				e.getLocalizedMessage()));
+					List<Charger> chargers = station.getChargers();
 
-		throw new StationException("STN001", "ManageStation", e.getStackTrace()[0].getClassName(),
-				e.getStackTrace()[0].getMethodName(), e.getStackTrace()[0].getLineNumber(), "Something went wrong",
-				e.getLocalizedMessage());
-	}
+					for (Charger charger : chargers) {
+						if (charger.getChargerSerialNumber().equals(chargerSerialNumber)) {
+							return charger.isActive();
+						}
+					}
+				}
+			} else
+				throw new InValidIdExcepetion(
+						"Invalid ChargerSerialNumber. The ChargerSerialNumber provided is not valid. Please check and try again.");
+		} catch (InValidDataException e) {
+			logger.error(e.getLocalizedMessage());
+			throw new InValidDataException(e.getLocalizedMessage());
+		} catch (Exception e) {
+
+			logger.error(new StationException("STN001", "ManageStation", e.getStackTrace()[0].getClassName(),
+					e.getStackTrace()[0].getMethodName(), e.getStackTrace()[0].getLineNumber(), "Something went wrong",
+					e.getLocalizedMessage()));
+
+			throw new StationException("STN001", "ManageStation", e.getStackTrace()[0].getClassName(),
+					e.getStackTrace()[0].getMethodName(), e.getStackTrace()[0].getLineNumber(), "Something went wrong",
+					e.getLocalizedMessage());
+		}
 		return false;
-	  }
+	}
+
+	@Override
+	public Boolean initialVerification(String chargerSerialNumber, ocppVerificationDTO ocppVerificationDTO) {
+		if (!chargerSerialNumber.isBlank() && chargerSerialNumber != null) {
+			Station station = stationRepository.findByChargersChargerSerialNumberAndIsActiveTrue(chargerSerialNumber);
+
+			if (station != null) {
+
+				List<Charger> chargers = station.getChargers();
+
+				Charger object = new Charger();
+
+				for (Charger charger : chargers) {
+					if (charger.getChargerSerialNumber().equals(chargerSerialNumber)) {
+						object = charger;
+						break;
+					} else
+						return false;
+
+				}
+
+				boolean flag = false;
+
+//					if(object.getChargePointVendor().equals(ocppVerificationDTO.getChargePointVendor())) {
+//						if(object.getChargePointModel().equals(ocppVerificationDTO.getChargePointModel())) 
+//							if(object.getChargeBoxSerialNumber().equals(ocppVerificationDTO.getChargeBoxSerialNumber())) 
+//								if(object.getMeterType().equals(ocppVerificationDTO.getMeterType()))
+//									if(object.getFirmwareVersion().equals(ocppVerificationDTO.getFirmwareVersion()))
+//											flag=true;
+//					}
+
+				if (object.getChargePointVendor().equalsIgnoreCase(ocppVerificationDTO.getChargePointVendor())) {
+					if (object.getChargePointModel().equals(ocppVerificationDTO.getChargePointModel()))
+						if (object.getChargeBoxSerialNumber().equals(ocppVerificationDTO.getChargeBoxSerialNumber()))
+							if (object.getFirmwareVersion().equals(ocppVerificationDTO.getFirmwareVersion()))
+								flag = true;
+				}
+
+				if (flag == true)
+					return true;
+				else
+					return flag;
+			} else
+				throw new InValidIdExcepetion(
+						"Invalid ChargerSerialNumber 1. The ChargerSerialNumber provided is not valid. Please check and try again.");
+		} else
+			throw new InValidIdExcepetion(
+					"Invalid ChargerSerialNumber 2. The ChargerSerialNumber provided is not valid. Please check and try again.");
+
+	}
+
+//		@Override
+	public String getChargerOCPPProtocol(String chargerSerialNumber) {
+		if (!chargerSerialNumber.isBlank() && chargerSerialNumber != null) {
+
+			Station station = stationRepository.findByChargersChargerSerialNumberAndIsActiveTrue(chargerSerialNumber);
+
+			if (station != null) {
+				List<Charger> chargers = station.getChargers();
+
+				for (Charger charger : chargers) {
+					charger.getChargerSerialNumber().equals(chargerSerialNumber);
+					Charger obj = new Charger();
+					obj = charger;
+					return obj.getChargerOCPPProtocol();
+				}
+				throw new InValidIdExcepetion(
+						"Invalid ChargerSerialNumber. The ChargerSerialNumber provided is not valid. Please check and try again.");
+			} else
+				throw new InValidIdExcepetion(
+						"Invalid ChargerSerialNumber. The ChargerSerialNumber provided is not valid. Please check and try again.");
+		}
+
+		return null;
+	}
+
 }

@@ -21,12 +21,14 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.vst.station.dto.ChargerDTO;
 import com.vst.station.dto.ChargerUpdateDTO;
+import com.vst.station.dto.ocppVerificationDTO;
 import com.vst.station.model.Charger;
 import com.vst.station.service.ChargerServiceImpl;
 
 @RequestMapping("/manageCharger")
 @CrossOrigin(origins = "*")
 @RestController
+@SuppressWarnings("unused")
 public class ChargerController {
 
 	@Autowired
@@ -144,7 +146,7 @@ public class ChargerController {
 
 	}
 	
-	@SuppressWarnings("unused")
+
 	@GetMapping("/getChargerStatusByChargerSerialNumber")
 	public ResponseEntity<?> getChargerStatus(@RequestParam("chargerSerialNumber") String chargerSerialNumber) {
 	    Boolean isActive = chargerServiceImpl.getChargerStatusByChargerSerialNumber(chargerSerialNumber);
@@ -154,6 +156,19 @@ public class ChargerController {
 	    } else {
 	        return ResponseEntity.ok(isActive); 
 	    }
+	}
+	
+	@PostMapping("/chargerVerification")
+	public ResponseEntity<?> getVerification(@RequestParam("chargerSerialNumber") String chargerSerialNumber, @RequestBody ocppVerificationDTO ocppVerificationDTO){
+		Boolean flag= chargerServiceImpl.initialVerification(chargerSerialNumber, ocppVerificationDTO);		
+		return ResponseEntity.ok(flag);
+	}
+	
+	@GetMapping("/chargerOCPPVersion")
+	public ResponseEntity<String> getOCPPProtocol(@RequestParam("chargerSerialNumber") String chargerSerialNumber){
+		String chargerOCPPProtocol = chargerServiceImpl.getChargerOCPPProtocol(chargerSerialNumber);
+		return new ResponseEntity<>(chargerOCPPProtocol,HttpStatus.OK);
+				 
 	}
 
 }

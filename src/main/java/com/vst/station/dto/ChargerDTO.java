@@ -123,6 +123,12 @@ public class ChargerDTO {
 	@NotNull(message = "Please Enter valid Charger Status")
 	private String chargerStatus;
 	
+	private String chargePointVendor;
+	private String chargePointModel;
+	private String chargeBoxSerialNumber;
+	private String meterType;
+	private String firmwareVersion;
+	
 	private Date createdDate;
 	private Date modifiedDate;
 	private String createdBy;

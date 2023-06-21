@@ -6,6 +6,7 @@ import com.vst.station.dto.ChargerDTO;
 import com.vst.station.dto.ChargerUpdateDTO;
 import com.vst.station.dto.ConnectorDTO;
 import com.vst.station.dto.ConnectorUpdateDTO;
+import com.vst.station.dto.ocppVerificationDTO;
 import com.vst.station.model.Charger;
 import com.vst.station.model.Connector;
 
@@ -34,7 +35,11 @@ public interface ChargerServiceInterface {
 	public boolean updateChargerStatus(String stationId, List<String> chargerIdList, String status);
 
 	public boolean removeCharger(String chargerId);
-	
+
 	public boolean getChargerStatusByChargerSerialNumber(String chargerSerialNumber);
+
+	public Boolean initialVerification(String chargerSerialNumber, ocppVerificationDTO ocppVerificationDTO);
+
+	public String getChargerOCPPProtocol(String chargerSerialNumber);
 
 }
