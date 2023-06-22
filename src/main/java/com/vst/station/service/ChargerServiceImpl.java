@@ -696,8 +696,6 @@ public class ChargerServiceImpl implements ChargerServiceInterface {
 									chargerOne = c;
 									break;
 								}
-								throw new InValidIdExcepetion(
-										"Invalid Charger ID. The ID provided is not valid. Please check and try again.");
 							}
 							if (chargerOne != null) {
 
