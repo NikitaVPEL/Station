@@ -66,7 +66,7 @@ public interface StationRepository extends MongoRepository<Station, String> {
 //	@Query(value = "{'chargers.chargerSerialNumber': ?0}", fields = "{'chargers.isActive': 1}")
 //	Station findByChargerSerialNumber(String chargerSerialNumber);
 	
-	 Station findByChargersChargerSerialNumberAndIsActiveTrue(String chargerSerialNumber);
+	 Station findByChargersChargerPointSerialNumberAndIsActiveTrue(String chargerSerialNumber);
 
 	
 //	({'chargers._id':'CHG20230419174707799'},{'chargers.$':1})

@@ -293,4 +293,11 @@ public class StationController {
 			 return new ResponseEntity<String>("Invalid User, user not Found", HttpStatus.NOT_FOUND);
 		}
 	}
+	
+	@GetMapping("/getHostStation")
+	public ResponseEntity<List<?>> getStationHostId(@RequestParam("stationHostId") String HostId){
+			return ResponseEntity.ok(stationServiceImpl.getStationByHostId(HostId));
+	}
+	
+	
 }

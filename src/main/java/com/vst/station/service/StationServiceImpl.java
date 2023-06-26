@@ -41,6 +41,7 @@ import com.vst.station.dto.ConnectorDTO;
 import com.vst.station.dto.StationDTO;
 import com.vst.station.dto.StationDTO1;
 import com.vst.station.dto.StationFindDTO;
+import com.vst.station.dto.StationHostDTO;
 import com.vst.station.dto.StationUpdateDTO;
 import com.vst.station.exception.ChargerNotFoundException;
 import com.vst.station.exception.InValidDataException;
@@ -735,7 +736,7 @@ public class StationServiceImpl implements StationServiceInterface {
 			Station station = stationRepository.findByStationIdAndIsActiveTrue(utility.stringSanitization(stationId));
 			if (station != null) {
 
-				List<String> accessList = station.getUserAcceessList();
+				List<String> accessList = station.getUserAccessList();
 				switch (type.toLowerCase()) {
 				case "contactno":
 
@@ -771,11 +772,11 @@ public class StationServiceImpl implements StationServiceInterface {
 								}
 								if (flag == false) {
 									accessList.add(userId);
-									station.setUserAcceessList(accessList);
+									station.setUserAccessList(accessList);
 								}
 							} else {
 								accessList.add(userId);
-								station.setUserAcceessList(accessList);
+								station.setUserAccessList(accessList);
 							}
 						}
 					}
@@ -816,15 +817,15 @@ public class StationServiceImpl implements StationServiceInterface {
 								}
 								if (flag == false) {
 									accessList.add(userId);
-									station.setUserAcceessList(accessList);
+									station.setUserAccessList(accessList);
 								}
 							} else {
 								accessList.add(userId);
-								station.setUserAcceessList(accessList);
+								station.setUserAccessList(accessList);
 							}
 						}
 					}
-					System.out.println(station.getUserAcceessList());
+					System.out.println(station.getUserAccessList());
 					stationRepository.save(station);
 					return true;
 
@@ -847,7 +848,7 @@ public class StationServiceImpl implements StationServiceInterface {
 						.findByStationIdAndIsActiveTrue(utility.stringSanitization(stationId));
 				if (station != null) {
 
-					List<String> UserAccessList = station.getUserAcceessList();
+					List<String> UserAccessList = station.getUserAccessList();
 					if (!UserAccessList.isEmpty()) {
 						logger.info("StationServiceImpl :: GetUserAccessList : execution ended");
 						return UserAccessList;
@@ -885,7 +886,7 @@ public class StationServiceImpl implements StationServiceInterface {
 							.findByStationIdAndIsActiveTrue(utility.stringSanitization(stationId));
 					if (station != null) {
 
-						List<String> UserAccessList = station.getUserAcceessList();
+						List<String> UserAccessList = station.getUserAccessList();
 
 						System.out.println(userIds);
 						System.out.println(UserAccessList);
@@ -904,8 +905,8 @@ public class StationServiceImpl implements StationServiceInterface {
 							if (flag == false) {
 								UserAccessList.add(userId);
 								System.out.println(UserAccessList);
-								station.setUserAcceessList(UserAccessList);
-								System.out.println(station.getUserAcceessList());
+								station.setUserAccessList(UserAccessList);
+								System.out.println(station.getUserAccessList());
 							}
 						}
 						if (stationRepository.save(station) != null) {
@@ -952,7 +953,7 @@ public class StationServiceImpl implements StationServiceInterface {
 					Station station = stationRepository.findByStationIdAndIsActiveTrue(stationId);
 					if (station != null) {
 
-						List<String> userAccessList = station.getUserAcceessList();
+						List<String> userAccessList = station.getUserAccessList();
 						if (!userAccessList.isEmpty()) {
 							boolean flag = false;
 							for (String id : userAccessList) {
@@ -1006,7 +1007,7 @@ public class StationServiceImpl implements StationServiceInterface {
 
 				Station station = stationRepository.findByStationIdAndIsActiveTrue(stationId);
 				if (station != null) {
-					List<String> userAccessList = station.getUserAcceessList();
+					List<String> userAccessList = station.getUserAccessList();
 					Boolean flag = false;
 					for (int i = 0; i < userAccessList.size(); i++) {
 						String id = userAccessList.get(i);
@@ -1015,7 +1016,7 @@ public class StationServiceImpl implements StationServiceInterface {
 						}
 						if (flag == true) {
 							userAccessList.remove(i);
-							station.setUserAcceessList(userAccessList);
+							station.setUserAccessList(userAccessList);
 							break;
 						}
 					}
@@ -1032,5 +1033,36 @@ public class StationServiceImpl implements StationServiceInterface {
 				throw new InValidIdExcepetion("Invalid Id, Please Check Details and Try Again");
 		} else
 			throw new StationIdNotAcceptableException("Invalid Id, Please Check Details and Try Again");
+	}
+
+	@Override
+	public List<StationHostDTO> getStationByHostId(String stationHostId) {
+		try {
+			logger.info("StationServiceImpl :: getStationByHostId : execution Started");
+
+			if (stationHostId != null && !stationHostId.isBlank()) {
+
+				List<Station> stations = stationRepository.findByStationHostIdAndIsActiveTrue(stationHostId);
+
+				List<StationHostDTO> dto = new ArrayList<>();
+				if (!stations.isEmpty()) {
+					 
+					for (Station station : stations) {
+						dto.add(stationConveter.stationEntitytoHostDTO(station));
+					}
+					logger.info("StationServiceImpl :: getStationByHostId : execution ended");
+					return dto;
+				} else
+					logger.info("StationServiceImpl :: getStationByHostId : execution ended");
+				return dto;
+			} else
+				throw new StationIdNotAcceptableException("Invalid Id, Please Check Details and Try Again");
+		} catch (StationNotFoundException e) {
+			logger.error(e.getLocalizedMessage());
+			throw new StationIdNotAcceptableException(e.getLocalizedMessage());
+		} catch (StationIdNotAcceptableException e) {
+			logger.error(e.getLocalizedMessage());
+			throw new StationNotFoundException(e.getLocalizedMessage());
+		}
 	}
 }

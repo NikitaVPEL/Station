@@ -37,9 +37,11 @@ public class ConnectorDTO {
 	@NotNull(message = "Please Enter valid Connector Socket")
 	private String connectorSocket;
 	
-	@NotBlank(message = "Please Enter valid Connector Status")
-	@NotNull(message = "Please Enter valid Connector status")
+//	@NotBlank(message = "Please Enter valid Connector Status")
+//	@NotNull(message = "Please Enter valid Connector status")
 	private String connectorStatus;
+	private Date connectorLastUnavailableTimeStamp;
+	private String connectorLastAvailableTimeStamp;
 	
 	@NotBlank(message = "Please Enter valid Connector Output Power")
 	@NotNull(message = "Please Enter valid Connector Output Power")
@@ -49,12 +51,20 @@ public class ConnectorDTO {
 	@NotBlank(message = "Please Enter valid Connector Charges")
 	@NotNull(message = "Please Enter valid Connector Charges")
 	private String connectorCharges;
-	
+	private String connectorErrorCode;
+	private String connectorInfo;
+	private String connectorTimeStamp;
 	private Date createdDate;
 	private Date modifiedDate;
 	private String createdBy;
 	private String modifiedBy;
 	private boolean isActive;
+	
+	
+
+	
+	
+	
 	
 	
 	

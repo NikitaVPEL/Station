@@ -51,7 +51,7 @@ public class Station {
 	private String stationPowerStandard;
 	private List<String> stationAmenity= new ArrayList<>();
 	private List<Charger> chargers =new ArrayList<>();
-	private List<String> userAcceessList =  new ArrayList<>(); 
+	private List<String> userAccessList =  new ArrayList<>(); 
 	private Date createdDate;
 	private Date modifiedDate;
 	private String createdBy;

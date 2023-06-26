@@ -36,8 +36,9 @@ public class Charger {
 	private String chargerIPRating;
 	private String chargerMountType;
 	private int chargerNumberOfConnector;
+	private String chargerLastHeartBeatTimeStamp;
 	private String isRFID;
-	private String chargerSerialNumber;
+	private String chargerPointSerialNumber;
 	private String chargerOCPPProtocol;
 	private String chargerConnectorType;
 	private String isAppSupport;

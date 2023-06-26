@@ -14,6 +14,7 @@ import org.springframework.stereotype.Component;
 import com.vst.station.dto.ChargerDTO;
 import com.vst.station.dto.StationDTO1;
 import com.vst.station.dto.StationFindDTO;
+import com.vst.station.dto.StationHostDTO;
 import com.vst.station.dto.StationUpdateDTO;
 import com.vst.station.dto.StationDTO;
 import com.vst.station.model.Charger;
@@ -54,6 +55,13 @@ public class StationConveter {
 
 	public StationFindDTO entitytoStationFind(Station station) {
 		StationFindDTO dto = new StationFindDTO();
+		BeanUtils.copyProperties(station, dto);
+		return dto;
+		
+	}
+	
+	public StationHostDTO stationEntitytoHostDTO(Station station) {
+		StationHostDTO dto = new StationHostDTO();
 		BeanUtils.copyProperties(station, dto);
 		return dto;
 		

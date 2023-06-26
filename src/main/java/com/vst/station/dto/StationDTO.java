@@ -54,9 +54,9 @@ public class StationDTO {
 	@NotNull(message = "Please enter a value.")
 	private String stationAddressLineTwo;
 
-	@NotNull(message = "This PIN Code cannot be left blank. Please enter a valid input to continue.")
-	@Pattern(regexp = "^[1-9][0-9]{5}$", message = "Please Enter Correct PIN Code")
-	@NotBlank(message = "Please enter a value. PIN Code cannot be left blank.")
+//	@NotNull(message = "This PIN Code cannot be left blank. Please enter a valid input to continue.")
+//	@Pattern(regexp = "^[1-9][0-9]{5}$", message = "Please Enter Correct PIN Code")
+//	@NotBlank(message = "Please enter a value. PIN Code cannot be left blank.")
 	private String stationZipCode;
 
 	@Pattern(regexp = "^[A-Za-z]+(?:[ -][A-Za-z]+)*$", message = "Please Check Enter City Name. Try Again.")
@@ -106,10 +106,11 @@ public class StationDTO {
 	@NotBlank(message = "Please enter a value.")
 	@NotNull(message = "Please enter a value.")
 	private String stationPowerStandard;
+	
 
 	private List<String> stationAmenity = new ArrayList<>();
 	private List<ChargerDTO> chargers = new ArrayList<>();
-	private List<String> userAcceessList = new ArrayList<>();
+	private List<String> userAccessList = new ArrayList<>();
 
 	private Date createdDate;
 	private Date modifiedDate;

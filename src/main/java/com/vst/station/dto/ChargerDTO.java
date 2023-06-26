@@ -78,6 +78,7 @@ public class ChargerDTO {
 	private String chargerMountType;
 
 	private int chargerNumberOfConnector;
+	private String chargerLastHeartBeatTimeStamp;
 	
 	@NotBlank(message = "Please Enter valid RFID ")
 	@NotNull(message = "Please Enter valid RFID ")
@@ -85,7 +86,7 @@ public class ChargerDTO {
 	
 	@NotBlank(message = "Please Enter valid Charger Serial Number ")
 	@NotNull(message = "Please Enter valid Charger Serial Number")
-	private String chargerSerialNumber;
+	private String chargerPointSerialNumber;
 	
 	@NotBlank(message = "Please Enter valid Charger OCPP Protocol")
 	@NotNull(message = "Please Enter valid Charger OCPP Protocol")

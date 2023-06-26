@@ -1,7 +1,15 @@
 package com.vst.station.service;
 
+import java.sql.Date;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.time.Duration;
+import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 import javax.transaction.Transactional;
 
@@ -16,6 +24,7 @@ import com.vst.station.dto.ChargerDTO;
 import com.vst.station.dto.ChargerUpdateDTO;
 import com.vst.station.dto.ConnectorDTO;
 import com.vst.station.dto.ConnectorUpdateDTO;
+import com.vst.station.dto.connectorStatusNotificationDTO;
 import com.vst.station.dto.ocppVerificationDTO;
 import com.vst.station.exception.ChargerNotFoundException;
 import com.vst.station.exception.InValidDataException;
@@ -320,8 +329,9 @@ public class ChargerServiceImpl implements ChargerServiceInterface {
 									flag = true;
 								}
 
-								if (obj.getChargerSerialNumber() != null && obj.getChargerSerialNumber().isBlank()) {
-									charger.setChargerSerialNumber(obj.getChargerSerialNumber());
+								if (obj.getChargerPointSerialNumber() != null
+										&& obj.getChargerPointSerialNumber().isBlank()) {
+									charger.setChargerPointSerialNumber(obj.getChargerPointSerialNumber());
 									flag = true;
 								}
 
@@ -696,6 +706,8 @@ public class ChargerServiceImpl implements ChargerServiceInterface {
 									chargerOne = c;
 									break;
 								}
+//								throw new InValidIdExcepetion(
+//										"Invalid Charger ID. The ID provided is not valid. Please check and try again.");
 							}
 							if (chargerOne != null) {
 
@@ -1155,25 +1167,25 @@ public class ChargerServiceImpl implements ChargerServiceInterface {
 		}
 	}
 
-	public boolean getChargerStatusByChargerSerialNumber(String chargerSerialNumber) {
+	public boolean getChargerStatusByChargerSerialNumber(String chargerPointSerialNumber) {
 		try {
 
-			if (!chargerSerialNumber.isBlank() && chargerSerialNumber != null) {
+			if (!chargerPointSerialNumber.isBlank() && chargerPointSerialNumber != null) {
 				Station station = stationRepository
-						.findByChargersChargerSerialNumberAndIsActiveTrue(chargerSerialNumber);
+						.findByChargersChargerPointSerialNumberAndIsActiveTrue(chargerPointSerialNumber);
 				if (station != null) {
 
 					List<Charger> chargers = station.getChargers();
 
 					for (Charger charger : chargers) {
-						if (charger.getChargerSerialNumber().equals(chargerSerialNumber)) {
+						if (charger.getChargerPointSerialNumber().equals(chargerPointSerialNumber)) {
 							return charger.isActive();
 						}
 					}
 				}
 			} else
 				throw new InValidIdExcepetion(
-						"Invalid ChargerSerialNumber. The ChargerSerialNumber provided is not valid. Please check and try again.");
+						"Invalid ChargerSerialNumber. The chargerPointSerialNumberprovided is not valid. Please check and try again.");
 		} catch (InValidDataException e) {
 			logger.error(e.getLocalizedMessage());
 			throw new InValidDataException(e.getLocalizedMessage());
@@ -1191,9 +1203,10 @@ public class ChargerServiceImpl implements ChargerServiceInterface {
 	}
 
 	@Override
-	public Boolean initialVerification(String chargerSerialNumber, ocppVerificationDTO ocppVerificationDTO) {
-		if (!chargerSerialNumber.isBlank() && chargerSerialNumber != null) {
-			Station station = stationRepository.findByChargersChargerSerialNumberAndIsActiveTrue(chargerSerialNumber);
+	public Boolean initialVerification(String chargerPointSerialNumber, ocppVerificationDTO ocppVerificationDTO) {
+		if (!chargerPointSerialNumber.isBlank() && chargerPointSerialNumber != null) {
+			Station station = stationRepository
+					.findByChargersChargerPointSerialNumberAndIsActiveTrue(chargerPointSerialNumber);
 
 			if (station != null) {
 
@@ -1202,7 +1215,7 @@ public class ChargerServiceImpl implements ChargerServiceInterface {
 				Charger object = new Charger();
 
 				for (Charger charger : chargers) {
-					if (charger.getChargerSerialNumber().equals(chargerSerialNumber)) {
+					if (charger.getChargerPointSerialNumber().equals(chargerPointSerialNumber)) {
 						object = charger;
 						break;
 					} else
@@ -1233,36 +1246,179 @@ public class ChargerServiceImpl implements ChargerServiceInterface {
 					return flag;
 			} else
 				throw new InValidIdExcepetion(
-						"Invalid ChargerSerialNumber 1. The ChargerSerialNumber provided is not valid. Please check and try again.");
+						"Invalid chargerPointSerialNumber1. The chargerPointSerialNumberprovided is not valid. Please check and try again.");
 		} else
 			throw new InValidIdExcepetion(
-					"Invalid ChargerSerialNumber 2. The ChargerSerialNumber provided is not valid. Please check and try again.");
-
+					"Invalid chargerPointSerialNumber2. The chargerPointSerialNumberprovided is not valid. Please check and try again.");
 	}
 
-//		@Override
-	public String getChargerOCPPProtocol(String chargerSerialNumber) {
-		if (!chargerSerialNumber.isBlank() && chargerSerialNumber != null) {
+	@Override
+	public String getChargerOCPPProtocol(String chargerPointSerialNumber) {
+		if (!chargerPointSerialNumber.isBlank() && chargerPointSerialNumber != null) {
 
-			Station station = stationRepository.findByChargersChargerSerialNumberAndIsActiveTrue(chargerSerialNumber);
+			Station station = stationRepository
+					.findByChargersChargerPointSerialNumberAndIsActiveTrue(chargerPointSerialNumber);
 
 			if (station != null) {
 				List<Charger> chargers = station.getChargers();
 
 				for (Charger charger : chargers) {
-					charger.getChargerSerialNumber().equals(chargerSerialNumber);
+					charger.getChargerPointSerialNumber().equals(chargerPointSerialNumber);
 					Charger obj = new Charger();
 					obj = charger;
 					return obj.getChargerOCPPProtocol();
 				}
 				throw new InValidIdExcepetion(
-						"Invalid ChargerSerialNumber. The ChargerSerialNumber provided is not valid. Please check and try again.");
+						"Invalid ChargerSerialNumber. The chargerPointSerialNumberprovided is not valid. Please check and try again.");
 			} else
 				throw new InValidIdExcepetion(
-						"Invalid ChargerSerialNumber. The ChargerSerialNumber provided is not valid. Please check and try again.");
+						"Invalid ChargerSerialNumber. The chargerPointSerialNumberprovided is not valid. Please check and try again.");
 		}
-
 		return null;
+	}
+
+	@Override
+	public boolean statusNotification(String chargerPointSerialNumber,
+			connectorStatusNotificationDTO connectorStatusNotificationDTO) {
+
+		System.out.println("Service DTO :-- " + connectorStatusNotificationDTO);
+
+		if (!chargerPointSerialNumber.isBlank() && chargerPointSerialNumber != null) {
+
+			Station station = stationRepository
+					.findByChargersChargerPointSerialNumberAndIsActiveTrue(chargerPointSerialNumber);
+
+			if (station != null) {
+
+				List<Charger> chargers = station.getChargers();
+
+				if (!chargers.isEmpty()) {
+
+					Charger chargerObject = new Charger();
+
+					int chargerIndex = 0;
+
+					for (int i = 0; i < chargers.size(); i++) {
+						if (chargers.get(i).getChargerPointSerialNumber().equals(chargerPointSerialNumber)) {
+							chargerObject = chargers.get(i);
+							chargerIndex = i;
+							break;
+						}
+					}
+
+					List<Connector> connectors = chargerObject.getConnectors();
+
+					if (!connectors.isEmpty()) {
+
+						Connector newConnector = new Connector();
+						int connectorIndex = 0;
+
+						for (int i = 0; i < connectors.size(); i++) {
+							if (connectors.get(i).getConnectorNumber() == connectorStatusNotificationDTO
+									.getConnectorNumber()) {
+								newConnector = connectors.get(i);
+								connectorIndex = i;
+								break;
+							}
+						}
+
+						if (connectorStatusNotificationDTO.getConnectorErrorCode().isBlank()) {
+
+							newConnector.setConnectorStatus(connectorStatusNotificationDTO.getConnectorStatus());
+							newConnector.setConnectorTimeStamp(connectorStatusNotificationDTO.getConnectorTimeStamp());
+							if (connectorStatusNotificationDTO.getConnectorStatus().equals("Available"))
+								newConnector.setConnectorLastAvailableTimeStamp(
+										connectorStatusNotificationDTO.getConnectorTimeStamp());
+							else
+								newConnector.setConnectorLastAvailableTimeStamp(
+										connectorStatusNotificationDTO.getConnectorTimeStamp());
+							connectors.set(connectorIndex, newConnector);
+							chargerObject.setConnectors(connectors);
+							chargers.set(chargerIndex, chargerObject);
+							station.setChargers(chargers);
+							stationRepository.save(station);
+							System.out.println("1");
+							return true;
+
+						} else {
+
+							newConnector.setConnectorStatus(connectorStatusNotificationDTO.getConnectorStatus());
+							newConnector.setConnectorTimeStamp(connectorStatusNotificationDTO.getConnectorTimeStamp());
+							newConnector.setConnectorErrorCode(connectorStatusNotificationDTO.getConnectorErrorCode());
+							newConnector.setConnectorInfo(connectorStatusNotificationDTO.getConnectorInfo());
+							newConnector.setConnectorLastUnavailableTimeStamp(idAndDateGenerator.dateSetter());
+							connectors.set(connectorIndex, newConnector);
+							chargerObject.setConnectors(connectors);
+							chargers.set(chargerIndex, chargerObject);
+							station.setChargers(chargers);
+							stationRepository.save(station);
+							System.out.println("2");
+							return true;
+						}
+					} else
+						return false;
+				} else
+					return false;
+			} else
+				return false;
+		}
+		return false;
+	}
+
+	public boolean heartbeatNotification(String chargertPoinSerialNumber, String chargerTimeStamp) {
+		if (!chargertPoinSerialNumber.isBlank() && chargertPoinSerialNumber != null) {
+			Station station = stationRepository
+					.findByChargersChargerPointSerialNumberAndIsActiveTrue(chargertPoinSerialNumber);
+			if (station != null) {
+				List<Charger> chargers = station.getChargers();
+				int chargerIndex = 0;
+				Charger charger = new Charger();
+				for (int i = 0; i < chargers.size(); i++) {
+					if (chargers.get(i).getChargerPointSerialNumber().equals(chargertPoinSerialNumber)) {
+						charger = chargers.get(i);
+						chargerIndex = i;
+						break;
+					}
+				}
+				
+				
+				if (charger != null) {
+					DateTimeFormatter formatter = DateTimeFormatter.ISO_DATE_TIME;
+					try {
+						LocalDateTime lastTimeStamp = LocalDateTime.parse(charger.getChargerLastHeartBeatTimeStamp(),
+								formatter);
+						LocalDateTime requestDateTime = LocalDateTime.parse(chargerTimeStamp, formatter);
+						Duration duration = Duration.between(lastTimeStamp, requestDateTime);
+						if (duration.toMinutes() <= 10) {
+							charger.setChargerLastHeartBeatTimeStamp(chargerTimeStamp);
+							chargers.set(chargerIndex, charger);
+							station.setChargers(chargers);
+							stationRepository.save(station);
+							return true;
+						} else {
+							charger.setChargerStatus("deactive");
+							List<Connector> connectors = charger.getConnectors();
+							for (Connector connector : connectors) {
+								connector.setConnectorLastAvailableTimeStamp(chargerTimeStamp);
+							}
+							charger.setConnectors(connectors);
+							chargers.set(chargerIndex, charger);
+							station.setChargers(chargers);
+							stationRepository.save(station);
+							System.out.print("6");
+							return false;
+						}
+					} catch (Exception exception) {
+						System.out.print("7");
+						return false;
+					}
+				} else
+					System.out.print("8");
+				return false;
+			} else
+				return false;
+		} else
+			return false;
 	}
 
 }

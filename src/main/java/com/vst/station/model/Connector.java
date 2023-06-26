@@ -26,14 +26,18 @@ public class Connector {
 	private String connectorType;
 	private String connectorSocket;
 	private String connectorStatus;
+	private Date connectorLastUnavailableTimeStamp;
+	private String connectorLastAvailableTimeStamp;
 	private String connectorOutputPower;
 	private String connectorCharges;
+	private String connectorErrorCode;
+	private String connectorInfo;
+	private String connectorTimeStamp;
 	private Date createdDate;
 	private Date modifiedDate;
 	private String createdBy;
 	private String modifiedBy;
 	private boolean isActive;
-	
-	
+		
 		
 }

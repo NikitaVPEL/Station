@@ -5,6 +5,7 @@ import java.util.List;
 import com.vst.station.dto.StationDTO;
 import com.vst.station.dto.StationDTO1;
 import com.vst.station.dto.StationFindDTO;
+import com.vst.station.dto.StationHostDTO;
 import com.vst.station.dto.StationUpdateDTO;
 import com.vst.station.model.Station;
 
@@ -47,5 +48,12 @@ public interface StationServiceInterface {
 	public boolean addUserAccessList(String stationId, List<String> userIds);
 	
 	public boolean getIsUserPresentInRestrictionList(String stationId, String userId);
+	
+	public List<StationHostDTO> getStationByHostId(String stationHostId);
+	
+	
+	
+	
+	
 
 }

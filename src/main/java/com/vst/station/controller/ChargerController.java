@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.vst.station.dto.ChargerDTO;
 import com.vst.station.dto.ChargerUpdateDTO;
+import com.vst.station.dto.connectorStatusNotificationDTO;
 import com.vst.station.dto.ocppVerificationDTO;
 import com.vst.station.model.Charger;
 import com.vst.station.service.ChargerServiceImpl;
@@ -169,6 +170,18 @@ public class ChargerController {
 		String chargerOCPPProtocol = chargerServiceImpl.getChargerOCPPProtocol(chargerSerialNumber);
 		return new ResponseEntity<>(chargerOCPPProtocol,HttpStatus.OK);
 				 
+	}
+	
+	@PostMapping("/chargerStatusNotification")
+	public ResponseEntity<?> getStatusNotification(@RequestParam("chargerPointSerialNumber")  String chargerPointSerialNumber, @RequestBody connectorStatusNotificationDTO connectorStatusNotificationDTO){
+		boolean flag=chargerServiceImpl.statusNotification(chargerPointSerialNumber, connectorStatusNotificationDTO);
+		return ResponseEntity.ok(flag);
+	}
+	
+	@GetMapping("/heartbeatStatus")
+	public ResponseEntity<?> getHeartBeatStatus(@RequestParam("chargerPointSerialNumber")  String chargerPointSerialNumber, @RequestParam("chargerTimeStamp") String chargerTimeStamp){
+		boolean flag = chargerServiceImpl.heartbeatNotification(chargerPointSerialNumber, chargerTimeStamp);
+		return ResponseEntity.ok(flag);
 	}
 
 }
