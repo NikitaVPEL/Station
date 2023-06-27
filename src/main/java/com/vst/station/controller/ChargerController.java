@@ -150,18 +150,18 @@ public class ChargerController {
 
 	@GetMapping("/getChargerStatusByChargerSerialNumber")
 	public ResponseEntity<?> getChargerStatus(@RequestParam("chargerSerialNumber") String chargerSerialNumber) {
-	    Boolean isActive = chargerServiceImpl.getChargerStatusByChargerSerialNumber(chargerSerialNumber);
+		System.out.println(chargerSerialNumber);
+		Boolean isActive = chargerServiceImpl.getChargerStatusByChargerSerialNumber(chargerSerialNumber);
+		System.out.print(isActive);
+		return ResponseEntity.ok(isActive);
 
-	    if (isActive == null) {
-	        return ResponseEntity.notFound().build();
-	    } else {
-	        return ResponseEntity.ok(isActive); 
-	    }
 	}
 	
 	@PostMapping("/chargerVerification")
 	public ResponseEntity<?> getVerification(@RequestParam("chargerSerialNumber") String chargerSerialNumber, @RequestBody ocppVerificationDTO ocppVerificationDTO){
-		Boolean flag= chargerServiceImpl.initialVerification(chargerSerialNumber, ocppVerificationDTO);		
+		Boolean flag= chargerServiceImpl.initialVerification(chargerSerialNumber, ocppVerificationDTO);	
+		
+		System.out.println("Charger Verification:---"+flag);
 		return ResponseEntity.ok(flag);
 	}
 	
@@ -173,13 +173,17 @@ public class ChargerController {
 	}
 	
 	@PostMapping("/chargerStatusNotification")
-	public ResponseEntity<?> getStatusNotification(@RequestParam("chargerPointSerialNumber")  String chargerPointSerialNumber, @RequestBody connectorStatusNotificationDTO connectorStatusNotificationDTO){
+	public ResponseEntity<?> getStatusNotification(@RequestParam("chargerSerialNumber")  String chargerPointSerialNumber, @RequestBody connectorStatusNotificationDTO connectorStatusNotificationDTO){
 		boolean flag=chargerServiceImpl.statusNotification(chargerPointSerialNumber, connectorStatusNotificationDTO);
 		return ResponseEntity.ok(flag);
 	}
 	
 	@GetMapping("/heartbeatStatus")
 	public ResponseEntity<?> getHeartBeatStatus(@RequestParam("chargerPointSerialNumber")  String chargerPointSerialNumber, @RequestParam("chargerTimeStamp") String chargerTimeStamp){
+		
+		System.out.println(chargerPointSerialNumber + chargerTimeStamp);
+		
+		
 		boolean flag = chargerServiceImpl.heartbeatNotification(chargerPointSerialNumber, chargerTimeStamp);
 		return ResponseEntity.ok(flag);
 	}

@@ -1167,8 +1167,10 @@ public class ChargerServiceImpl implements ChargerServiceInterface {
 		}
 	}
 
-	public boolean getChargerStatusByChargerSerialNumber(String chargerPointSerialNumber) {
+	public boolean getChargerStatusByChargerSerialNumber(String chargerSerialNumber) {
 		try {
+
+			String chargerPointSerialNumber = chargerSerialNumber;
 
 			if (!chargerPointSerialNumber.isBlank() && chargerPointSerialNumber != null) {
 				Station station = stationRepository
@@ -1234,10 +1236,17 @@ public class ChargerServiceImpl implements ChargerServiceInterface {
 //					}
 
 				if (object.getChargePointVendor().equalsIgnoreCase(ocppVerificationDTO.getChargePointVendor())) {
-					if (object.getChargePointModel().equals(ocppVerificationDTO.getChargePointModel()))
-						if (object.getChargeBoxSerialNumber().equals(ocppVerificationDTO.getChargeBoxSerialNumber()))
-							if (object.getFirmwareVersion().equals(ocppVerificationDTO.getFirmwareVersion()))
+					System.out.println("1");
+					if (object.getChargePointModel().equals(ocppVerificationDTO.getChargePointModel())) {
+						System.out.println("2");
+						if (object.getChargeBoxSerialNumber().equals(ocppVerificationDTO.getChargeBoxSerialNumber())) {
+							System.out.println("3");
+							if (object.getFirmwareVersion().equals(ocppVerificationDTO.getFirmwareVersion())) {
+								System.out.println("4");
 								flag = true;
+							}
+						}
+					}
 				}
 
 				if (flag == true)
@@ -1278,11 +1287,12 @@ public class ChargerServiceImpl implements ChargerServiceInterface {
 	}
 
 	@Override
-	public boolean statusNotification(String chargerPointSerialNumber,
+	public boolean statusNotification(String chargerSerialNumber,
 			connectorStatusNotificationDTO connectorStatusNotificationDTO) {
-
-		System.out.println("Service DTO :-- " + connectorStatusNotificationDTO);
-
+		logger.info("StationServiceImpl :: statusNotification : execution Started");
+		
+		String chargerPointSerialNumber = chargerSerialNumber;
+		
 		if (!chargerPointSerialNumber.isBlank() && chargerPointSerialNumber != null) {
 
 			Station station = stationRepository
@@ -1337,8 +1347,10 @@ public class ChargerServiceImpl implements ChargerServiceInterface {
 							chargers.set(chargerIndex, chargerObject);
 							station.setChargers(chargers);
 							stationRepository.save(station);
-							System.out.println("1");
+							System.out.println("Status Notification Method Done");
 							return true;
+							
+							
 
 						} else {
 
@@ -1365,6 +1377,7 @@ public class ChargerServiceImpl implements ChargerServiceInterface {
 		return false;
 	}
 
+	@Override
 	public boolean heartbeatNotification(String chargertPoinSerialNumber, String chargerTimeStamp) {
 		if (!chargertPoinSerialNumber.isBlank() && chargertPoinSerialNumber != null) {
 			Station station = stationRepository
@@ -1380,8 +1393,7 @@ public class ChargerServiceImpl implements ChargerServiceInterface {
 						break;
 					}
 				}
-				
-				
+
 				if (charger != null) {
 					DateTimeFormatter formatter = DateTimeFormatter.ISO_DATE_TIME;
 					try {
@@ -1394,9 +1406,11 @@ public class ChargerServiceImpl implements ChargerServiceInterface {
 							chargers.set(chargerIndex, charger);
 							station.setChargers(chargers);
 							stationRepository.save(station);
+							System.out.println("heartbeat check");
 							return true;
 						} else {
 							charger.setChargerStatus("deactive");
+							charger.setChargerLastHeartBeatTimeStamp(chargerTimeStamp);
 							List<Connector> connectors = charger.getConnectors();
 							for (Connector connector : connectors) {
 								connector.setConnectorLastAvailableTimeStamp(chargerTimeStamp);
@@ -1405,16 +1419,13 @@ public class ChargerServiceImpl implements ChargerServiceInterface {
 							chargers.set(chargerIndex, charger);
 							station.setChargers(chargers);
 							stationRepository.save(station);
-							System.out.print("6");
 							return false;
 						}
 					} catch (Exception exception) {
-						System.out.print("7");
 						return false;
 					}
 				} else
-					System.out.print("8");
-				return false;
+					return false;
 			} else
 				return false;
 		} else

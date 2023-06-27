@@ -44,5 +44,7 @@ public interface ChargerServiceInterface {
 	public String getChargerOCPPProtocol(String chargerSerialNumber);
 	
 	public boolean statusNotification(String chargerSerialNumber, connectorStatusNotificationDTO connectorStatusNotificationDTO);
+	
+	public boolean heartbeatNotification(String chargertPoinSerialNumber, String chargerTimeStamp);
 
 }
