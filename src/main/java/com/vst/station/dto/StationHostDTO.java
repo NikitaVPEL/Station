@@ -1,6 +1,5 @@
 package com.vst.station.dto;
 
-import com.vst.station.model.Location;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -18,7 +17,8 @@ import lombok.ToString;
 public class StationHostDTO {
 
 	private String stationId;
-	private Location location;
+	private double stationLatitude;
+	private double stationLongitude;
 	private String stationName;
 	private String stationStatus;
 

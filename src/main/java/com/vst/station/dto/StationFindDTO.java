@@ -17,7 +17,6 @@ import lombok.ToString;
 public class StationFindDTO {
 
 	private String stationName;
-
 	private String stationArea;
 	private String stationAddressLineOne;
 	private String stationAddressLineTwo;
