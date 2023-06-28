@@ -57,7 +57,5 @@ public class Station {
 	private String createdBy;
 	private String modifiedBy;
 	private boolean isActive;
-	
-	
 		
 }
