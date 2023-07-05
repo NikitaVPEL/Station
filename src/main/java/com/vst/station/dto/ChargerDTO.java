@@ -120,8 +120,8 @@ public class ChargerDTO {
 	@NotNull(message = "Please Enter valid Smart")
 	private String isSmart;
 	
-	@NotBlank(message = "Please Enter valid Charger Status")
-	@NotNull(message = "Please Enter valid Charger Status")
+//	@NotBlank(message = "Please Enter valid Charger Status")
+//	@NotNull(message = "Please Enter valid Charger Status")
 	private String chargerStatus;
 	
 	private String chargePointVendor;
