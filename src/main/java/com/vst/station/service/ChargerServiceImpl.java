@@ -1235,7 +1235,7 @@ public class ChargerServiceImpl implements ChargerServiceInterface {
 //											flag=true;
 //					}
 
-				if (object.getChargePointVendor().equalsIgnoreCase(ocppVerificationDTO.getChargePointVendor())) {
+				if (object.getChargePointVendor().equals(ocppVerificationDTO.getChargePointVendor())) {
 					System.out.println("1");
 					if (object.getChargePointModel().equals(ocppVerificationDTO.getChargePointModel())) {
 						System.out.println("2");
