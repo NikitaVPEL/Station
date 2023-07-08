@@ -57,15 +57,14 @@ public class StationConveter {
 		StationFindDTO dto = new StationFindDTO();
 		BeanUtils.copyProperties(station, dto);
 		return dto;
-		
+
 	}
-	
+
 	public StationHostDTO stationEntitytoHostDTO(Station station) {
 		StationHostDTO dto = new StationHostDTO();
 		BeanUtils.copyProperties(station, dto);
 		return dto;
-		
-	}
 
+	}
 
 }

@@ -10,7 +10,7 @@ public class IdAndDateGenerator {
 	public String idGenerator() {
 
 		Date dNow = new Date();
-		Random random = new Random();
+//		Random random = new Random();
 
 		SimpleDateFormat dateFormat1 = new SimpleDateFormat("yyyyMMddHHmmssSSS");
 		

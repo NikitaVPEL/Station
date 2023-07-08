@@ -129,7 +129,7 @@ public class ChargerDTO {
 	private String chargeBoxSerialNumber;
 	private String meterType;
 	private String firmwareVersion;
-	
+	private String chargerSerialNumber;	
 	private Date createdDate;
 	private Date modifiedDate;
 	private String createdBy;

@@ -1170,17 +1170,20 @@ public class ChargerServiceImpl implements ChargerServiceInterface {
 	public boolean getChargerStatusByChargerSerialNumber(String chargerSerialNumber) {
 		try {
 
-			String chargerPointSerialNumber = chargerSerialNumber;
+//			String chargerPointSerialNumber = chargerSerialNumber;
 
-			if (!chargerPointSerialNumber.isBlank() && chargerPointSerialNumber != null) {
+			if (!chargerSerialNumber.isBlank() && chargerSerialNumber != null) {
 				Station station = stationRepository
-						.findByChargersChargerPointSerialNumberAndIsActiveTrue(chargerPointSerialNumber);
+						.findByChargersChargerSerialNumberAndIsActiveTrue(chargerSerialNumber);
+
+				System.out.println(station);
+
 				if (station != null) {
 
 					List<Charger> chargers = station.getChargers();
 
 					for (Charger charger : chargers) {
-						if (charger.getChargerPointSerialNumber().equals(chargerPointSerialNumber)) {
+						if (charger.getChargerSerialNumber().equals(chargerSerialNumber)) {
 							return charger.isActive();
 						}
 					}
@@ -1205,10 +1208,9 @@ public class ChargerServiceImpl implements ChargerServiceInterface {
 	}
 
 	@Override
-	public Boolean initialVerification(String chargerPointSerialNumber, ocppVerificationDTO ocppVerificationDTO) {
-		if (!chargerPointSerialNumber.isBlank() && chargerPointSerialNumber != null) {
-			Station station = stationRepository
-					.findByChargersChargerPointSerialNumberAndIsActiveTrue(chargerPointSerialNumber);
+	public Boolean initialVerification(String chargerSerialNumber, ocppVerificationDTO ocppVerificationDTO) {
+		if (!chargerSerialNumber.isBlank() && chargerSerialNumber != null) {
+			Station station = stationRepository.findByChargersChargerSerialNumberAndIsActiveTrue(chargerSerialNumber);
 
 			if (station != null) {
 
@@ -1217,7 +1219,7 @@ public class ChargerServiceImpl implements ChargerServiceInterface {
 				Charger object = new Charger();
 
 				for (Charger charger : chargers) {
-					if (charger.getChargerPointSerialNumber().equals(chargerPointSerialNumber)) {
+					if (charger.getChargerSerialNumber().equals(chargerSerialNumber)) {
 						object = charger;
 						break;
 					} else
@@ -1236,13 +1238,9 @@ public class ChargerServiceImpl implements ChargerServiceInterface {
 //					}
 
 				if (object.getChargePointVendor().equals(ocppVerificationDTO.getChargePointVendor())) {
-					System.out.println("1");
 					if (object.getChargePointModel().equals(ocppVerificationDTO.getChargePointModel())) {
-						System.out.println("2");
 						if (object.getChargeBoxSerialNumber().equals(ocppVerificationDTO.getChargeBoxSerialNumber())) {
-							System.out.println("3");
 							if (object.getFirmwareVersion().equals(ocppVerificationDTO.getFirmwareVersion())) {
-								System.out.println("4");
 								flag = true;
 							}
 						}
@@ -1262,17 +1260,17 @@ public class ChargerServiceImpl implements ChargerServiceInterface {
 	}
 
 	@Override
-	public String getChargerOCPPProtocol(String chargerPointSerialNumber) {
-		if (!chargerPointSerialNumber.isBlank() && chargerPointSerialNumber != null) {
+	public String getChargerOCPPProtocol(String chargerSerialNumber) {
+		if (!chargerSerialNumber.isBlank() && chargerSerialNumber != null) {
 
 			Station station = stationRepository
-					.findByChargersChargerPointSerialNumberAndIsActiveTrue(chargerPointSerialNumber);
+					.findByChargersChargerSerialNumberAndIsActiveTrue(chargerSerialNumber);
 
 			if (station != null) {
 				List<Charger> chargers = station.getChargers();
 
 				for (Charger charger : chargers) {
-					charger.getChargerPointSerialNumber().equals(chargerPointSerialNumber);
+					charger.getChargerSerialNumber().equals(chargerSerialNumber);
 					Charger obj = new Charger();
 					obj = charger;
 					return obj.getChargerOCPPProtocol();
@@ -1291,12 +1289,10 @@ public class ChargerServiceImpl implements ChargerServiceInterface {
 			connectorStatusNotificationDTO connectorStatusNotificationDTO) {
 		logger.info("StationServiceImpl :: statusNotification : execution Started");
 		
-		String chargerPointSerialNumber = chargerSerialNumber;
-		
-		if (!chargerPointSerialNumber.isBlank() && chargerPointSerialNumber != null) {
+		if (!chargerSerialNumber.isBlank() && chargerSerialNumber != null) {
 
 			Station station = stationRepository
-					.findByChargersChargerPointSerialNumberAndIsActiveTrue(chargerPointSerialNumber);
+					.findByChargersChargerSerialNumberAndIsActiveTrue(chargerSerialNumber);
 
 			if (station != null) {
 
@@ -1309,7 +1305,7 @@ public class ChargerServiceImpl implements ChargerServiceInterface {
 					int chargerIndex = 0;
 
 					for (int i = 0; i < chargers.size(); i++) {
-						if (chargers.get(i).getChargerPointSerialNumber().equals(chargerPointSerialNumber)) {
+						if (chargers.get(i).getChargerSerialNumber().equals(chargerSerialNumber)) {
 							chargerObject = chargers.get(i);
 							chargerIndex = i;
 							break;
@@ -1349,8 +1345,6 @@ public class ChargerServiceImpl implements ChargerServiceInterface {
 							stationRepository.save(station);
 							System.out.println("Status Notification Method Done");
 							return true;
-							
-							
 
 						} else {
 
@@ -1378,16 +1372,15 @@ public class ChargerServiceImpl implements ChargerServiceInterface {
 	}
 
 	@Override
-	public boolean heartbeatNotification(String chargertPoinSerialNumber, String chargerTimeStamp) {
-		if (!chargertPoinSerialNumber.isBlank() && chargertPoinSerialNumber != null) {
-			Station station = stationRepository
-					.findByChargersChargerPointSerialNumberAndIsActiveTrue(chargertPoinSerialNumber);
+	public boolean heartbeatNotification(String chargerSerialNumber, String chargerTimeStamp) {
+		if (!chargerSerialNumber.isBlank() && chargerSerialNumber != null) {
+			Station station = stationRepository.findByChargersChargerSerialNumberAndIsActiveTrue(chargerSerialNumber);
 			if (station != null) {
 				List<Charger> chargers = station.getChargers();
 				int chargerIndex = 0;
 				Charger charger = new Charger();
 				for (int i = 0; i < chargers.size(); i++) {
-					if (chargers.get(i).getChargerPointSerialNumber().equals(chargertPoinSerialNumber)) {
+					if (chargers.get(i).getChargerSerialNumber().equals(chargerSerialNumber)) {
 						charger = chargers.get(i);
 						chargerIndex = i;
 						break;
