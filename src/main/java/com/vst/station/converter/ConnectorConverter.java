@@ -5,6 +5,7 @@ import org.springframework.stereotype.Component;
 
 import com.vst.station.dto.ConnectorDTO;
 import com.vst.station.dto.ConnectorUpdateDTO;
+import com.vst.station.dto.MeterValueDTO;
 import com.vst.station.model.Connector;
 
 @Component
@@ -28,5 +29,13 @@ public class ConnectorConverter {
 		BeanUtils.copyProperties(connectorDTO, connector);
 		return connector;
 	}
+	
+//	public MeterValueDTO entityToMeterDTO(MeterValueDTO meterValueDTO) {
+//		
+//		MeterValueDTO dto = new MeterValueDTO();
+//		BeanUtils.copyProperties(meterValueDTO, dto);
+//		System.out.println("converter DTO:--"+dto);
+//		return dto;	
+//	}
 	
 }

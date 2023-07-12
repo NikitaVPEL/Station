@@ -15,7 +15,7 @@ import lombok.ToString;
 @ToString
 public class ocppVerificationDTO {
 	
-	
+//	private String chargePointSerialNumber;
 	private String chargePointVendor;
 	private String chargePointModel;
 	private String chargeBoxSerialNumber;

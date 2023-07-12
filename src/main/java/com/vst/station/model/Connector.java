@@ -22,17 +22,20 @@ public class Connector {
 
 	@Id
 	private String connectorId;
-	private int connectorNumber;
+	private Integer connectorNumber;
 	private String connectorType;
 	private String connectorSocket;
 	private String connectorStatus;
-	private Date connectorLastUnavailableTimeStamp;
+	private String connectorLastUnavailableTimeStamp;
 	private String connectorLastAvailableTimeStamp;
 	private String connectorOutputPower;
 	private String connectorCharges;
+	private double connectorMeterValue;
 	private String connectorErrorCode;
 	private String connectorInfo;
 	private String connectorTimeStamp;
+	private String connectorMeterRequestTimeStamp;
+	private String connectorUnitType;
 	private Date createdDate;
 	private Date modifiedDate;
 	private String createdBy;

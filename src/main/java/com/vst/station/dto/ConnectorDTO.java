@@ -24,41 +24,66 @@ import lombok.ToString;
 @ToString
 public class ConnectorDTO {
 
+//	@Id
+//	private String connectorId;
+//	
+//	private int connectorNumber;
+//	
+//	@NotBlank(message = "Please Enter valid Connector Type")
+//	@NotNull(message = "Please Enter valid Connector Type")
+//	private String connectorType;
+//	
+//	@NotBlank(message = "Please Enter valid Connector Socket")
+//	@NotNull(message = "Please Enter valid Connector Socket")
+//	private String connectorSocket;
+//	
+////	@NotBlank(message = "Please Enter valid Connector Status")
+////	@NotNull(message = "Please Enter valid Connector status")
+//	private String connectorStatus;
+//	private Date connectorLastUnavailableTimeStamp;
+//	private String connectorLastAvailableTimeStamp;
+//	
+//	@NotBlank(message = "Please Enter valid Connector Output Power")
+//	@NotNull(message = "Please Enter valid Connector Output Power")
+//	@Pattern(regexp = "^\\d+(\\.\\d+)?$",message="Enter correct connector output power")
+//	private String connectorOutputPower;
+//	
+//	@NotBlank(message = "Please Enter valid Connector Charges")
+//	@NotNull(message = "Please Enter valid Connector Charges")
+//	private String connectorCharges;
+//	private Integer connectorMeterValue;
+//	private String connectorMeterRequestTimeStamp;
+//	private String connectorErrorCode;
+//	private String connectorInfo;
+//	private String connectorTimeStamp;
+//	private Date createdDate;
+//	private Date modifiedDate;
+//	private String createdBy;
+//	private String modifiedBy;
+//	private boolean isActive;
+	
 	@Id
 	private String connectorId;
-	
-	private int connectorNumber;
-	
-	@NotBlank(message = "Please Enter valid Connector Type")
-	@NotNull(message = "Please Enter valid Connector Type")
+	private Integer connectorNumber;
 	private String connectorType;
-	
-	@NotBlank(message = "Please Enter valid Connector Socket")
-	@NotNull(message = "Please Enter valid Connector Socket")
 	private String connectorSocket;
-	
-//	@NotBlank(message = "Please Enter valid Connector Status")
-//	@NotNull(message = "Please Enter valid Connector status")
 	private String connectorStatus;
 	private Date connectorLastUnavailableTimeStamp;
-	private String connectorLastAvailableTimeStamp;
-	
-	@NotBlank(message = "Please Enter valid Connector Output Power")
-	@NotNull(message = "Please Enter valid Connector Output Power")
-	@Pattern(regexp = "^\\d+(\\.\\d+)?$",message="Enter correct connector output power")
+	private Date connectorLastAvailableTimeStamp;
 	private String connectorOutputPower;
-	
-	@NotBlank(message = "Please Enter valid Connector Charges")
-	@NotNull(message = "Please Enter valid Connector Charges")
 	private String connectorCharges;
+	private Integer connectorMeterValue;
 	private String connectorErrorCode;
 	private String connectorInfo;
 	private String connectorTimeStamp;
+	private String connectorMeterRequestTimeStamp;
+	private String connectorUnitType;
 	private Date createdDate;
 	private Date modifiedDate;
 	private String createdBy;
 	private String modifiedBy;
 	private boolean isActive;
+		
 	
 	
 

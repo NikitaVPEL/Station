@@ -29,7 +29,6 @@ import com.vst.station.service.ChargerServiceImpl;
 @RequestMapping("/manageCharger")
 @CrossOrigin(origins = "*")
 @RestController
-@SuppressWarnings("unused")
 public class ChargerController {
 
 	@Autowired
@@ -146,43 +145,5 @@ public class ChargerController {
 		
 
 	}
-	
-
-	@GetMapping("/getChargerStatusByChargerSerialNumber") // first 
-	public ResponseEntity<?> getChargerStatus(@RequestParam("chargerSerialNumber") String chargerSerialNumber) {
-		Boolean isActive = chargerServiceImpl.getChargerStatusByChargerSerialNumber(chargerSerialNumber);
-		return ResponseEntity.ok(isActive);
-
-	}
-	
-	@PostMapping("/chargerVerification")  //boot notificaton
-	public ResponseEntity<?> getVerification(@RequestParam("chargerSerialNumber") String chargerSerialNumber, @RequestBody ocppVerificationDTO ocppVerificationDTO){
-		Boolean flag= chargerServiceImpl.initialVerification(chargerSerialNumber, ocppVerificationDTO);	
-		return ResponseEntity.ok(flag);
-	}
-	
-	@GetMapping("/chargerOCPPVersion")
-	public ResponseEntity<String> getOCPPProtocol(@RequestParam("chargerSerialNumber") String chargerSerialNumber){
-		String chargerOCPPProtocol = chargerServiceImpl.getChargerOCPPProtocol(chargerSerialNumber);
-		return new ResponseEntity<>(chargerOCPPProtocol,HttpStatus.OK);
-				 
-	}
-	
-	@PostMapping("/chargerStatusNotification")
-	public ResponseEntity<?> getStatusNotification(@RequestParam("chargerSerialNumber")  String chargerPointSerialNumber, @RequestBody connectorStatusNotificationDTO connectorStatusNotificationDTO){
-		boolean flag=chargerServiceImpl.statusNotification(chargerPointSerialNumber, connectorStatusNotificationDTO);
-		return ResponseEntity.ok(flag);
-	}
-	
-	@GetMapping("/heartbeatStatus")
-	public ResponseEntity<?> getHeartBeatStatus(@RequestParam("chargerPointSerialNumber")  String chargerPointSerialNumber, @RequestParam("chargerTimeStamp") String chargerTimeStamp){
-		
-		System.out.println(chargerPointSerialNumber + chargerTimeStamp);
-		
-		
-		boolean flag = chargerServiceImpl.heartbeatNotification(chargerPointSerialNumber, chargerTimeStamp);
-		return ResponseEntity.ok(flag);
-	}
-
 }
 
