@@ -27,7 +27,6 @@ public class OCPPChargerController {
 	public ResponseEntity<?> getChargerStatus(@RequestParam("chargerSerialNumber") String chargerSerialNumber) {
 		Boolean isActive = chargerServiceImpl.getChargerStatusByChargerSerialNumber(chargerSerialNumber);
 		return ResponseEntity.ok(isActive);
-
 	}
 
 	@PostMapping("/chargerVerification") // boot notificaton
@@ -41,7 +40,6 @@ public class OCPPChargerController {
 	public ResponseEntity<String> getOCPPProtocol(@RequestParam("chargerSerialNumber") String chargerSerialNumber) {
 		String chargerOCPPProtocol = chargerServiceImpl.getChargerOCPPProtocol(chargerSerialNumber);
 		return new ResponseEntity<>(chargerOCPPProtocol, HttpStatus.OK);
-
 	}
 
 	@PostMapping("/chargerStatusNotification")
@@ -52,10 +50,9 @@ public class OCPPChargerController {
 	}
 
 	@GetMapping("/heartbeatStatus")
-	public ResponseEntity<?> getHeartBeatStatus(
-			@RequestParam("chargerPointSerialNumber") String chargerPointSerialNumber,
+	public ResponseEntity<?> getHeartBeatStatus(@RequestParam("chargerSerialNumber") String chargerSerialNumber,
 			@RequestParam("chargerTimeStamp") String chargerTimeStamp) {
-		boolean flag = chargerServiceImpl.heartbeatNotification(chargerPointSerialNumber, chargerTimeStamp);
+		boolean flag = chargerServiceImpl.heartbeatNotification(chargerSerialNumber, chargerTimeStamp);
 		return ResponseEntity.ok(flag);
 	}
 

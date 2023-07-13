@@ -906,13 +906,22 @@ public class ChargerServiceImpl implements ChargerServiceInterface {
 				}
 
 				if (charger != null) {
-					DateTimeFormatter formatter = DateTimeFormatter.ISO_DATE_TIME;
+//					DateTimeFormatter formatter = DateTimeFormatter.ISO_ZONED_DATE_TIME;
+//							.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSSSSSSXXX'['VV']'");
+//					DateTimeFormatter formatter = DateTimeFormatter.ISO_LOCAL_DATE_TIME;
+					DateTimeFormatter formatter = DateTimeFormatter.ofPattern("uuuu-MM-dd HH:mm:ss.SSSSSS VV",
+							Locale.ROOT);
 					try {
+						ZonedDateTime dateTime = ZonedDateTime.parse(chargerTimeStamp, formatter);
 						LocalDateTime lastTimeStamp = LocalDateTime.parse(charger.getChargerLastHeartBeatTimeStamp(),
 								formatter);
-						LocalDateTime requestDateTime = LocalDateTime.parse(chargerTimeStamp, formatter);
+						LocalDateTime requestDateTime = dateTime.toLocalDateTime();
+
+						System.out.println(requestDateTime);
+
 						Duration duration = Duration.between(lastTimeStamp, requestDateTime);
 						if (duration.toMinutes() <= 10) {
+							System.out.println("1");
 							charger.setChargerLastHeartBeatTimeStamp(chargerTimeStamp);
 							chargers.set(chargerIndex, charger);
 							station.setChargers(chargers);
