@@ -161,6 +161,8 @@ public class ChargerServiceImpl implements ChargerServiceInterface {
 							.findByStationIdAndIsActiveTrue(utility.stringSanitization(stationId));
 					if (station != null) {
 						Charger obj = chargerConverter.dtoToEntity1(chargerDTO);
+						
+						System.out.println(obj);
 
 						List<Charger> chargers = station.getChargers();
 						if (!chargers.isEmpty()) {
@@ -173,6 +175,7 @@ public class ChargerServiceImpl implements ChargerServiceInterface {
 									break;
 								}
 							}
+
 							if (charger != null) {
 								boolean flag = false;
 
@@ -194,40 +197,40 @@ public class ChargerServiceImpl implements ChargerServiceInterface {
 								}
 
 								if (obj.getChargerMinInputAmpere() != null
-										&& obj.getChargerMinInputAmpere().isBlank()) {
+										&& !obj.getChargerMinInputAmpere().isBlank()) {
 									charger.setChargerMinInputAmpere(obj.getChargerMinInputAmpere());
 									flag = true;
 								}
 
 								if (obj.getChargerMaxInputAmpere() != null
-										&& obj.getChargerMaxInputAmpere().isBlank()) {
+										&& !obj.getChargerMaxInputAmpere().isBlank()) {
 									charger.setChargerMaxInputAmpere(obj.getChargerMaxInputAmpere());
 									flag = true;
 								}
 
-								if (obj.getChargerOutputAmpere() != null && obj.getChargerOutputAmpere().isBlank()) {
+								if (obj.getChargerOutputAmpere() != null && !obj.getChargerOutputAmpere().isBlank()) {
 									charger.setChargerOutputAmpere(obj.getChargerOutputAmpere());
 									flag = true;
 								}
 
 								if (obj.getChargerInputFrequency() != null
-										&& obj.getChargerInputFrequency().isBlank()) {
+										&& !obj.getChargerInputFrequency().isBlank()) {
 									charger.setChargerInputFrequency(obj.getChargerInputFrequency());
 									flag = true;
 								}
 
 								if (obj.getChargerOutputFrequency() != null
-										&& obj.getChargerOutputFrequency().isBlank()) {
+										&& !obj.getChargerOutputFrequency().isBlank()) {
 									charger.setChargerOutputFrequency(obj.getChargerOutputFrequency());
 									flag = true;
 								}
 
-								if (obj.getChargerIPRating() != null && obj.getChargerIPRating().isBlank()) {
+								if (obj.getChargerIPRating() != null && !obj.getChargerIPRating().isBlank()) {
 									charger.setChargerIPRating(obj.getChargerIPRating());
 									flag = true;
 								}
 
-								if (obj.getChargerMountType() != null && obj.getChargerMountType().isBlank()) {
+								if (obj.getChargerMountType() != null && !obj.getChargerMountType().isBlank()) {
 									charger.setChargerMountType(obj.getChargerMountType());
 									flag = true;
 								}
@@ -237,51 +240,98 @@ public class ChargerServiceImpl implements ChargerServiceInterface {
 									flag = true;
 								}
 
-								if (obj.getIsRFID() != null && obj.getIsRFID().isBlank()) {
+								if (obj.getIsRFID() != null && !obj.getIsRFID().isBlank()) {
 									charger.setIsRFID(obj.getIsRFID());
 									flag = true;
 								}
 
 								if (obj.getChargerPointSerialNumber() != null
-										&& obj.getChargerPointSerialNumber().isBlank()) {
+										&& !obj.getChargerPointSerialNumber().isBlank()) {
 									charger.setChargerPointSerialNumber(obj.getChargerPointSerialNumber());
 									flag = true;
 								}
 
-								if (obj.getChargerOCPPProtocol() != null && obj.getChargerOCPPProtocol().isBlank()) {
+								if (obj.getChargerOCPPProtocol() != null && !obj.getChargerOCPPProtocol().isBlank()) {
 									charger.setChargerOCPPProtocol(obj.getChargerOCPPProtocol());
 									flag = true;
 								}
 
-								if (obj.getIsAppSupport() != null && obj.getIsAppSupport().isBlank()) {
+								if(obj.getChargerConnectorType() !=null && !obj.getChargerConnectorType().isBlank()) {
+									charger.setChargerConnectorType(obj.getChargerConnectorType());
+									flag=true;
+								}
+								
+								
+								if (obj.getIsAppSupport() != null && !obj.getIsAppSupport().isBlank()) {
 									charger.setIsAppSupport(obj.getIsAppSupport());
 									flag = true;
 								}
 
-								if (obj.getIsTBCutOff() != null && obj.getIsTBCutOff().isBlank()) {
+								if (obj.getIsTBCutOff() != null && !obj.getIsTBCutOff().isBlank()) {
 									charger.setIsTBCutOff(obj.getIsTBCutOff());
 									flag = true;
 								}
 
-								if (obj.getIsAntitheft() != null && obj.getIsAntitheft().isBlank()) {
+								if (obj.getIsAntitheft() != null && !obj.getIsAntitheft().isBlank()) {
 									charger.setIsAntitheft(obj.getIsAntitheft());
 									flag = true;
 								}
 
-								if (obj.getIsLEDDisplay() != null && obj.getIsLEDDisplay().isBlank()) {
+								if (obj.getIsLEDDisplay() != null && !obj.getIsLEDDisplay().isBlank()) {
 									charger.setIsLEDDisplay(obj.getIsLEDDisplay());
 									flag = true;
 								}
 
-								if (obj.getIsLEDIndications() != null && obj.getIsLEDIndications().isBlank()) {
+								if (obj.getIsLEDIndications() != null && !obj.getIsLEDIndications().isBlank()) {
 									charger.setIsLEDIndications(obj.getIsLEDIndications());
 									flag = true;
 								}
 
-								if (obj.getIsSmart() != null && obj.getIsSmart().isBlank()) {
+								if (obj.getIsSmart() != null && !obj.getIsSmart().isBlank()) {
 									charger.setIsSmart(obj.getIsSmart());
 									flag = true;
 								}
+								
+								if (obj.getChargerStatus() != null && !obj.getChargerStatus().isBlank()) {
+									charger.setChargerStatus(obj.getChargerStatus());
+									flag = true;
+								}
+								
+								if (obj.getChargePointVendor() != null && !obj.getChargePointVendor().isBlank()) {
+									charger.setChargePointVendor(obj.getChargePointVendor());
+									flag = true;
+								}
+								
+								if(obj.getChargePointModel()!=null && !obj.getChargePointModel().isBlank()) {
+									charger.setChargePointModel(obj.getChargePointModel());
+									flag=true;
+								}
+								
+								if(obj.getChargeBoxSerialNumber()!=null && !obj.getChargeBoxSerialNumber().isBlank()) {
+									charger.setChargeBoxSerialNumber(obj.getChargeBoxSerialNumber());
+									flag=true;
+								}
+								
+								if(obj.getMeterType()!=null && !obj.getMeterType().isBlank()) {
+									charger.setMeterType(obj.getMeterType());
+									flag=true;
+								}
+								
+								if(obj.getFirmwareVersion()!=null && !obj.getFirmwareVersion().isBlank()) {
+									charger.setFirmwareVersion(obj.getFirmwareVersion());
+									flag=true;
+								}
+								
+								if(obj.getFirmwareVersion()!=null && !obj.getFirmwareVersion().isBlank()) {
+									charger.setFirmwareVersion(obj.getFirmwareVersion());
+									flag=true;
+								}
+								
+								if(obj.getChargerSerialNumber()!=null && !obj.getChargerSerialNumber().isBlank()) {
+									charger.setChargerSerialNumber(obj.getChargerSerialNumber());
+									flag=true;
+								}
+								
 								charger.setModifiedDate(idAndDateGenerator.dateSetter());
 								charger.setModifiedBy("Admin");
 								chargers.set(index, charger);
@@ -295,7 +345,7 @@ public class ChargerServiceImpl implements ChargerServiceInterface {
 										throw new InValidDataException(
 												"Charger Details Not Updated. Please Check and Try Again");
 								} else
-									throw new StationIdNotAcceptableException("Please Check Enter Data. And try Again");
+									throw new StationIdNotAcceptableException("1 Please Check Enter Data. And try Again");
 							} else
 								throw new ChargerNotFoundException("Charger Data Not Available");
 						} else
@@ -906,11 +956,11 @@ public class ChargerServiceImpl implements ChargerServiceInterface {
 				}
 
 				if (charger != null) {
-//					DateTimeFormatter formatter = DateTimeFormatter.ISO_ZONED_DATE_TIME;
+					DateTimeFormatter formatter = DateTimeFormatter.ISO_DATE_TIME;
 //							.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSSSSSSXXX'['VV']'");
 //					DateTimeFormatter formatter = DateTimeFormatter.ISO_LOCAL_DATE_TIME;
-					DateTimeFormatter formatter = DateTimeFormatter.ofPattern("uuuu-MM-dd HH:mm:ss.SSSSSS VV",
-							Locale.ROOT);
+//					DateTimeFormatter formatter = DateTimeFormatter.ofPattern("uuuu-MM-dd HH:mm:ss.SSSSSS VV",
+//							Locale.ROOT);
 					try {
 						ZonedDateTime dateTime = ZonedDateTime.parse(chargerTimeStamp, formatter);
 						LocalDateTime lastTimeStamp = LocalDateTime.parse(charger.getChargerLastHeartBeatTimeStamp(),
