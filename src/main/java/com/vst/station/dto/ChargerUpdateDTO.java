@@ -25,67 +25,77 @@ public class ChargerUpdateDTO {
 
 	@Id
 	private String chargerId;
-	
+
 	private String chargerName;
-	
+
 	private int chargerNumber;
-	
-	@Pattern(regexp = "^\\d+(\\.\\d+)?$",message="Enter correct charger input voltage")
+
+	@Pattern(regexp = "^\\d+(\\.\\d+)?$", message = "Enter correct charger input voltage")
 	private String chargerInputVoltage;
-	
-	@Pattern(regexp = "^\\d+(\\.\\d+)?$",message="Enter correct charger output voltage")
+
+	@Pattern(regexp = "^\\d+(\\.\\d+)?$", message = "Enter correct charger output voltage")
 	private String chargerOutputVoltage;
-	
-	@Pattern(regexp = "^\\d+(\\.\\d+)?$",message="Enter correct charger MinInput Ampere")
+
+	@Pattern(regexp = "^\\d+(\\.\\d+)?$", message = "Enter correct charger MinInput Ampere")
 	private String chargerMinInputAmpere;
-	
-	@Pattern(regexp = "^\\d+(\\.\\d+)?$",message="Enter correct charger MaxInput Ampere")
+
+	@Pattern(regexp = "^\\d+(\\.\\d+)?$", message = "Enter correct charger MaxInput Ampere")
 	private String chargerMaxInputAmpere;
-	
-	@Pattern(regexp = "^\\d+(\\.\\d+)?$",message="Enter correct charger output Ampere")
+
+	@Pattern(regexp = "^\\d+(\\.\\d+)?$", message = "Enter correct charger output Ampere")
 	private String chargerOutputAmpere;
-	
-	@Pattern(regexp = "^\\d+(\\.\\d+)?$",message="Enter correct charger Input Frequency")
+
+	@Pattern(regexp = "^\\d+(\\.\\d+)?$", message = "Enter correct charger Input Frequency")
 	private String chargerInputFrequency;
-	
-	@Pattern(regexp = "^\\d+(\\.\\d+)?$",message="Enter correct charger output Ampere")
+
+	@Pattern(regexp = "^\\d+(\\.\\d+)?$", message = "Enter correct charger output Ampere")
 	private String chargerOutputFrequency;
-	
+
 	private String chargerIPRating;
-	
+
 	private String chargerMountType;
-	
+
 	private int chargerNumberOfConnector;
-	
+
 	private String isRFID;
-	
-	private String chargerSerialNumber;
-	
+
+	private String chargerPointSerialNumber;
+
 	private String chargerOCPPProtocol;
-	
+
 	private String chargerConnectorType;
-	
+
 	private String isAppSupport;
-	
+
 	private String isTBCutOff;
-	
+
 	private String isAntitheft;
-	
+
 	private String isLEDDisplay;
-	
+
 	private String isLEDIndications;
-	
+
 	private String isSmart;
-	
+
 	private String chargerStatus;
+
+	private String chargePointVendor;
 	
+	private String chargePointModel;
+
+	private String chargeBoxSerialNumber;
+
+	private String meterType;
+
+	private String firmwareVersion;
+
+	private String chargerSerialNumber;
+
 	private Date createdDate;
 	private Date modifiedDate;
 	private String createdBy;
 	private String modifiedBy;
 	private boolean isActive;
-	private List<ConnectorDTO> connectors= new ArrayList<>();
-	
-	
-	
+	private List<ConnectorDTO> connectors = new ArrayList<>();
+
 }
